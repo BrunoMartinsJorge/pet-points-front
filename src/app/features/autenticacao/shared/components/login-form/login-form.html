@@ -1,0 +1,51 @@
+<main>
+  <form [formGroup]="loginForm">
+    <div class="logo">
+      <div class="logo-image"></div>
+      <div class="description-login">
+        <h2>Acesse sua conta</h2>
+        <p>Entre com seu email e senha para acessar sua conta.</p>
+      </div>
+    </div>
+    <div class="input-group">
+      <input
+        type="text"
+        pInputText
+        placeholder="Email"
+        style="width: 100%"
+        formControlName="email"
+      />
+    </div>
+    <div class="input-group">
+      <p-password
+        [toggleMask]="true"
+        style="width: 100%"
+        placeholder="Senha"
+        [feedback]="false"
+        formControlName="password"
+      />
+    </div>
+  </form>
+  <p-button
+    label="Entrar"
+    icon="pi pi-sign-in"
+    [disabled]="loginForm.invalid"
+    (click)="loginUser()"
+  />
+  <div class="forgot-password">
+    <!-- <a (click)="toogleRecoverPassowrd()">Esqueci minha senha</a> -->
+  </div>
+  <br />
+  <hr />
+  <br />
+  <p-button
+    label="Criar Conta"
+    icon="pi pi-user-plus"
+    (click)="toogleModeForm.emit()"
+    styleClass="p-button-outlined"
+  />
+</main>
+<!-- <recover-passowrd
+  [visibilityByRecoverPassword]="visibilityByRecoverPassword"
+  (visibilityByRecoverPasswordChange)="visibilityByRecoverPassword = $event"
+></recover-passowrd> -->

@@ -1,0 +1,72 @@
+main {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  grid-gap: 1em;
+  padding: 4em;
+  justify-content: center;
+
+  div.logo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    div.logo-image {
+      background: url("../../../../../../../public/logo.png") no-repeat center
+        center;
+      background-size: contain;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+    }
+
+    div.description-login {
+      display: flex;
+      flex-direction: column;
+
+      h2 {
+        color: var(--color-title);
+        font-family: "Poppins", sans-serif;
+        font-size: 2em;
+      }
+      p {
+        color: var(--color-text);
+        font-family: "Poppins", sans-serif;
+      }
+    }
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 2em;
+  }
+
+  div.forgot-password {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    a {
+      color: #4a8ce0;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      font-style: italic;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+html.dark-mode {
+  h2,
+  p {
+    color: #fff;
+  }
+}

@@ -1,0 +1,14 @@
+<main>
+  <section class="logo">
+  </section>
+  <section class="form-container">
+    <app-login-form
+      [hidden]="mode_form === 'register'"
+      (toogleModeForm)="toogleModeForm()"
+    ></app-login-form>
+    <app-register-form
+      [hidden]="mode_form === 'login'"
+      (toogleModeForm)="toogleModeForm()"
+    ></app-register-form>
+  </section>
+</main>
