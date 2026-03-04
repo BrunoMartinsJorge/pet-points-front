@@ -16,7 +16,7 @@ export const authGuard: CanActivateFn = (route, state) => {
    * @returns {boolean} - Verdadeiro se o token expirou
    */
   if (!token || tokenService.isTokenExpired(token)) {
-    router.navigate(['/login']);
+    router.navigate(['/autenticacao']);
     return false;
   }
 
