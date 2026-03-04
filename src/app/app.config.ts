@@ -23,7 +23,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Material,
         options: {
-          darkModeSelector: '.my-app-dark',
+          darkModeSelector: '.dark-mode',
           semantic: {
             colorScheme: {
               light: { 
