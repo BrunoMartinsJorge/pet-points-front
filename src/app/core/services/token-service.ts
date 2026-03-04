@@ -1,7 +1,9 @@
 /* eslint-disable @angular-eslint/prefer-inject */
 import { Injectable } from '@angular/core';
-import type { Router } from '@angular/router';
-import type { RotasService } from './rotas-service';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { Router } from '@angular/router';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { RotasService } from './rotas-service';
 import { jwtDecode } from 'jwt-decode';
 import type { TokenModel } from '../model/TokenModel';
 
