@@ -1,0 +1,21 @@
+:root {
+  --color-border: #ccc;
+  --color-title: #fff;
+  --color-text: #2d2d2d;
+  --color-sub-text: #a0aec0;
+  --color-icon: #1e293b;
+  --color-hover: #e2f3f0;
+  --color-male: #c0e7ff;
+  --color-female: #ffc0e3;
+}
+
+html[data-theme='my-app-dark'] {
+  --color-border: rgb(63, 63, 70);
+  --color-title: #fff;
+  --color-text: #ccc;
+  --color-sub-text: #a0aec0;
+  --color-icon: #ccc;
+  --color-hover: #ffffff29;
+  --color-male: #4399ce;
+  --color-female: #ff6fa4ce;
+}
