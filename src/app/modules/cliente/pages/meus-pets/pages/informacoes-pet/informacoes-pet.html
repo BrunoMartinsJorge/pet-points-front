@@ -1,0 +1,79 @@
+<main>
+  <section>
+    <p-fieldset
+      legend="Dados do Pet Selecionado"
+      [toggleable]="false"
+      [style]="{ height: '100%' }"
+    >
+      <div class="informacoes-pet">
+        <div class="imagem"></div>
+        <div class="informacoes">
+          <strong
+            >{{ petSelecionado?.nome }} - {{ petSelecionado?.raca }}</strong
+          >
+          <br />
+          <span class="data">{{ petSelecionado?.dataNascimento }}</span>
+          <span class="data">{{ petSelecionado?.dataRegistro }}</span>
+          @if (petSelecionado) {
+            <span class="tags">
+              <app-tipo-pet-bag [tipo]="petSelecionado.tipo"></app-tipo-pet-bag>
+              <app-genero-bag [genero]="petSelecionado.genero"></app-genero-bag>
+            </span>
+          }
+        </div>
+        <p-button icon="fa-solid fa-id-card" (click)="buscarCarteirinha()" />
+      </div>
+      <hr />
+      <br />
+      <div>
+        <label for="observacoes">Observações</label>
+        <textarea
+          name=""
+          id="observacoes"
+          pTextarea
+          style="width: 100%; height: 150px"
+          disabled
+        ></textarea>
+      </div>
+      <br />
+      <hr />
+      <br />
+      <p-fieldset legend="Pets Relacionados" [toggleable]="false">
+        <div class="cards">
+          @for (pet of petsRelacionados; track pet.id) {
+            <button class="card" (click)="acessarPet(pet.id)">
+              <div class="imagem-pet"></div>
+              <div>
+                <strong>{{ pet.nome }}</strong>
+                <br />
+                <span class="tags">
+                  <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
+                  <app-genero-bag [genero]="pet.genero"></app-genero-bag>
+                </span>
+              </div>
+            </button>
+          }
+        </div>
+      </p-fieldset>
+    </p-fieldset>
+  </section>
+  <section>
+    <p-fieldset
+      legend="Consultas do Pet"
+      [toggleable]="false"
+      [style]="{ height: '100%' }"
+    >
+    </p-fieldset>
+  </section>
+</main>
+<p-dialog header="header" [(visible)]="modalCarteirinha" [modal]="true">
+      <div class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-content">
+        <div
+          [innerHTML]="htmlCarteirinha"
+        ></div>
+      </div>
+    </div>
+  </div>
+</p-dialog>
