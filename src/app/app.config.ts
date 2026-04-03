@@ -9,39 +9,61 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
-import Material from '@primeuix/themes/material';
 import { tokenApiInterceptor } from './core/interceptors/token-api-interceptor';
 import { responseApiInterceptor } from './core/interceptors/response-api-interceptor';
+import { MessageService } from 'primeng/api';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import Aura from '@primeuix/themes/aura';
+
+import { definePreset } from '@primeuix/themes';
+
+const MinhaPaleta = definePreset(Aura, {
+  semantic: {
+    primary: {
+      50:  '#eaf5e8',
+      100: '#cfe6ca',
+      200: '#b1d6aa',
+      300: '#92c689',
+      400: '#74b769',
+      500: '#3b7c2e',
+      600: '#2c6622',
+      700: '#1d5017',
+      800: '#0f3b0b',
+      900: '#002500'
+    },
+    secondary: {
+      50:  '#e8f5f9',
+      100: '#cae6f1',
+      200: '#a1d6e8',
+      300: '#78c6e0',
+      400: '#4fb6d8',
+      500: '#248dab',
+      600: '#1c738f',
+      700: '#144e73',
+      800: '#0c3857',
+      900: '#031b3b'
+    }
+  }
+});
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    MessageService,
+    provideAnimationsAsync(),
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withFetch(), withInterceptors([tokenApiInterceptor, responseApiInterceptor])),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([tokenApiInterceptor, responseApiInterceptor])
+    ),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     providePrimeNG({
       theme: {
-        preset: Material,
+        preset: MinhaPaleta,
         options: {
-          darkModeSelector: '.dark-mode',
-          semantic: {
-            colorScheme: {
-              light: { 
-                highlight: {
-                  background: '{primary.50}',
-                  color: '{primary.700}',
-                },
-              },
-              dark: {
-                highlight: {
-                  background: '{primary.200}',
-                  color: '{primary.900}',
-                },
-              },
-            },
-          },
-        },
-      },
-    }),
-  ],
+          darkModeSelector: '.dark'
+        }
+      }
+    })
+  ]
 };
