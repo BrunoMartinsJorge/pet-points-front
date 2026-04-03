@@ -1,0 +1,22 @@
+span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3em 0.5em;
+  border-radius: 50px;
+  font-size: 0.8em;
+  font-weight: 600;
+
+  &.erro {
+    border: 2px solid #9d2c2c;
+    background-color: #9d2c2c6a;
+    color: #9d2c2c;
+  }
+
+  &.login,
+  &.registro {
+    border: 2px solid #2c9d28;
+    background-color: #07a5216a;
+    color: #2c9d28;
+  }
+}
