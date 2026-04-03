@@ -1,0 +1,39 @@
+main {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  height: 100%;
+  grid-gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.5em 1em;
+
+  section {
+    min-width: 400px;
+    min-height: 400px;
+  }
+
+  p-fieldset {
+    height: 100% !important;
+    overflow-y: auto;
+  }
+
+  section:nth-child(1) {
+    flex: 2;
+    overflow: hidden;
+    p-fieldset {
+      .lista-pets {
+        display: flex;
+        flex-direction: column;
+        grid-gap: 1em;
+      }
+    }
+  }
+
+  section:nth-child(2) {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 1em;
+  }
+}

@@ -1,0 +1,27 @@
+<main>
+  <section>
+    <p-fieldset legend="Meus Pets" [style]="{ height: '100%' }">
+      @if (pets === []) {
+        <h3>Nenhum pet cadastrado</h3>
+      } @else {
+        <div class="lista-pets">
+          @for (pet of pets; track pet.id) {
+            <app-pet-card [pet]="pet"></app-pet-card>
+          }
+        </div>
+      }
+    </p-fieldset>
+  </section>
+  <section>
+    <p-fieldset legend="Meus Pets com Consultas" [style]="{ height: '100%' }">
+      @if (consultas === []) {
+        <h3>Nenhuma consulta cadastrada</h3>
+      } @else {
+        @for (consulta of consultas; track consulta.id) {
+          <app-consulta-pet-card [consulta]="consulta"></app-consulta-pet-card>
+        }
+      }
+    </p-fieldset>
+    <p-button icon="fa fa-plus" label="Adicionar Novo Pet" [style]="{ width: '100%' }" severity="success" (click)="adicionarNovoPet()"></p-button>
+  </section>
+</main>

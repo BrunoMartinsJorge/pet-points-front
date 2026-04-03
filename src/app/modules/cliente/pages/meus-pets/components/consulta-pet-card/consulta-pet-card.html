@@ -1,0 +1,13 @@
+@if (consulta !== null) {
+  <div class="card">
+    <div class="foto"></div>
+    <div class="info">
+      <span>{{ consulta.tipoConsulta }} - <app-bag-status-consulta [status]="consulta.status"></app-bag-status-consulta></span>
+      <hr />
+      <span class="info-pet"
+        >{{ consulta.pet }} - {{ consulta.dataConsulta }}</span
+      >
+    </div>
+    <p-button icon="pi pi-eye"/>
+  </div>
+}

@@ -1,0 +1,17 @@
+@if (pet !== null) {
+  <div class="card">
+    <div class="foto" style="width: 100px;height: 100px;"></div>
+    <div class="info">
+      <div>
+        <strong>{{ pet.nome }} - {{ pet.raca }}</strong>
+        <app-genero-bag [genero]="pet.genero"></app-genero-bag>
+        <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
+      </div>
+      <hr>
+      <div>
+        <span>Nascido em {{pet.dataNascimento | date: 'dd/MM/yyyy'}}</span>
+      </div>
+    </div>
+    <p-button icon="pi pi-eye" (click)="acessarPet()"/>
+  </div>
+}
