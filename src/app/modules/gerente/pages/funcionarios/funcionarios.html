@@ -1,0 +1,49 @@
+<main>
+  <p-fieldset legend="Filtros" [toggleable]="false">
+    <section class="filtros">
+      <div class="input-group">
+        <label for="nome_email">Nome ou email</label>
+        <input
+          [(ngModel)]="filtros.nome_email"
+          type="text"
+          pInputText
+          id="nome_email"
+          placeholder="funcionario@gmail.com - funcionario"
+        />
+      </div>
+      <div class="input-group">
+        <label for="tipo">Tipo de funcionario</label>
+        <p-select
+          [(ngModel)]="filtros.tipo"
+          [id]="'tipo'"
+          [options]="tiposFuncionarios"
+          appendTo="body"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Selecione um tipo de funcionario"
+          (onChange)="filtrarFuncionarios()"
+        ></p-select>
+      </div>
+      <p-button
+        label="Adicionar Novo Funcionario"
+        icon="pi pi-user-plus"
+        severity="success"
+        (click)="acessarPaginaRegistroFuncionario()"
+      />
+      <p-button
+        label="Gerar Relatório"
+        icon="fa fa-file"
+        severity="secondary"
+      />
+    </section>
+  </p-fieldset>
+  <p-fieldset legend="Funcionarios" [toggleable]="false">
+    <section class="lista-funcionarios">
+      @for (funcionario of funcionariosFiltrados; track funcionario.id) {
+        <app-card-funcionario
+          [funcionario]="funcionario"
+        ></app-card-funcionario>
+      }
+    </section>
+  </p-fieldset>
+</main>

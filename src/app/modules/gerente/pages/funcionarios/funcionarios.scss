@@ -1,0 +1,27 @@
+main {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    grid-gap: 1em;
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+      flex: 1;
+    }
+  }
+
+  .lista-funcionarios {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 1em;
+  }
+}

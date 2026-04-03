@@ -1,0 +1,23 @@
+@if (funcionario !== null) {
+  <div class="card">
+    <div class="imagem">
+      <span class="tipo-funcionario">
+        {{ funcionario.permissao }}
+      </span>
+    </div>
+    <div class="card-info">
+      <div class="details">
+        <h3>{{ funcionario.nome }}</h3>
+        <span>{{ funcionario.email }}</span>
+      </div>
+      <div class="btns">
+        <p-button
+          icon="pi pi-send"
+          label="Enviar Mensagem"
+          severity="secondary"
+        ></p-button>
+        <p-button icon="pi pi-eye" label="Ver" severity="primary"></p-button>
+      </div>
+    </div>
+  </div>
+}
