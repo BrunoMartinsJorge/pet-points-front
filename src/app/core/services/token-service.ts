@@ -118,11 +118,10 @@ export class TokenService {
       this.removeToken();
       return;
     }
-    const rule = this.decodeToken(token).permissoes;
+    const rule = this.decodeToken(token).permissao;
     const rotaPai = this.router.config.find((r) => {
-      return r.data?.['RULES'][0]?.includes(rule);
+      return r.data?.['RULE']?.includes(rule);
     });
-
     if (rotaPai) {
       this.rotasService.setarRotaPai(rotaPai.path || '');
       const rotasFilhas = rotaPai.children || [];
