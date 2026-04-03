@@ -1,0 +1,156 @@
+<main>
+  <div class="logo">
+    <div class="img-logo"></div>
+    <h3>Pet Points</h3>
+  </div>
+  <h2>
+    Olá, seja bem-vindo ao <span>Pet Points!</span> Registre-se para ter sua
+    conta!
+  </h2>
+  <p-stepper [value]="etapa" [linear]="true">
+    <p-step-list>
+      <p-step [value]="1">Dados de Login</p-step>
+      <p-step [value]="2">Informações Pessoais</p-step>
+    </p-step-list>
+    <p-step-panels>
+      <form [formGroup]="registroForm">
+        <p-step-panel [value]="1">
+          <ng-template #content>
+            <div class="input-group">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                pInputText
+                type="email"
+                formControlName="email"
+                placeholder="Digite seu email"
+              />
+            </div>
+            <div class="input-group">
+              <label for="password">Senha</label>
+              <p-password
+                id="password"
+                name="password"
+                formControlName="password"
+                placeholder="Digite sua senha"
+                [toggleMask]="true"
+                [feedback]="false"
+              />
+            </div>
+            <div class="input-group">
+              <label for="confirmPassword">Confirmar Senha</label>
+              <p-password
+                id="confirmPassword"
+                name="confirmPassword"
+                formControlName="confirmPassword"
+                placeholder="Digite sua senha novamente"
+                [toggleMask]="true"
+                [feedback]="false"
+              />
+            </div>
+            <p-button
+              [style]="{ width: '100%' }"
+              label="Avançar"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              (onClick)="etapa = 2"
+              [disabled]="!dadosLoginValidos"
+            />
+          </ng-template>
+        </p-step-panel>
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="input-group">
+              <label for="nome">Nome Completo</label>
+              <input
+                id="nome"
+                pInputText
+                type="text"
+                formControlName="nome"
+                placeholder="Digite seu nome completo"
+              />
+            </div>
+            <div class="input-group">
+              <label for="genero">Gênero</label>
+              <p-select
+                id="genero"
+                formControlName="genero"
+                [options]="generos"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Selecione seu gênero"
+              />
+            </div>
+            <div class="input-group">
+              <label for="cpf">CPF</label>
+              <input
+                id="cpf"
+                pInputText
+                type="text"
+                formControlName="cpf"
+                placeholder="Digite seu CPF"
+              />
+            </div>
+            <div class="input-group">
+              <label for="telefone">Telefone</label>
+              <input
+                id="telefone"
+                pInputText
+                type="text"
+                formControlName="telefone"
+                placeholder="Digite seu telefone"
+              />
+            </div>
+            <div class="input-group">
+              <label for="dataNascimento">Data de Nascimento</label>
+              <p-datepicker
+                [showTime]="false"
+                [inputStyle]="{ width: '100%' }"
+                id="dataNascimento"
+                formControlName="dataNascimento"
+                [showIcon]="true"
+                [dateFormat]="'dd/mm/yy'"
+                placeholder="Selecione sua data de nascimento"
+                [maxDate]="dataMaxima"
+              />
+            </div>
+            <div class="botoes">
+              <p-button
+                icon="pi pi-arrow-left"
+                label="Voltar"
+                severity="secondary"
+                (click)="etapa = 1"
+              />
+              <p-button
+                icon="pi pi-user-plus"
+                label="Registrar-se"
+                severity="primary"
+                (click)="registrarUsuario()"
+                [disabled]="
+                  !dadosPessoaisValidos ||
+                  carregandoRegistro ||
+                  !dadosLoginValidos
+                "
+                iconPos="right"
+              />
+            </div>
+          </ng-template>
+        </p-step-panel>
+      </form>
+      <div class="divider">
+        <i></i>
+        <span>Ou</span>
+        <i></i>
+      </div>
+      <p-button
+        [disabled]="carregandoRegistro"
+        icon="pi pi-sign-in"
+        label="Login"
+        iconPos="right"
+        severity="contrast"
+        (click)="logarUsuario()"
+        [style]="{ width: '100%' }"
+      />
+    </p-step-panels>
+  </p-stepper>
+</main>

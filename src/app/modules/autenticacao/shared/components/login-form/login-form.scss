@@ -1,0 +1,67 @@
+main {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 3rem;
+  color: var(--color-text);
+  grid-gap: 1em;
+
+  .logo {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+
+    .img-logo {
+      width: 3em;
+      height: 3em;
+      background: url("../../../../../../../public/logo.png") center center
+        no-repeat;
+      background-size: contain;
+    }
+  }
+
+  h2 {
+    font-size: 1.5em;
+    span {
+      font-size: 1em;
+      color: #dec123;
+    }
+  }
+
+  form {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 1em;
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      grid-gap: 0.5em;
+
+      i#alterar-senha {
+        font-size: 14px;
+        color: rgb(59, 144, 177);
+        cursor: pointer;
+        align-self: flex-end;
+        text-decoration: underline;
+      }
+    }
+
+    .divider {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      i {
+        flex: 1;
+        height: 1px;
+        background-color: var(--color-text);
+      }
+
+      span {
+        font-size: 14px;
+        color: var(--color-text);
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+<main>
+  <div class="logo">
+    <div class="img-logo"></div>
+    <h3>Pet Points</h3>
+  </div>
+  <h2>
+    Olá, seja bem-vindo ao <span>Pet Points!</span> Faça login para acessar sua
+    conta!
+  </h2>
+  <form [formGroup]="loginForm">
+    <div class="input-group">
+      <label for="email">E-mail</label>
+      <input
+        pInputText
+        type="email"
+        formControlName="email"
+        id="email"
+        name="email"
+        placeholder="Digite seu e-mail"
+      />
+    </div>
+    <div class="input-group">
+      <label for="password">Senha</label>
+      <p-password
+        id="password"
+        name="password"
+        formControlName="password"
+        placeholder="Digite sua senha"
+        [toggleMask]="true"
+        [feedback]="false"
+      />
+      <i
+        aria-hidden="true"
+        id="alterar-senha"
+        (click)="mudarVisibilidadeSenha()"
+        [style.cursor]="carregandoLogin ? 'not-allowed' : 'pointer'"
+        (keyup)="mudarVisibilidadeSenha()"
+      >
+        Esqueci minha senha
+      </i>
+    </div>
+    <p-button
+      [disabled]="loginForm.invalid || carregandoLogin"
+      icon="pi pi-sign-in"
+      label="Entrar"
+      iconPos="right"
+      severity="primary"
+      (click)="logarUsuario()"
+      [style]="{ width: '100%' }"
+    />
+    <div class="divider">
+      <i></i>
+      <span>Ou</span>
+      <i></i>
+    </div>
+    <p-button
+      [disabled]="carregandoLogin"
+      icon="pi pi-user-plus"
+      label="Registrar-se"
+      iconPos="right"
+      severity="contrast"
+      (click)="toogleModeForm.emit()"
+      [style]="{ width: '100%' }"
+    />
+  </form>
+</main>
+<p-dialog
+  header="Alterar Senha"
+  [(visible)]="visibilidadeAlterarSenha"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ maxWidth: '600px', width: '100%' }"
+>
+  <app-alterar-senha
+    (mudarVisibilidadeAlterarSenha)="mudarVisibilidadeSenha()"
+  ></app-alterar-senha>
+</p-dialog>
