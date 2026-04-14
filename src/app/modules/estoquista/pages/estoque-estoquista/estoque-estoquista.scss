@@ -1,0 +1,77 @@
+main {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 1rem;
+  padding: 1rem;
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 1rem 0;
+  }
+
+  section.cards {
+    display: flex;
+    flex-wrap: wrap;
+    grid-gap: 1rem;
+
+    div.card {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5em;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 2em 2.5em;
+      transition: all 0.4s ease-in-out;
+
+      i {
+        font-size: 4.5em;
+        color: var(--color-primary);
+      }
+
+      div.informacoes {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.25em;
+
+        span#descricao {
+          font-size: 1rem;
+        }
+
+        span#titulo {
+          font-size: 1.2em;
+          font-weight: bold;
+          color: var(--color-text-secondary);
+        }
+      }
+    }
+  }
+
+  section .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    grid-gap: 1rem;
+    justify-content: space-between;
+
+    .inputs {
+      display: flex;
+      flex-wrap: wrap;
+      grid-gap: 1rem;
+    }
+
+    .botoes {
+      align-items: center;
+      padding-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      grid-gap: 1rem;
+    }
+  }
+
+  #icone-quantidade {
+    font-size: 1.2em;
+  }
+}
