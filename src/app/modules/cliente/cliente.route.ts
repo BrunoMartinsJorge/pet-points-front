@@ -5,6 +5,7 @@ import { Cliente } from './cliente';
 import { MeusPets } from './pages/meus-pets/meus-pets';
 import { InformacoesPet } from './pages/meus-pets/pages/informacoes-pet/informacoes-pet';
 import { AdicionarNovoPet } from './pages/meus-pets/pages/adicionar-novo-pet/adicionar-novo-pet';
+import { MinhasConsultas } from './pages/minhas-consultas/minhas-consultas';
 
 export const ROTAS_CLIENTES: Routes = [
   {
@@ -74,6 +75,20 @@ export const ROTAS_CLIENTES: Routes = [
         },
         canActivate: [authGuard],
       },
+      {
+        path: 'minhas-consultas',
+        title: 'Minhas Consultas',
+        component: MinhasConsultas,
+        data: {
+          RULE: 'CLIENTE',
+          visible: true,
+          nome: 'Minhas Consultas',
+          icone: 'pi pi-calendar',
+          group: '',
+          descricao: 'Consultas dos meus Pets',
+        },
+        canActivate: [authGuard],
+      }
     ],
   },
 ];
