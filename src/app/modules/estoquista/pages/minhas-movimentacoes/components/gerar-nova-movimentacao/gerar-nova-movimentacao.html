@@ -1,0 +1,55 @@
+<form [formGroup]="formulario">
+  <div class="input-group">
+    <label for="tipoMovimentacao">Tipo de Movimentação:</label>
+    <p-select
+      id="tipoMovimentacao"
+      formControlName="tipoMovimentacao"
+      [options]="[
+        { label: 'Entrada', value: 'ENTRADA' },
+        { label: 'Saída', value: 'SAIDA' },
+      ]"
+      placeholder="Selecione o tipo de movimentação"
+    ></p-select>
+  </div>
+  <div class="input-group">
+    <label for="idProduto">Produto:</label>
+    <p-select
+      id="idProduto"
+      formControlName="idProduto"
+      [options]="produtos"
+      optionLabel="nome"
+      optionValue="id"
+      filter="true"
+      filterBy="nome"
+      placeholder="Selecione um produto"
+      emptyFilterMessage="Nenhum produto encontrado"
+      appendTo="body"
+    ></p-select>
+  </div>
+  <div class="input-group">
+    <label for="quantidade">Quantidade:</label>
+    <input
+      id="quantidade"
+      type="number"
+      formControlName="quantidade"
+      placeholder="Digite a quantidade"
+      pInputText
+      [min]="1"
+    />
+  </div>
+  <div class="botoes">
+    <p-button
+      label="Salvar"
+      severity="success"
+      icon="fa fa-check"
+      (click)="salvarMovimentacao()"
+      [disabled]="formulario.invalid"
+    ></p-button>
+    <p-button
+      label="Cancelar"
+      severity="danger"
+      icon="fa fa-times"
+      (click)="fecharDialog()"
+    ></p-button>
+  </div>
+</form>
