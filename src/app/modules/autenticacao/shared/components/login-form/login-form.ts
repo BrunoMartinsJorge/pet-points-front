@@ -23,7 +23,7 @@ export class LoginForm {
   private readonly service = inject(AutenticaoService);
 
   /**
-   * 
+   *
    * @description - Gera o formulário de login com os campos de email e senha, utilizando as validações do Angular Forms
    * @returns - {FormGroup} - Formulário de login
    */
@@ -38,17 +38,16 @@ export class LoginForm {
   }
 
   /**
-   * 
+   *
    * @description - Emite um evento para o componente pai para alternar entre os formulários de login e cadastro
    */
   public mudarVisibilidadeSenha(): void {
-    if(this.carregandoLogin) return;
+    if (this.carregandoLogin) return;
     this.visibilidadeAlterarSenha = !this.visibilidadeAlterarSenha;
   }
 
-
   /**
-   * 
+   *
    * @description - Emite um evento para o componente pai para alternar entre os formulários de login e cadastro
    */
   public logarUsuario(): void {
@@ -63,9 +62,10 @@ export class LoginForm {
         const token = res.token || '';
         this.tokenService.setToken(token);
         this.tokenService.loadToken();
+      },
+      complete: () => {
         this.carregandoLogin = false;
-      }
-    }
-    );
+      },
+    });
   }
 }
