@@ -1,1 +1,53 @@
-<p>cliente-dashboard works!</p>
+<main>
+  <section>
+    <div class="cards-list">
+      <div class="card">
+        <i id="icon" class="pi pi-users"></i>
+        <div class="infos">
+          <span id="titulo">Teste</span>
+          <span id="descricao">Descrição</span>
+        </div>
+      </div>
+      <div class="card">
+        <i id="icon" class="pi pi-users"></i>
+        <div class="infos">
+          <span id="titulo">Teste</span>
+          <span id="descricao">Descrição</span>
+        </div>
+      </div>
+      <div class="card">
+        <i id="icon" class="pi pi-users"></i>
+        <div class="infos">
+          <span id="titulo">Teste</span>
+          <span id="descricao">Descrição</span>
+        </div>
+      </div>
+    </div>
+    <p-fieldset
+      legend="Atendimentos Pendentes"
+      [toggleable]="false"
+    >
+      <div class="lista-atendimentos">
+        @for (atendimento of atendimentos; track atendimento.id) {
+          <div class="atendimento">
+            <div class="assunto">
+              {{ atendimento.assunto }}
+            </div>
+            <div class="data">
+              {{ atendimento.data }}
+            </div>
+            <p-button
+              icon="pi pi-send"
+              label="Enviar Mensagem"
+              severity="secondary"
+            />
+          </div>
+        }
+      </div>
+    </p-fieldset>
+  </section>
+  <section>
+    <p-fieldset legend="Meus Pets" [toggleable]="false"> </p-fieldset>
+    <p-fieldset legend="Consultas Agendadas" [toggleable]="false"> </p-fieldset>
+  </section>
+</main>

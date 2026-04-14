@@ -1,0 +1,82 @@
+main {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 1em;
+  height: 100%;
+  padding: 1em;
+
+  section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1em;
+
+    p-fieldset {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+  }
+}
+
+.cards-list {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 1em;
+  width: 100%;
+
+  div.card {
+    flex: 1 1 calc(50% - 1em);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5em;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 1em 2.5em;
+    transition: all 0.4s ease-in-out;
+
+    i#icon {
+      font-size: 4.5em;
+      color: var(--color-primary);
+    }
+
+    div.infos {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25em;
+
+      span#titulo {
+        font-size: 1em;
+      }
+
+      span#descricao {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: var(--color-text-secondary);
+      }
+    }
+  }
+}
+
+.lista-atendimentos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  overflow-y: auto;
+  max-height: 300px;
+
+  .atendimento {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 1em;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    text-align: center;
+    flex: 1 1 calc(50% - 2em);
+    // max-width: 250px;
+  }
+}
