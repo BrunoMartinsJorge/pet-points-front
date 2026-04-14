@@ -1,0 +1,27 @@
+main {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.sidebar {
+  width: auto;
+  flex-shrink: 0;
+}
+
+section.body-module {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+header-pagina {
+  flex-shrink: 0;
+}
+
+section.body {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
