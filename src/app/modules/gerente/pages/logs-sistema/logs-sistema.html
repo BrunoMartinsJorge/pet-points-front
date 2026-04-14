@@ -57,12 +57,13 @@
         <p-button
           label="Limpar Filtros"
           severity="danger"
+          icon="fa fa-eraser"
           [disabled]="!habilitarBotaoLimparFiltros"
           (click)="limparFiltros()"
         />
         <p-button
           [label]="carregandoRelatorio ? 'Gerando Relatório...' : 'Gerar Relatório'"
-          [icon]="'pi' + (carregandoRelatorio ? ' pi-spin pi-spinner' : 'pi-file-pdf')"
+          [icon]="'fa' + (carregandoRelatorio ? ' fa-spin fa-spinner' : ' fa-file-pdf')"
           severity="success"
           [disabled]="carregandoRelatorio"
           (click)="gerarRelatorio()"
@@ -111,7 +112,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-log>
         <tr>
-          <td>{{ log.registradoEm | date: "dd/MM/yyyy HH:mm:ss" }}</td>
+          <td>{{ log.registradoEm }}</td>
           <td>
             <app-bag-log [tipoLog]="log.tipo" />
           </td>
