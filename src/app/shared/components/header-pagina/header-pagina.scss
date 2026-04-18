@@ -31,8 +31,23 @@ header.header-page {
       font-size: 0.875em;
     }
   }
-
-  .notificacao-elemento {
-    color: #f0f;
-  }
 }
+
+  .lista-notificacoes {
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    .notificacao {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      height: 50px;
+      padding: 5px;
+
+      &:nth-child(even) {
+        background-color: var(--color-border);
+      }
+    }
+  }

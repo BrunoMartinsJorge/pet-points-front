@@ -27,6 +27,50 @@
           label="Voltar"
           severity="danger"
         ></p-button>
-      }</div>
+      }
+      <p-overlaybadge
+        [badgeDisabled]="foiAbertoNotificiacoes || notificacoes.length === 0"
+        [value]="notificacoes.length"
+      >
+        <p-button
+          icon="fa fa-bell"
+          pTooltip="Notificações"
+          severity="secondary"
+          (click)="alterarPopover()"
+        />
+      </p-overlaybadge>
+    </div>
   </header>
 }
+<p-popover #op (onHide)="fehcarPopover()">
+  @if (notificacoes.length > 0) {
+    <span>Suas Notificicações</span>
+    <hr />
+    <div class="lista-notificacoes">
+      @for (notificacao of notificacoes; track notificacao.id) {
+        <div class="notificacao">
+          <p-checkbox
+            [binary]="true"
+            [ngModel]="notificacaoMarcadaComoLida(notificacao.id)"
+            (onChange)="marcarComoLida($event, notificacao.id)"
+          />
+          <span>{{ notificacao.mensagem }}</span>
+        </div>
+      }
+    </div>
+    <p-button
+      [label]="
+        notificacoesParaMarcarComoLidas.length > 0
+          ? 'Marcar como lidas'
+          : 'Marcar todas como lidas'
+      "
+      (click)="
+        marcarSelecionadasComoLidas(
+          notificacoesParaMarcarComoLidas.length === 0 ? true : false
+        )
+      "
+    ></p-button>
+  } @else {
+    <strong style="text-align: center">Sem notificacoes</strong>
+  }
+</p-popover>
