@@ -1,0 +1,119 @@
+<main>
+  <p-fieldset legend="Filtros de Movimentações" [toggleable]="false">
+    <div class="filtros">
+      <div class="inputs">
+        <div class="input-group">
+          <label for="tipo">Tipo de Movimentação</label>
+          <p-select
+            [(ngModel)]="filtros.tipoMovimentacao"
+            [id]="'tipo'"
+            [options]="tiposMovimentacoes"
+            appendTo="body"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione um tipo de movimentação"
+            (onChange)="filtrarMovimentacoes()"
+            [disabled]="carregandoMovimentacoes"
+          ></p-select>
+        </div>
+        <div class="input-group">
+          <label for="produto">Produto da Movimentação</label>
+          <p-select
+            [(ngModel)]="filtros.produto"
+            [id]="'produto'"
+            [options]="produtos"
+            appendTo="body"
+            optionLabel="nome"
+            optionValue="id"
+            placeholder="Selecione um produto"
+            (onChange)="filtrarMovimentacoes()"
+            [disabled]="carregandoMovimentacoes || carregandoEstoquistas"
+          ></p-select>
+        </div>
+        <div class="input-group">
+          <label for="lancadorPor">Movimentador Por</label>
+          <p-select
+            [(ngModel)]="filtros.lancadoPor"
+            [id]="'lancadorPor'"
+            [options]="estoquistas"
+            appendTo="body"
+            optionLabel="nome"
+            optionValue="id"
+            placeholder="Selecione um estoquista"
+            (onChange)="filtrarMovimentacoes()"
+            [disabled]="carregandoMovimentacoes || carregandoProdutos"
+          ></p-select>
+        </div>
+      </div>
+      <div class="btns">
+        <p-button
+          label="Limpar Filtros"
+          severity="danger"
+          icon="fa fa-eraser"
+          (click)="limparFiltros()"
+          [disabled]="carregandoMovimentacoes"
+        />
+        <p-button
+          label="Gerar Relatório"
+          severity="success"
+          icon="fa fa-file"
+          (click)="gerarRelatorio()"
+          [disabled]="carregandoMovimentacoes"
+        />
+      </div>
+    </div>
+  </p-fieldset>
+  <hr />
+  <p-table
+    [value]="movimentacoesFiltradas"
+    [paginator]="true"
+    [rows]="12"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[12, 24, 36]"
+    [stripedRows]="true"
+    [showGridlines]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Tipo</th>
+        <th pSortableColumn="dataHora">
+          <p-sortIcon field="dataHora"></p-sortIcon>
+          Data e Hora
+        </th>
+        <th>Produto</th>
+        <th pSortableColumn="quantidadeMovimentada">
+          <p-sortIcon field="quantidadeMovimentada"></p-sortIcon>
+          Quantidade Movimentada
+        </th>
+        <th>Lançado Por</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-movimentacao>
+      <tr>
+        <td>
+          <app-bag-tipo-movimentacao
+            [tipoMovimentacao]="movimentacao.tipoMovimentacao"
+          ></app-bag-tipo-movimentacao>
+        </td>
+        <td>{{ movimentacao.dataHora | date: "dd/MM/yyyy HH:mm" }}</td>
+        <td>{{ movimentacao.produto.nome }}</td>
+        <td>
+          {{ movimentacao.quantidadeMovimentada }} Unidade(s) Movimentada(s)
+        </td>
+        <td>{{ movimentacao.lancadoPor.nome }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" style="text-align: center; overflow: hidden">
+          @if (carregandoMovimentacoes) {
+            <p-progressSpinner></p-progressSpinner>
+          } @else {
+            <span>Nenhuma movimentação encontrada</span>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</main>
