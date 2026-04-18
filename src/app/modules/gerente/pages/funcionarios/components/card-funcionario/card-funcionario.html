@@ -15,9 +15,27 @@
           icon="pi pi-send"
           label="Enviar Mensagem"
           severity="secondary"
+          (click)="abrirSimulador(funcionario.id)"
         ></p-button>
         <p-button icon="pi pi-eye" label="Ver" severity="primary"></p-button>
       </div>
     </div>
   </div>
 }
+<p-dialog
+  header="Simulador de Notificações"
+  [(visible)]="visibilidadeSimulador"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+>
+  <input type="text" pInputText placeholder="Título da Notificação" [(ngModel)]="titulo" />
+  <textarea
+    name="mensagem"
+    id="mensagem"
+    placeholder="Digite a mensagem de notificação..."
+    pTextarea
+    [(ngModel)]="mensagem"
+  ></textarea>
+  <p-button label="Enviar" [disabled]="mensagem.length < 5 || mensagem.trim() === '' || titulo.trim() === ''" (click)="enviarMensagem()"></p-button>
+</p-dialog>
