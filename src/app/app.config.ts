@@ -1,18 +1,21 @@
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { ApplicationConfig } from '@angular/core';
 import {
-  ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
 import { tokenApiInterceptor } from './core/interceptors/token-api-interceptor';
 import { responseApiInterceptor } from './core/interceptors/response-api-interceptor';
 import { MessageService } from 'primeng/api';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import Aura from '@primeuix/themes/aura';
 
 import { definePreset } from '@primeuix/themes';
@@ -20,7 +23,7 @@ import { definePreset } from '@primeuix/themes';
 const MinhaPaleta = definePreset(Aura, {
   semantic: {
     primary: {
-      50:  '#eaf5e8',
+      50: '#eaf5e8',
       100: '#cfe6ca',
       200: '#b1d6aa',
       300: '#92c689',
@@ -29,10 +32,10 @@ const MinhaPaleta = definePreset(Aura, {
       600: '#2c6622',
       700: '#1d5017',
       800: '#0f3b0b',
-      900: '#002500'
+      900: '#002500',
     },
     secondary: {
-      50:  '#e8f5f9',
+      50: '#e8f5f9',
       100: '#cae6f1',
       200: '#a1d6e8',
       300: '#78c6e0',
@@ -41,19 +44,19 @@ const MinhaPaleta = definePreset(Aura, {
       600: '#1c738f',
       700: '#144e73',
       800: '#0c3857',
-      900: '#031b3b'
-    }
-  }
+      900: '#031b3b',
+    },
+  },
 });
 
 export const appConfig: ApplicationConfig = {
   providers: [
     MessageService,
-    provideAnimationsAsync(),
+    provideAnimations(),
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(
       withFetch(),
-      withInterceptors([tokenApiInterceptor, responseApiInterceptor])
+      withInterceptors([tokenApiInterceptor, responseApiInterceptor]),
     ),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
@@ -61,9 +64,9 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: MinhaPaleta,
         options: {
-          darkModeSelector: '.dark'
-        }
-      }
-    })
-  ]
+          darkModeSelector: '.dark',
+        },
+      },
+    }),
+  ],
 };

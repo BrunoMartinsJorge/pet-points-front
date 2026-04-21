@@ -1,4 +1,4 @@
-import type { TipoProdutoEnum } from "../../../../../shared/models/enums/TipoProdutoEnum";
+import type { TipoProdutoEnum } from "./enums/TipoProdutoEnum";
 
 export interface ProdutoEstoqueDto {
     id: number;

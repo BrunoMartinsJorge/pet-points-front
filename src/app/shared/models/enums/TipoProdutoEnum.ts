@@ -8,6 +8,10 @@ export enum TipoProdutoEnum {
 
 export const TipoProdutoOpcoes = [
     {
+        label: 'Todos',
+        value: ''
+    },
+    {
         label: 'Ração',
         value: 'RACAO'
     },

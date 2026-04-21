@@ -1,0 +1,82 @@
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: end;
+
+    .inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .input-group {
+        margin: 0;
+      }
+    }
+
+    .btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  }
+
+  section.lista-clientes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .cliente-card {
+      flex: 1 1 250px;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      transition: all 0.4s ease-in-out;
+
+      .imagem-cliente {
+        display: block;
+        height: 150px;
+        background-color: gray;
+      }
+
+      .info-cliente {
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem;
+        text-align: center;
+
+        .nome-cliente {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 0.25rem;
+        }
+
+        hr {
+          border: none;
+          border-top: 1px solid var(--color-border);
+          margin: 0.75rem 0;
+        }
+
+        span {
+            font-size: 14px;
+        }
+      }
+
+      .footer-card {
+        padding: 0.5rem;
+        border-top: 1px solid var(--color-border);
+      }
+    }
+  }
+}

@@ -5,6 +5,12 @@ import { GerenteDashboard } from './pages/gerente-dashboard/gerente-dashboard';
 import { Funcionarios } from './pages/funcionarios/funcionarios';
 import { RegistrarFuncionario } from './pages/funcionarios/pages/registrar-funcionario/registrar-funcionario';
 import { LogsSistema } from './pages/logs-sistema/logs-sistema';
+import { ProdutosEstoque } from './pages/produtos-estoque/produtos-estoque';
+import { MovimentacoesClinica } from './pages/movimentacoes-clinica/movimentacoes-clinica';
+import { ClientesClinica } from './pages/clientes-clinica/clientes-clinica';
+import { PetsClinica } from './pages/pets-clinica/pets-clinica';
+import { ConsultasClinica } from './pages/consultas-clinica/consultas-clinica';
+import { DetalhesClientes } from './pages/clientes-clinica/pages/detalhes-clientes/detalhes-clientes';
 
 export const ROTAS_GERENTE: Routes = [
   {
@@ -25,7 +31,7 @@ export const ROTAS_GERENTE: Routes = [
           RULE: 'GERENTE',
           visible: true,
           nome: 'Dashboard',
-          icone: 'pi pi-home',
+          icone: 'fa fa-home',
           group: '',
           descricao: 'Dashboard do Gerente',
         },
@@ -40,7 +46,7 @@ export const ROTAS_GERENTE: Routes = [
           visible: true,
           nome: 'Funcionarios',
           icone: 'fa-solid fa-users-cog',
-          group: '',
+          group: 'INTERNO',
           descricao: 'Funcionarios da Clinica',
         },
         canActivate: [authGuard],
@@ -56,7 +62,7 @@ export const ROTAS_GERENTE: Routes = [
           visible: false,
           nome: 'Novo Funcionario',
           icone: 'fa-solid fa-users-cog',
-          group: '',
+          group: 'INTERNO',
           descricao: 'Registrar Novo Funcionário',
           voltar: true,
         },
@@ -71,9 +77,94 @@ export const ROTAS_GERENTE: Routes = [
           visible: true,
           nome: 'Logs do Sistema',
           icone: 'fa-solid fa-folder-open',
-          group: '',
+          group: 'INTERNO',
           descricao: 'Logs do Sistema',
           voltar: false,
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'estoque-clinica',
+        title: 'Produtos em Estoque',
+        component: ProdutosEstoque,
+        data: {
+          RULE: 'GERENTE',
+          visible: true,
+          nome: 'Estoque',
+          icone: 'fa fa-box',
+          group: 'ESTOQUE',
+          descricao: 'Produtos em Estoque da Clinica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'movimentacoes-clinica',
+        title: 'Movimentações da Clinica',
+        component: MovimentacoesClinica,
+        data: {
+          RULE: 'GERENTE',
+          visible: true,
+          nome: 'Movimentações',
+          icone: 'fa fa-list',
+          group: 'ESTOQUE',
+          descricao: 'Histórico de Movimentações da Clinica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'clientes-clinica',
+        title: 'Clientes da Clinica',
+        component: ClientesClinica,
+        data: {
+          RULE: 'GERENTE',
+          visible: true,
+          nome: 'Clientes',
+          icone: 'fa fa-users',
+          group: 'CLÍNICA',
+          descricao: 'Clientes Registrados da Clinica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'detalhes-clientes/:id',
+        title: 'Detalhes Cliente da Clinica',
+        component: DetalhesClientes,
+        data: {
+          RULE: 'GERENTE',
+          visible: false,
+          nome: 'Clientes',
+          icone: 'fa fa-users',
+          voltar: true,
+          group: 'CLÍNICA',
+          descricao: 'Clientes Registrados da Clinica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'pets-clinica',
+        title: 'Pets da Clinica',
+        component: PetsClinica,
+        data: {
+          RULE: 'GERENTE',
+          visible: true,
+          nome: 'Pets',
+          icone: 'fa fa-paw',
+          group: 'CLÍNICA',
+          descricao: 'Pets Registrados da Clinica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'consultas-clinica',
+        title: 'Consultas da Clinica',
+        component: ConsultasClinica,
+        data: {
+          RULE: 'GERENTE',
+          visible: true,
+          nome: 'Consultas',
+          icone: 'fa fa-clipboard-list',
+          group: 'CLÍNICA',
+          descricao: 'Histórico de Consultas da Clinica',
         },
         canActivate: [authGuard],
       },

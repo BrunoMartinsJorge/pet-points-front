@@ -8,9 +8,11 @@
   --color-male: #c0e7ff;
   --color-secondary: #fff;
   --color-female: #ffc0e3;
+  --color-card-primary: rgb(33, 128, 33);
+  --color-card-secondary: rgb(223, 89, 12);
 }
 
-html[data-theme='dark'] {
+html[data-theme="dark"] {
   --color-border: rgb(63, 63, 70);
   --color-title: #fff;
   --color-text: #ccc;
@@ -20,4 +22,5 @@ html[data-theme='dark'] {
   --color-male: #4399ce;
   --color-secondary: #121212;
   --color-female: #ff6fa4ce;
+  --color-card-secondary: rgb(235, 141, 86);
 }

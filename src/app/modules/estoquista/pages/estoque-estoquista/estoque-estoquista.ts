@@ -6,7 +6,7 @@ import { PrimeNGModule } from '../../../../shared/modules/prime-ng/prime-ng-modu
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TipoProdutoOpcoes } from '../../../../shared/models/enums/TipoProdutoEnum';
 import type { OptionSelect } from '../../../../shared/models/OptionSelect';
-import type { ProdutoEstoqueDto } from './model/ProdutoEstoqueDto';
+import type { ProdutoEstoqueDto } from '../../../../shared/models/ProdutoEstoqueDto';
 import type { FiltrosProdutosForm } from './forms/FiltrosProdutosForm';
 import { Router } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -44,6 +44,10 @@ export class EstoqueEstoquista implements OnInit {
     this.opcoesTipoProduto.push({ label: 'Todos os Tipos', value: '' });
   }
 
+  /**
+   * 
+   * @description Busca as informações para os cards do estoque, como valor total, quantidade de produtos e produtos abaixo do estoque.
+   */
   private buscarInformacoesCards(): void {
     this.carregandoCards = true;
     this.service.buscarInformacoesCards().subscribe({
@@ -56,6 +60,10 @@ export class EstoqueEstoquista implements OnInit {
     });
   }
 
+  /**
+   * 
+   * @description Filtra os produtos em estoque com base nos filtros definidos no formulário de filtros, como nome, tipo, preço mínimo e preço máximo, e se deve mostrar todos os produtos ou apenas os que estão abaixo do estoque mínimo.
+   */
   public filtrarProdutos(): void {
     let produtos = this.produtos;
     if (!this.filtros.todosOsProdutos)
@@ -79,6 +87,11 @@ export class EstoqueEstoquista implements OnInit {
     this.produtosFiltrados = produtos;
   }
 
+  /**
+   * 
+   * @description Verifica se existem filtros ativos no formulário de filtros, ou seja, se algum dos campos de filtro foi preenchido ou se a opção de mostrar todos os produtos está desmarcada.
+   * @returns {boolean} - Retorna true se existirem filtros ativos, ou seja, se algum dos campos de filtro foi preenchido ou se a opção de mostrar todos os produtos está desmarcada, e false caso contrário.
+   */
   public get possuiFiltrosAtivos(): boolean {
     return (
       this.filtros.nome.trim() !== '' ||
@@ -89,6 +102,10 @@ export class EstoqueEstoquista implements OnInit {
     );
   }
 
+  /**
+   * 
+   * @description Lista os produtos em estoque, com suas informações como id, nome, tipo, descrição, valor unitário, quantidade em estoque e se está abaixo do estoque mínimo.
+   */
   private listarProdutosEstoque(): void {
     this.carregandoProdutos = true;
     this.produtos = [];
@@ -104,6 +121,10 @@ export class EstoqueEstoquista implements OnInit {
     });
   }
 
+  /**
+   * 
+   * @description Limpa os filtros do formulário de filtros.
+   */
   public limparFiltros(): void {
     this.filtros = {
       nome: '',
@@ -115,10 +136,18 @@ export class EstoqueEstoquista implements OnInit {
     this.filtrarProdutos();
   }
 
+  /**
+   * 
+   * @description Navega para a página de detalhes do produto, passando o id do produto como parâmetro na rota.
+   */
   public verDetalhesProduto(idProduto: number): void {
     this.route.navigate(['/estoquista/detalhes-produto', idProduto]);
   }
 
+  /**
+   * 
+   * @description Gera um relatório em PDF dos produtos em estoque, com base nos filtros definidos no formulário de filtros, e o abre em uma nova janela do navegador.
+   */
   public gerarRelatorio(): void {
     this.carregandoRelatorio = true;
     this.service.gerarRelatorioProdutos(this.filtros).subscribe({

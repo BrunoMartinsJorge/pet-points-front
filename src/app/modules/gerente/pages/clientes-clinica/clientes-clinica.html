@@ -1,0 +1,88 @@
+<main>
+  <p-fieldset legend="Filtros" [toggleable]="false">
+    <div class="filtros">
+      <div class="inputs">
+        <div class="input-group">
+          <label for="nome">Nome do Cliente</label>
+          <input
+            [(ngModel)]="filtros.nome"
+            type="text"
+            pInputText
+            id="nome"
+            placeholder="Digite o nome do cliente"
+            (input)="filtrarClientes()"
+          />
+        </div>
+        <div class="input-group">
+          <label for="nome">Nome do Cliente</label>
+          <p-select
+            [options]="generos"
+            [(ngModel)]="filtros.genero"
+            appendTo="body"
+            placeholder="Selecione um gênero"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione um tipo de movimentação"
+            (onChange)="filtrarClientes()"
+          />
+        </div>
+        <div class="input-group">
+          <label for="nome">Ordenar por Data de Cadastro</label>
+          <p-togglebutton
+            [(ngModel)]="filtros.ordenarDataCrescente"
+            [onLabel]="'Crescente'"
+            [offLabel]="'Decrescente'"
+            (onChange)="ordenarDatas()"
+          />
+        </div>
+      </div>
+      <div class="btns">
+        <p-button
+          label="Limpar Filtros"
+          severity="danger"
+          icon="fa fa-eraser"
+          (click)="limparFiltros()"
+        />
+        <p-button
+          label="Gerar Relatório"
+          severity="success"
+          icon="fa fa-file"
+        />
+      </div>
+    </div>
+  </p-fieldset>
+  <p-fieldset legend="Clientes" [toggleable]="false">
+    <section class="lista-clientes">
+      @if (clientesFiltrados.length > 0) {
+        @for (cliente of clientesFiltrados; track cliente.id) {
+          <div class="cliente-card">
+            <div class="imagem-cliente"></div>
+            <div class="info-cliente">
+              <div class="nome-cliente">
+                <strong>{{ cliente.nome }}</strong>
+                <app-genero-bag [genero]="cliente.genero"></app-genero-bag>
+              </div>
+              <hr />
+              <span>Registrado Em: {{ cliente.registradoEm | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="footer-card">
+              <p-button
+                icon="pi pi-user"
+                label="Ver"
+                severity="secondary"
+                [style]="{ width: '100%' }"
+                (click)="verDetalhesCliente(cliente.id)"
+              />
+            </div>
+          </div>
+        }
+      } @else {
+        @if (filtros.nome.trim() !== "" || filtros.genero !== "") {
+          <strong>Nenhum cliente com os dados filtrados encontrado!</strong>
+        } @else {
+          <strong>Nenhum cliente cadastrado!</strong>
+        }
+      }
+    </section>
+  </p-fieldset>
+</main>

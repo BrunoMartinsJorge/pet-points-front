@@ -1,5 +1,5 @@
 import type { HistoricoMovimentacoesDto } from "./HistoricoMovimentacoesDto";
-import type { ProdutoEstoqueDto } from "./ProdutoEstoqueDto";
+import type { ProdutoEstoqueDto } from "../../../../../shared/models/ProdutoEstoqueDto";
 
 export interface DetalhesProdutoDto extends ProdutoEstoqueDto {
     historicoMovimentacoes: HistoricoMovimentacoesDto[];

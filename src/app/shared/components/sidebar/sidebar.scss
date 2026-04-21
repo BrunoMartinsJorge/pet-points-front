@@ -14,7 +14,6 @@ section.sidebar-element {
     align-items: center;
     padding: 1.3em;
     border-bottom: 1px solid var(--color-border);
-    transition: all 0.4s ease-in-out;
 
     .logo {
       width: 45px;
@@ -45,6 +44,7 @@ section.sidebar-element {
     flex-direction: column;
     flex: 1;
     padding: 1em 1.3em;
+    margin: 0;
 
     span.group-name {
       font-size: 0.9em;

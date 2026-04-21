@@ -19,7 +19,6 @@
         @for (route of routeGroup.routes; let j = $index; track route.path) {
           @if (route.children && route.children.length > 0) {
             <li>
-              <!-- <p-overlaybadge> -->
               <a
                 (click)="mudarEstadoSubMenu(i, j)"
                 [routerLinkActive]="['active']"
@@ -32,7 +31,6 @@
                   [class.rotated]="subMenuEstaAberto(i, j)"
                 ></i>
               </a>
-              <!-- </p-overlaybadge> -->
               <ul class="sub-menu" [class.open]="subMenuEstaAberto(i, j)">
                 @for (subRoute of route.children; track subRoute.path) {
                   <li>

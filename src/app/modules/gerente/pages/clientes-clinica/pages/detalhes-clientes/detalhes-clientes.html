@@ -1,0 +1,141 @@
+<main>
+  <p-fieldset legend="Detalhes do Cliente" [toggleable]="false">
+    @if (detalhesCliente) {
+      <section class="dados-cliente">
+        <div class="input-group">
+          <label for="">Nome</label>
+          <input
+            type="text"
+            pInputText
+            disabled
+            [value]="detalhesCliente.nome"
+          />
+        </div>
+        <div class="input-group">
+          <label for="genero">Gênero</label>
+          <input
+            type="text"
+            pInputText
+            disabled
+            [value]="detalhesCliente.genero === 'M' ? 'Masculino' : 'Feminino'"
+          />
+        </div>
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            pInputText
+            disabled
+            [value]="detalhesCliente.email"
+          />
+        </div>
+        <div class="input-group">
+          <label for="cpf">CPF</label>
+          <input
+            type="text"
+            pInputText
+            disabled
+            [value]="detalhesCliente.cpf"
+          />
+        </div>
+        <div class="input-group">
+          <label for="nascimento">Date de Nascimento</label>
+          <input
+            type="text"
+            pInputText
+            disabled
+            [value]="detalhesCliente.dataNascimento | date: 'dd/MM/yyyy'"
+          />
+        </div>
+        <div class="input-group">
+          <label for="telefone">Telefone</label>
+          <input
+            type="text"
+            pInputText
+            disabled
+            [value]="detalhesCliente.telefone"
+          />
+        </div>
+        <div class="input-group">
+          <label for="cadastradoEm">Cadastrado Em</label>
+          <input
+            type="text"
+            pInputText
+            disabled
+            [value]="detalhesCliente.dataCadastro | date: 'dd/MM/yyyy - HH:mm'"
+          />
+        </div>
+      </section>
+    } @else {
+      <strong>Cliente nao encontrado!</strong>
+    }
+  </p-fieldset>
+  <hr />
+  <p-fieldset legend="Pets do Cliente" [toggleable]="false">
+    <section class="lista-pets">
+      @for (pet of pets; track pet.id) {
+        <div class="pet-card">
+          <div class="body-card">
+            <div class="foto-pet"></div>
+            <div class="informacoes-pet">
+              <div>
+                <strong>
+                  {{ pet.nome }}
+                </strong>
+                <app-genero-bag [genero]="pet.genero"></app-genero-bag>
+              </div>
+              <div>
+                <span class="data-nascimento">
+                  Data Nascimento: {{ pet.dataNascimento | date: "dd/MM/yyyy" }}
+                </span>
+                <span>
+                  <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
+                </span>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="footer-card">
+            <span class="data-registro"
+              >Registrado Em: {{ pet.registradoEm | date: "dd/MM/yyyy" }}</span
+            >
+          </div>
+        </div>
+      }
+    </section>
+  </p-fieldset>
+  <hr />
+  <p-fieldset legend="Histórico de Consultas do Cliente" [toggleable]="false">
+    <section class="lista-consultas">
+      @for (consulta of consultas; track consulta.id) {
+        <div
+          class="consulta-card"
+          [pTooltip]="
+            consulta.motivoIndeferimento !== ''
+              ? consulta.motivoIndeferimento
+              : consulta.motivoCancelamento !== ''
+                ? consulta.motivoCancelamento
+                : ''
+          "
+        >
+          <div class="body-card">
+            <p>{{ consulta.descricao }}</p>
+            <app-bag-status-consulta
+              [status]="consulta.status"
+            ></app-bag-status-consulta>
+            <strong>Veterinário: {{ consulta.veterinario }}</strong>
+            <span class="tipo-consulta">{{ consulta.tipoConsulta }}</span>
+          </div>
+          <hr />
+          <div>
+            <span
+                class="solicitado-em"
+              >Solicitado Em:
+              {{ consulta.solicitadoEm | date: "dd/MM/yyyy - HH:mm" }}</span
+            >
+          </div>
+        </div>
+      }
+    </section>
+  </p-fieldset>
+</main>
