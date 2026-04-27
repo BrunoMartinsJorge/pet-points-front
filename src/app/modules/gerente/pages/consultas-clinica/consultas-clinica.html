@@ -1,1 +1,275 @@
-<p>consultas-clinica works!</p>
+<main>
+  <p-fieldset legend="Filtros" [toggleable]="false">
+    <div class="filtros">
+      <div class="inputs">
+        <div class="input-group">
+          <label for="nome">Cliente</label>
+          <p-select
+            [(ngModel)]="filtros.cliente"
+            [options]="clientesFiltros"
+            appendTo="body"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione um cliente"
+            (onChange)="filtrarConsultas()"
+            [disabled]="carregandoConsultas"
+          />
+        </div>
+        <div class="input-group">
+          <label for="nome">Veterinário</label>
+          <p-select
+            [(ngModel)]="filtros.veterinario"
+            [options]="veterinariosFiltros"
+            appendTo="body"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione um veterinário"
+            (onChange)="filtrarConsultas()"
+            [disabled]="carregandoConsultas"
+          />
+        </div>
+        <div class="input-group">
+          <label for="nome">Tipo de Consulta</label>
+          <p-select
+            [(ngModel)]="filtros.tipoConsulta"
+            [options]="tiposConsultasFiltros"
+            appendTo="body"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione um tipo de consulta"
+            (onChange)="filtrarConsultas()"
+            [disabled]="carregandoConsultas || carregandoTiposConsultas || tiposConsultas.length === 0"
+          />
+        </div>
+      </div>
+      <div class="btns">
+        <p-button
+          label="Limpar Filtros"
+          severity="danger"
+          icon="fa fa-eraser"
+          (click)="limparFiltros()"
+        />
+        <p-button
+          [label]="carregandoRelatorio ? 'Gerando Relatório...' : 'Gerar Relatório'"
+          [disabled]="carregandoRelatorio"
+          severity="success"
+          [icon]="carregandoRelatorio ? 'pi pi-spin pi-spinner' : 'fa fa-file'"
+          (click)="gerarRelatorio()"
+        />
+      </div>
+    </div>
+  </p-fieldset>
+  <hr />
+  <section class="consultas-tipos-consultas">
+    <p-fieldset legend="Consultas da Clínica" [toggleable]="false">
+      <div class="lista-consultas">
+        @if (consultasFiltradas.length === 0) {
+          @if (carregandoConsultas) {
+            <p-progressSpinner
+              [style]="{ overflow: 'hidden' }"
+            ></p-progressSpinner>
+          } @else {
+            <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+          }
+        } @else {
+          @for (consulta of consultasFiltradas; track consulta.id) {
+            <div class="consulta-card">
+              <div
+                style="
+                  min-width: 200px;
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.5rem;
+                "
+              >
+                <div class="body-card">
+                  <app-bag-status-consulta
+                    [status]="consulta.status"
+                  ></app-bag-status-consulta>
+                  <strong>Veterinário: {{ consulta.veterinario.nome }}</strong>
+                  <span class="tipo-consulta">{{ consulta.tipo.nome }}</span>
+                </div>
+                <hr />
+                <div>
+                  <span class="solicitado-em"
+                    >Data e Hora da Consulta:
+                    {{
+                      consulta.solicitadoEm | date: "dd/MM/yyyy - HH:mm"
+                    }}</span
+                  >
+                </div>
+              </div>
+              <p-button
+                label="Ver"
+                icon="fa fa-eye"
+                severity="secondary"
+                (click)="verDetalhesConsulta(consulta.id)"
+              />
+            </div>
+          }
+        }
+      </div>
+    </p-fieldset>
+    <p-fieldset legend="Tipos de Consultas" [toggleable]="false">
+      <div class="lista-tipos-consultas">
+        @if (tiposConsultas.length === 0) {
+          @if (carregandoTiposConsultas) {
+            <p-progressSpinner></p-progressSpinner>
+          } @else {
+            <span class="sem-resultados"
+              >Nenhuma tipo de consulta encontrado!</span
+            >
+          }
+        } @else {
+          @for (tipo of tiposConsultas; track tipo.id) {
+            <div class="card-tipo-consulta">
+              <div class="informacoes">
+                <strong>
+                  {{ tipo.nome }}
+                </strong>
+                <span
+                  >{{ tipo.descricao }} - <strong>Valor: </strong> R${{
+                    tipo.valor
+                  }}
+                </span>
+              </div>
+              <p-button
+                label="Ver"
+                icon="fa fa-eye"
+                severity="secondary"
+                (click)="verDetalhesTipoConsulta(tipo.id)"
+              />
+            </div>
+          }
+        }
+      </div>
+    </p-fieldset>
+  </section>
+</main>
+<p-dialog
+  (onHide)="limparEdicao()"
+  [(visible)]="visibilidadeDialogDetalhesTipoConsulta"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ maxWidth: '600px', width: '100%' }"
+  [header]="detalhesTipoConsulta.nome || 'Detalhes do Tipo de Consulta'"
+>
+  <p-tabs value="0">
+    <p-tablist>
+      <p-tab value="0">Informações</p-tab>
+      <p-tab value="1">Veterinários Relacionados</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        <div class="valores-detalhes">
+          <div class="input-group">
+            <label for="nome">Nome</label>
+            <input
+              [disabled]="!edicaoHabilitadaTipoConsulta"
+              [(ngModel)]="valoresEdicao.nome"
+              type="text"
+              pInputText
+              id="nome"
+              placeholder="Digite o nome"
+            />
+          </div>
+          <div class="input-group">
+            <label for="valor">Valor</label>
+            <input
+              [disabled]="!edicaoHabilitadaTipoConsulta"
+              [(ngModel)]="valoresEdicao.valor"
+              type="number"
+              pInputText
+              id="valor"
+              placeholder="Digite o valor"
+            />
+          </div>
+          <div class="input-group">
+            <label for="descricao">Descrição</label>
+            <textarea
+              [disabled]="!edicaoHabilitadaTipoConsulta"
+              [(ngModel)]="valoresEdicao.descricao"
+              pTextarea
+              id="descricao"
+              placeholder="Digite a descrição"
+            ></textarea>
+          </div>
+          <hr />
+          <div class="acoes">
+            <p-button
+              [label]="edicaoHabilitadaTipoConsulta ? 'Não Editar' : 'Editar'"
+              severity="info"
+              (click)="alterarEdicao()"
+            />
+            <p-button
+              label="Salvar"
+              severity="success"
+              [disabled]="!edicaoHabilitadaTipoConsulta"
+              (click)="editarInformacoesTipoConsulta()"
+            />
+          </div>
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="1">
+        <div class="lista-veterinarios">
+          <p-accordion [value]="0">
+            @for (
+              veterinario of detalhesTipoConsulta.veterinario;
+              let i = $index;
+              track veterinario.id
+            ) {
+              <p-accordion-panel [value]="i">
+                <p-accordion-header>{{ veterinario.nome }}</p-accordion-header>
+                <p-accordion-content>
+                  @if (veterinario.especializacao.length > 0) {
+                    <ul class="especializacoes">
+                      @for (
+                        especializacao of veterinario.especializacao;
+                        track especializacao
+                      ) {
+                        <li>
+                          {{ especializacao }}
+                        </li>
+                      }
+                    </ul>
+                  } @else {
+                    <span>Sem especializações</span>
+                  }
+                </p-accordion-content>
+              </p-accordion-panel>
+            }
+          </p-accordion>
+        </div>
+        <div class="lista-veterinarios">
+          @for (veterinario of veterinariosAdicionar; track veterinario.id) {
+            <div class="card-veterinario">
+              <div class="informacoes">
+                <strong>{{ veterinario.nome }}</strong>
+                @if (veterinario.especializacoes.length > 0) {
+                  <ul class="especializacoes">
+                    @for (
+                      especializacao of veterinario.especializacoes;
+                      track especializacao
+                    ) {
+                      <li>
+                        {{ especializacao }}
+                      </li>
+                    }
+                  </ul>
+                } @else {
+                  <span>Sem especializações</span>
+                }
+              </div>
+              <p-button
+                label="Adicionar"
+                severity="success"
+                (click)="adicionarVeterinarioTipoConsulta(veterinario.id)"
+              />
+            </div>
+          }
+        </div>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</p-dialog>

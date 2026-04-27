@@ -1,0 +1,77 @@
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  .input-group {
+    margin: 0;
+  }
+
+  section.participantes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .input-group {
+      flex: 1 1 25%;
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 0.75rem 0;
+  }
+
+  section.detalhes-consulta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    p-fieldset {
+      flex: 1 1 calc(50% - 0.5rem);
+
+      div.datas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        .input-group {
+          flex: 1 1 calc(50% - 0.5rem);
+        }
+      }
+
+      div.informacoes-gerais {
+        display: flex;
+        flex-direction: column;
+
+        .principal {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+
+            .input-group {
+              flex: 1 1 calc(50% - 0.5rem);
+            }
+
+            .status-tipo {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+
+                .tipo {
+                    padding: 0.5rem;
+                    border-radius: 4px;
+                    border: 1px solid var(--color-border);
+                    font-size: 14px;
+                }
+            }
+        }
+      }
+    }
+  }
+}

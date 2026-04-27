@@ -1,0 +1,206 @@
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 0.75rem 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: end;
+
+    .inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .input-group {
+        margin: 0;
+      }
+    }
+
+    .btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  }
+
+  .consultas-tipos-consultas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    p-fieldset {
+      min-width: 250px;
+
+      &:nth-child(1) {
+        flex: 1 1 800px;
+
+        div.lista-consultas {
+          display: flex;
+          flex-wrap: wrap;
+          max-height: 500px;
+          overflow-y: auto;
+          gap: 1rem;
+
+          div.consulta-card {
+            cursor: pointer;
+            flex: 1 1 380px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--color-border);
+            align-items: center;
+            border-radius: 4px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: 5px solid var(--color-card-primary);
+
+            &:nth-child(even) {
+              border-left: 5px solid var(--color-card-secondary);
+            }
+
+            hr {
+              margin: 0.25rem 0;
+            }
+
+            .body-card {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 1rem;
+              justify-content: space-between;
+
+              span.tipo-consulta {
+                font-size: 0.8rem;
+                font-weight: 600;
+                border: 1px solid var(--color-border);
+                border-radius: 4px;
+                padding: 0.25rem 0.5rem;
+              }
+            }
+
+            div span.solicitado-em {
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+
+      &:nth-child(2) {
+        flex: 1 1 200px;
+
+        div.lista-tipos-consultas {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+
+          .card-tipo-consulta {
+            flex: 1;
+            min-height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--color-border);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: 5px solid var(--color-card-secondary);
+
+            &:nth-child(even) {
+              border-left: 5px solid var(--color-card-primary);
+            }
+
+            .informacoes {
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+div.valores-detalhes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .input-group {
+    margin: 0;
+
+    textarea {
+      resize: none;
+      height: 100px;
+      overflow-y: auto;
+    }
+  }
+
+  .acoes {
+    display: flex;
+    gap: 1rem;
+    justify-content: end;
+  }
+}
+
+div.lista-veterinarios {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  .card-veterinario {
+    display: flex;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 5px solid var(--color-card-primary);
+
+    &:nth-child(even) {
+      border-left: 5px solid var(--color-card-secondary);
+    }
+
+    span {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        cursor: pointer;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        border: 1px solid var(--color-border);
+      }
+
+      &.especializacao {
+        border: 1px solid var(--color-border);
+        font-size: 14px;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+      }
+    }
+  }
+}
