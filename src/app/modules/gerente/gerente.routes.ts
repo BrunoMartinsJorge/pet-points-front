@@ -11,6 +11,9 @@ import { ClientesClinica } from './pages/clientes-clinica/clientes-clinica';
 import { PetsClinica } from './pages/pets-clinica/pets-clinica';
 import { ConsultasClinica } from './pages/consultas-clinica/consultas-clinica';
 import { DetalhesClientes } from './pages/clientes-clinica/pages/detalhes-clientes/detalhes-clientes';
+import { DetalhesPet } from './pages/pets-clinica/pages/detalhes-pet/detalhes-pet';
+import { ChatInterno } from '../../shared/pages/chat-interno/chat-interno';
+import { DetalhesConsulta } from './pages/consultas-clinica/pages/detalhes-consulta/detalhes-consulta';
 
 export const ROTAS_GERENTE: Routes = [
   {
@@ -50,8 +53,20 @@ export const ROTAS_GERENTE: Routes = [
           descricao: 'Funcionarios da Clinica',
         },
         canActivate: [authGuard],
-        // children: [
-        // ],
+      },
+      {
+        path: 'chat-interno',
+        title: 'Chat Interno',
+        component: ChatInterno,
+        data: {
+          RULE: 'GERENTE',
+          visible: true,
+          nome: 'Chat Interno',
+          icone: 'fa-solid fa-message',
+          group: 'INTERNO',
+          descricao: 'Chat Interno de Funcionários da Clinica',
+        },
+        canActivate: [authGuard],
       },
       {
         path: 'registrar-funcionario',
@@ -165,6 +180,36 @@ export const ROTAS_GERENTE: Routes = [
           icone: 'fa fa-clipboard-list',
           group: 'CLÍNICA',
           descricao: 'Histórico de Consultas da Clinica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'detalhes-pet/:id',
+        title: 'Detalhes de Pet',
+        component: DetalhesPet,
+        data: {
+          RULE: 'GERENTE',
+          visible: false,
+          nome: 'Pets',
+          voltar: true,
+          icone: '',
+          group: 'CLÍNICA',
+          descricao: 'Detalhes do Pet Selecionado',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'detalhes-consulta/:id',
+        title: 'Detalhes da Consulta',
+        component: DetalhesConsulta,
+        data: {
+          RULE: 'GERENTE',
+          visible: false,
+          nome: 'Consultas',
+          voltar: true,
+          icone: '',
+          group: 'CLÍNICA',
+          descricao: 'Detalhes da Consulta Selecionada',
         },
         canActivate: [authGuard],
       },
