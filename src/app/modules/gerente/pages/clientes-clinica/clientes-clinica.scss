@@ -4,6 +4,12 @@ main {
   gap: 1rem;
   padding: 1rem;
 
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 1rem 0;
+  }
+
   .filtros {
     display: flex;
     flex-wrap: wrap;
@@ -56,10 +62,10 @@ main {
         text-align: center;
 
         .nome-cliente {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 0.25rem;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          gap: 0.25rem;
         }
 
         hr {
@@ -69,7 +75,7 @@ main {
         }
 
         span {
-            font-size: 14px;
+          font-size: 14px;
         }
       }
 
