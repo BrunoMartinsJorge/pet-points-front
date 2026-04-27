@@ -1,1 +1,96 @@
-<p>pets-clinica works!</p>
+<main>
+  <p-fieldset legend="Filtros" [toggleable]="false">
+    <div class="filtros">
+      <div class="inputs">
+        <div class="input-group">
+          <label for="nome">Nome do Pet</label>
+          <input
+            [(ngModel)]="filtros.nome"
+            type="text"
+            pInputText
+            id="nome"
+            placeholder="Digite o nome do pet"
+            (input)="filtrarPets()"
+          />
+        </div>
+        <div class="input-group">
+          <label for="tipo">Tipo</label>
+          <p-select
+            appendTo="body"
+            [(ngModel)]="filtros.tipo"
+            placeholder="Selecione o tipo do pet"
+            [options]="tipoAnimalOpcoes"
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="filtrarPets()"
+          >
+          </p-select>
+        </div>
+        <div class="input-group">
+          <label for="genero">Genero</label>
+          <p-select
+            appendTo="body"
+            [(ngModel)]="filtros.genero"
+            placeholder="Selecione o gênero do pet"
+            [options]="generosOpcoes"
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="filtrarPets()"
+          >
+          </p-select>
+        </div>
+        <div class="input-group">
+          <label for="genero">Tutor</label>
+          <p-select
+            appendTo="body"
+            [(ngModel)]="filtros.idTutor"
+            placeholder="Selecione um tutor"
+            [options]="tutores"
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="filtrarPets()"
+          >
+          </p-select>
+        </div>
+      </div>
+      <div class="btns">
+        <p-button label="Limpar Filtros" severity="danger" icon="fa fa-eraser" (click)="limparFiltros()"/>
+        <p-button label="Gerar Relatório" severity="success" icon="fa fa-file" (click)="gerarRelatorio()"/>
+      </div>
+    </div>
+  </p-fieldset>
+  <hr />
+  <p-fieldset legend="Pets da Clinica" [toggleable]="false">
+    <section class="lista-pets">
+      @for (pet of petsFiltrados; track pet.id) {
+        <div class="pet-card">
+          <div class="imagem-pet"></div>
+          <div class="info-pet">
+            <div class="nome-pet">
+              <strong>{{ pet.nome }}</strong>
+              <span>{{ pet.tutor.nome }}</span>
+            </div>
+            <hr />
+            <div class="bags">
+              <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
+              <app-genero-bag [genero]="pet.genero"></app-genero-bag>
+            </div>
+            <hr />
+            <span
+              >Registrado Em: {{ pet.registradoEm | date: "dd/MM/yyyy" }}</span
+            >
+          </div>
+          <div class="footer-card">
+            <p-button
+              icon="fa fa-paw"
+              label="Ver"
+              severity="secondary"
+              [style]="{ width: '100%' }"
+              (click)="verDetalhesPet(pet.id)"
+            />
+          </div>
+        </div>
+      }
+    </section>
+  </p-fieldset>
+</main>
