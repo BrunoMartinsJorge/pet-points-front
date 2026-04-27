@@ -11,7 +11,8 @@ html, body {
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  width: 100vw;
 }
 
 div.carteirinha {
@@ -71,4 +72,16 @@ div.imagem img {
   flex-direction: column;
   grid-gap: 0.5em;
   margin-bottom: 1em;
+}
+
+span.sem-resultados {
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
 }
