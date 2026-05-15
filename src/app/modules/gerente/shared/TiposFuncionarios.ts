@@ -1,26 +1,30 @@
 export enum TiposFuncionarios {
-  GERENTE = 'GERENTE',
-  ATENDENTE = 'ATENDENTE',
-  VETERINARIO = 'VETERINARIO',
-  ESTOQUISTA = 'ESTOQUISTA',
+  G = 'GERENTE',
+  A = 'ATENDENTE',
+  V = 'VETERINARIO',
+  E = 'ESTOQUISTA',
 }
 
 export const FuncionariosOpcoes = [
   {
+    label: 'Todos',
+    value: '',
+  },
+  {
     label: 'Gerente',
-    value: TiposFuncionarios.GERENTE,
+    value: TiposFuncionarios.G,
   },
   {
     label: 'Atendente',
-    value: TiposFuncionarios.ATENDENTE,
+    value: TiposFuncionarios.A,
   },
   {
     label: 'Veterinario',
-    value: TiposFuncionarios.VETERINARIO,
+    value: TiposFuncionarios.V,
   },
   {
     label: 'Estoquista',
-    value: TiposFuncionarios.ESTOQUISTA,
+    value: TiposFuncionarios.E,
   },
 ];
 
@@ -28,22 +32,22 @@ const iconePrefixo = 'fa fa-';
 
 export function getIconePorTipoFuncionario(tipo: TiposFuncionarios): string {
   switch (tipo) {
-    case TiposFuncionarios.GERENTE:
+    case TiposFuncionarios.G:
       return iconePrefixo + 'user-gear';
-    case TiposFuncionarios.ATENDENTE:
+    case TiposFuncionarios.A:
       return iconePrefixo + 'user-tie';
-    case TiposFuncionarios.VETERINARIO:
+    case TiposFuncionarios.V:
       return iconePrefixo + 'user-doctor';
-    case TiposFuncionarios.ESTOQUISTA:
+    case TiposFuncionarios.E:
       return iconePrefixo + 'people-carry-box';
     default:
       return iconePrefixo + 'user';
   }
 }
 
-export function getPermissoesPorUsuario(tipo: TiposFuncionarios): string[] {
+export function getPermissoesPorUsuario(tipo: string): string[] {
   switch (tipo) {
-    case TiposFuncionarios.GERENTE:
+    case 'G':
       return [
         'Adicionar e Listar Funcionários',
         'Listar Logs do Sistema',
@@ -53,11 +57,11 @@ export function getPermissoesPorUsuario(tipo: TiposFuncionarios): string[] {
         'Listar e Adicionar Novos Tipos de Consultas',
         'Gerar Relatórios de Funcionários, Clientes, Logs, Pets e etc',
       ];
-    case TiposFuncionarios.ATENDENTE:
+    case 'A':
       return ['ATENDENTE'];
-    case TiposFuncionarios.VETERINARIO:
+    case 'V':
       return ['VETERINARIO'];
-    case TiposFuncionarios.ESTOQUISTA:
+    case 'E':
       return ['ESTOQUISTA'];
     default:
       return [];

@@ -14,6 +14,7 @@ import { DetalhesClientes } from './pages/clientes-clinica/pages/detalhes-client
 import { DetalhesPet } from './pages/pets-clinica/pages/detalhes-pet/detalhes-pet';
 import { ChatInterno } from '../../shared/pages/chat-interno/chat-interno';
 import { DetalhesConsulta } from './pages/consultas-clinica/pages/detalhes-consulta/detalhes-consulta';
+import { DetalhesFuncionario } from './pages/funcionarios/pages/detalhes-funcionario/detalhes-funcionario';
 
 export const ROTAS_GERENTE: Routes = [
   {
@@ -79,6 +80,21 @@ export const ROTAS_GERENTE: Routes = [
           icone: 'fa-solid fa-users-cog',
           group: 'INTERNO',
           descricao: 'Registrar Novo Funcionário',
+          voltar: true,
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'detalhes-funcionario/:id',
+        title: 'Detalhes do Funcionario',
+        component: DetalhesFuncionario,
+        data: {
+          RULE: 'GERENTE',
+          visible: false,
+          nome: 'Detalhes Funcionario',
+          icone: 'fa-solid fa-users-cog',
+          group: 'INTERNO',
+          descricao: 'Detalhes do Funcionário Selecionado',
           voltar: true,
         },
         canActivate: [authGuard],

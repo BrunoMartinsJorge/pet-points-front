@@ -1,49 +1,123 @@
 <main>
   <p-fieldset legend="Filtros" [toggleable]="false">
     <section class="filtros">
-      <div class="input-group">
-        <label for="nome_email">Nome ou email</label>
-        <input
-          [(ngModel)]="filtros.nome_email"
-          type="text"
-          pInputText
-          id="nome_email"
-          placeholder="funcionario@gmail.com - funcionario"
+      <div class="inputs">
+        <div class="input-group">
+          <label for="nome">Nome do funcionario</label>
+          <input
+            [(ngModel)]="filtros.nome"
+            type="text"
+            pInputText
+            id="nome"
+            placeholder="Digite o nome do funcionario"
+            (input)="filtrarFuncionarios()"
+            [disabled]="carregandoFuncionarios"
+          />
+        </div>
+        <div class="input-group">
+          <label for="email">Email do funcionario</label>
+          <input
+            [(ngModel)]="filtros.email"
+            type="text"
+            pInputText
+            id="email"
+            placeholder="Digite o email do funcionario"
+            (input)="filtrarFuncionarios()"
+            [disabled]="carregandoFuncionarios"
+          />
+        </div>
+        <div class="input-group">
+          <label for="tipo">Tipo de funcionario</label>
+          <p-select
+            [(ngModel)]="filtros.tipo"
+            [id]="'tipo'"
+            [options]="tiposFuncionarios"
+            appendTo="body"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione um tipo de funcionario"
+            (onChange)="filtrarFuncionarios()"
+            [disabled]="carregandoFuncionarios"
+          ></p-select>
+        </div>
+      </div>
+      <div class="btns">
+        <p-button
+          label="Limpar Filtros"
+          icon="pi pi-eraser"
+          severity="danger"
+          (click)="limparFiltros()"
+        />
+        <p-button
+          label="Adicionar Novo Funcionario"
+          icon="pi pi-user-plus"
+          severity="success"
+          (click)="acessarPaginaRegistroFuncionario()"
+        />
+        <p-button
+          [disabled]="carregandoFuncionarios || carregandoRelatorio"
+          label="Gerar Relatório"
+          icon="fa fa-file"
+          severity="secondary"
+          (click)="gerarRelatorio()"
         />
       </div>
-      <div class="input-group">
-        <label for="tipo">Tipo de funcionario</label>
-        <p-select
-          [(ngModel)]="filtros.tipo"
-          [id]="'tipo'"
-          [options]="tiposFuncionarios"
-          appendTo="body"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Selecione um tipo de funcionario"
-          (onChange)="filtrarFuncionarios()"
-        ></p-select>
-      </div>
-      <p-button
-        label="Adicionar Novo Funcionario"
-        icon="pi pi-user-plus"
-        severity="success"
-        (click)="acessarPaginaRegistroFuncionario()"
-      />
-      <p-button
-        label="Gerar Relatório"
-        icon="fa fa-file"
-        severity="secondary"
-      />
     </section>
   </p-fieldset>
-  <p-fieldset legend="Funcionarios" [toggleable]="false">
-    <section class="lista-funcionarios">
-      @for (funcionario of funcionariosFiltrados; track funcionario.id) {
-        <app-card-funcionario
-          [funcionario]="funcionario"
-        ></app-card-funcionario>
-      }
-    </section>
-  </p-fieldset>
+  @if (funcionariosFiltrados.length === 0) {
+    @if (carregandoFuncionarios) {
+      <p-skeleton height="350px"></p-skeleton>
+    } @else {
+      <span class="sem-resultados">Nenhum funcionario encontrado!</span>
+    }
+  } @else {
+    <p-fieldset legend="Funcionarios" [toggleable]="false">
+      <p-dataview
+        [value]="funcionariosFiltrados"
+        [style]="{ width: '100%' }"
+        [rows]="5"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords}"
+        [rowsPerPageOptions]="[10, 20, 30]"
+      >
+        <ng-template #list let-items>
+          <section class="lista-funcionarios">
+            @for (funcionario of items; track funcionario.id) {
+              <div
+                [class]="'card-funcionario ' + funcionario.statusPerfil.toLowerCase()"
+              >
+                <div class="imagem-funcionario"></div>
+                <div class="informacoes">
+                  <div class="header">
+                    <h3>{{ funcionario.nome }}</h3>
+                    <strong
+                      ><i class="pi pi-envelope"></i
+                      >{{ funcionario.email }}</strong
+                    >
+                  </div>
+                  <div class="outras">
+                    <span class="tipo-funcionario">{{
+                      funcionario.permissao
+                    }}</span>
+                    <span class="status">{{ funcionario.statusPerfil }}</span>
+                    <app-genero-bag
+                      [genero]="funcionario.genero"
+                    ></app-genero-bag>
+                    <span>CPF {{ funcionario.cpf | converterCpf }}</span>
+                    <span>Registrado em {{ funcionario.dataCadastro }}</span>
+                  </div>
+                </div>
+                <button pButton [severity]="'info'" icon="fa fa-send">Enviar Mensagem</button>
+                <button pButton [severity]="'secondary'" icon="fa fa-user" (click)="acessarDetalhesFuncionario(funcionario.id)">Acessar Perfil</button>
+              </div>
+            }
+          </section>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhum funcionario encontrado!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  }
 </main>

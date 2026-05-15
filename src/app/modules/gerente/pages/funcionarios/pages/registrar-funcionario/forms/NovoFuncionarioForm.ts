@@ -10,4 +10,5 @@ export interface NovoFuncionarioForm {
     genero: GeneroEnum;
     dataNascimento: Date;
     permissao: TiposFuncionarios;
+    especializacao: number | null;
 }

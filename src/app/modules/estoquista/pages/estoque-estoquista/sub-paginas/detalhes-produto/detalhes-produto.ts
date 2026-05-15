@@ -15,14 +15,13 @@ import { CommonModule } from '@angular/common';
 export class DetalhesProduto implements OnInit {
   private readonly service = inject(EstoqueEstoquistaService);
   private readonly router = inject(ActivatedRoute);
-  
+
   public produto: DetalhesProdutoDto | null = null;
   public carregando = false;
 
   ngOnInit(): void {
     const idProduto = Number(this.router.snapshot.paramMap.get('idProduto'));
-    if (idProduto)
-      this.buscarProdutoPorId(idProduto);
+    if (idProduto) this.buscarProdutoPorId(idProduto);
   }
 
   private buscarProdutoPorId(id: number): void {
@@ -31,8 +30,11 @@ export class DetalhesProduto implements OnInit {
     this.service.buscarDetalhesProduto(id).subscribe({
       next: (produto) => {
         this.produto = produto;
+        this.carregando = false;
       },
-      complete: () => (this.carregando = false),
+      error: () => {
+        this.carregando = false;
+      },
     });
   }
 }

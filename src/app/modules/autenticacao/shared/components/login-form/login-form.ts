@@ -62,8 +62,9 @@ export class LoginForm {
         const token = res.token || '';
         this.tokenService.setToken(token);
         this.tokenService.loadToken();
+        this.carregandoLogin = false;
       },
-      complete: () => {
+      error: () => {
         this.carregandoLogin = false;
       },
     });

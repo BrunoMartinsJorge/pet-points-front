@@ -51,20 +51,21 @@ main {
 
   section {
     display: flex;
+    flex-wrap: wrap;
     gap: 1em;
     flex: 1;
 
     p-fieldset {
-      flex: 1;
+      flex: 1 1 400px;
     }
 
     &:nth-child(2) {
       p-fieldset:nth-child(1) {
-        flex: 2;
+        flex: 2 1 400px;
       }
 
       p-fieldset:nth-child(2) {
-        flex: 1;
+        flex: 1 1 400px;
       }
     }
 

@@ -14,6 +14,9 @@ import { MessageService } from 'primeng/api';
 import { AccordionModule } from 'primeng/accordion';
 import type { VeterinarioEspecializacoesDto } from './model/VeterinarioEspecializacoesDto';
 import type { FiltroConsultaForm } from './form/FiltroConsultaForm';
+import type { EspecializacaoDto } from './model/EspecializacaoDto';
+import type { EspecializacaoForm } from './form/EspecializacaoForm';
+import type { DetalhesEspecializacaoDto } from './model/DetalhesEspecializacaoDto';
 
 @Component({
   selector: 'app-consultas-clinica',
@@ -26,34 +29,60 @@ export class ConsultasClinica implements OnInit {
   private readonly router = inject(Router);
   private readonly toast = inject(MessageService);
 
-  public carregandoConsultas = false;
-  public carregandoTiposConsultas = false;
-  public carregandoRelatorio = false;
-
   private consultas: ConsultaClinicaDto[] = [];
+
+  public carregandoConsultas = false;
   public consultasFiltradas: ConsultaClinicaDto[] = [];
+
+  public carregandoTiposConsultas = false;
   public tiposConsultas: TiposConsultaDto[] = [];
-  public tiposConsultasFiltros: OpcoesFiltro[] = [];
-  public clientesFiltros: OpcoesFiltro[] = [];
-  public veterinariosFiltros: OpcoesFiltro[] = [];
-  public veterinariosAdicionar: VeterinarioEspecializacoesDto[] = [];
   public detalhesTipoConsulta: DetalhesTipoConsultaDto =
     {} as DetalhesTipoConsultaDto;
   public idTipoConsultaSelecionado: number | null = null;
+  public visibilidadeDialogNovoTipoConsulta = false;
+  public visibilidadeDialogDetalhesTipoConsulta = false;
+  public edicaoHabilitadaTipoConsulta = false;
+  public novoTipoConsulta: TipoConsultaForm = {
+    nome: '',
+    descricao: '',
+    valor: 0.0,
+  };
   public valoresEdicao: TipoConsultaForm = {
     nome: '',
     descricao: '',
     valor: 0.0,
   };
 
+  public carregandoRelatorio = false;
+
+  public especializacoes: EspecializacaoDto[] = [];
+  public carregandoEspecializacoes = false;
+  public idEspecializacaoSelecionado: number | null = null;
+  public visibilidadeDialogAdicionarEspecializacao = false;
+  public visibilidadeDialogEditarEspecializacao = false;
+  public novaEspecializacao: EspecializacaoForm = {
+    descricao: '',
+  };
+  public especializacaoEdicao: EspecializacaoForm = {
+    descricao: '',
+  };
+
+  public editarEspecializacao: EspecializacaoForm = {
+    descricao: '',
+  };
+
+  public tiposConsultasFiltros: OpcoesFiltro[] = [];
+  public clientesFiltros: OpcoesFiltro[] = [];
+  public veterinariosFiltros: OpcoesFiltro[] = [];
+
+  public veterinariosAdicionar: VeterinarioEspecializacoesDto[] = [];
+  public detalhesEspecializacao: DetalhesEspecializacaoDto | null = null;
+
   public filtros = {
     cliente: null as number | null,
     veterinario: null as number | null,
     tipoConsulta: null as number | null,
   };
-
-  public visibilidadeDialogDetalhesTipoConsulta = false;
-  public edicaoHabilitadaTipoConsulta = false;
 
   ngOnInit(): void {
     this.buscarConsultas();
@@ -72,6 +101,7 @@ export class ConsultasClinica implements OnInit {
         this.buscarClientesFiltros();
         this.buscarVeterinariosFiltros();
         this.buscarTiposConsultaFiltros();
+        this.buscarEspecializacoes();
       },
     });
   }
@@ -83,6 +113,20 @@ export class ConsultasClinica implements OnInit {
       next: (response: TiposConsultaDto[]) => {
         this.tiposConsultas = response;
         this.carregandoTiposConsultas = false;
+      },
+    });
+  }
+
+  private buscarEspecializacoes(): void {
+    this.carregandoEspecializacoes = true;
+    this.especializacoes = [];
+    this.service.listarEspecializacoes().subscribe({
+      next: (response: EspecializacaoDto[]) => {
+        this.especializacoes = response;
+        this.carregandoEspecializacoes = false;
+      },
+      error: () => {
+        this.carregandoEspecializacoes = false;
       },
     });
   }
@@ -115,6 +159,38 @@ export class ConsultasClinica implements OnInit {
         this.tiposConsultasFiltros.unshift({ label: 'Todos', value: null });
       },
     });
+  }
+
+  public removerVeterinarioEspecializacao(idVeterinario: number): void {
+    if (!this.idEspecializacaoSelecionado) return;
+    this.service
+      .removerVeterinarioEspecializacao(
+        this.idEspecializacaoSelecionado,
+        idVeterinario,
+      )
+      .subscribe({
+        next: () => {
+          if (this.idEspecializacaoSelecionado)
+            this.verDetalhesEspecializacao(this.idEspecializacaoSelecionado);
+          this.limparEdicaoEspecializacao();
+        },
+      });
+  }
+
+  public adicionarNovoVeterinarioEspecializacao(idVeterinario: number): void {
+    if (!this.idEspecializacaoSelecionado) return;
+    this.service
+      .adicionarVeterinarioEspecializacao(
+        this.idEspecializacaoSelecionado,
+        idVeterinario,
+      )
+      .subscribe({
+        next: () => {
+          if (this.idEspecializacaoSelecionado)
+            this.verDetalhesEspecializacao(this.idEspecializacaoSelecionado);
+          this.limparEdicaoEspecializacao();
+        },
+      });
   }
 
   public filtrarConsultas(): void {
@@ -154,11 +230,39 @@ export class ConsultasClinica implements OnInit {
         const file = new Blob([response], { type: 'application/pdf' });
         const fileURL = URL.createObjectURL(file);
         window.open(fileURL);
-      },
-      complete: () => {
         this.carregandoRelatorio = false;
-      }
+      },
+      error: () => {
+        this.carregandoRelatorio = false;
+      },
     });
+  }
+
+  public alterarNovoTipoConsulta(): void {
+    this.visibilidadeDialogNovoTipoConsulta =
+      !this.visibilidadeDialogNovoTipoConsulta;
+    this.limparNovoTipoConsulta();
+  }
+
+  public alterarVisibilidadeAdicionarEspecializacao(): void {
+    this.visibilidadeDialogAdicionarEspecializacao =
+      !this.visibilidadeDialogAdicionarEspecializacao;
+  }
+
+  public get novoTipoConsultaValido(): boolean {
+    return (
+      this.novoTipoConsulta.nome.length > 0 &&
+      this.novoTipoConsulta.descricao.length > 0 &&
+      this.novoTipoConsulta.valor > 0
+    );
+  }
+
+  public limparNovoTipoConsulta(): void {
+    this.novoTipoConsulta = { nome: '', descricao: '', valor: 0.0 };
+  }
+
+  public limparNovaEspecializacao(): void {
+    this.novaEspecializacao = { descricao: '' };
   }
 
   public alterarEdicao(): void {
@@ -184,6 +288,24 @@ export class ConsultasClinica implements OnInit {
         this.buscarVeterinariosParaAdicionar();
       },
     });
+  }
+
+  public verDetalhesEspecializacao(idEspecializacao: number): void {
+    this.detalhesEspecializacao = null;
+    this.idEspecializacaoSelecionado = idEspecializacao;
+    this.service.buscarDetalhesEspecializacoes(idEspecializacao).subscribe({
+      next: (response: DetalhesEspecializacaoDto) => {
+        this.detalhesEspecializacao = response;
+        this.visibilidadeDialogEditarEspecializacao = true;
+        this.limparEdicaoEspecializacao();
+      },
+    });
+  }
+
+  public limparEdicaoEspecializacao(): void {
+    this.especializacaoEdicao = {
+      descricao: this.detalhesEspecializacao?.nome || '',
+    };
   }
 
   public buscarVeterinariosParaAdicionar(): void {
@@ -212,11 +334,27 @@ export class ConsultasClinica implements OnInit {
             summary: 'Sucesso',
             detail: 'Tipo de consulta editado com sucesso!',
           });
+          this.buscarTiposConsulta();
           this.detalhesTipoConsulta.nome = this.valoresEdicao.nome;
           this.detalhesTipoConsulta.descricao = this.valoresEdicao.descricao;
           this.detalhesTipoConsulta.valor = this.valoresEdicao.valor;
         },
       });
+  }
+
+  public registrarNovoTipoConsulta(): void {
+    this.service.adicionarNovoTipoConsulta(this.novoTipoConsulta).subscribe({
+      next: () => {
+        this.edicaoHabilitadaTipoConsulta = false;
+        this.toast.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Tipo de consulta cadastrado com sucesso!',
+        });
+        this.alterarNovoTipoConsulta();
+        this.buscarTiposConsulta();
+      },
+    });
   }
 
   public adicionarVeterinarioTipoConsulta(idVeterinario: number): void {
@@ -239,11 +377,53 @@ export class ConsultasClinica implements OnInit {
       });
   }
 
+  public removerVeterinarioTipoConsulta(idVeterinario: number): void {
+    if (!this.idTipoConsultaSelecionado) return;
+    this.service
+      .removerVeterinarioTipoConsulta(
+        idVeterinario,
+        this.idTipoConsultaSelecionado,
+      )
+      .subscribe({
+        next: () => {
+          this.toast.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Veterinário removido do tipo de consulta com sucesso!',
+          });
+          if (this.idTipoConsultaSelecionado)
+            this.verDetalhesTipoConsulta(this.idTipoConsultaSelecionado);
+        },
+      });
+  }
+
   public limparEdicao(): void {
     this.valoresEdicao = {
       nome: this.detalhesTipoConsulta.nome,
       descricao: this.detalhesTipoConsulta.descricao,
       valor: this.detalhesTipoConsulta.valor,
     };
+  }
+
+  public adicionarEspecializacao(): void {
+    if (
+      this.novaEspecializacao.descricao === '' ||
+      this.novaEspecializacao.descricao.trim() === ''
+    )
+      return;
+    this.service
+      .adicionarNovaEspecializacao(this.novaEspecializacao)
+      .subscribe({
+        next: () => {
+          this.limparNovaEspecializacao();
+          this.alterarVisibilidadeAdicionarEspecializacao();
+          this.buscarEspecializacoes();
+          this.toast.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Especialização cadastrada com sucesso!',
+          });
+        },
+      });
   }
 }

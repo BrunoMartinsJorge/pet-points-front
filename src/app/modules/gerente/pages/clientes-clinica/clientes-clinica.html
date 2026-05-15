@@ -51,39 +51,60 @@
       </div>
     </div>
   </p-fieldset>
-  <hr>
+  <hr />
   <p-fieldset legend="Clientes" [toggleable]="false">
-    <section class="lista-clientes">
-      @if (clientesFiltrados.length > 0) {
-        @for (cliente of clientesFiltrados; track cliente.id) {
-          <div class="cliente-card">
-            <div class="imagem-cliente"></div>
-            <div class="info-cliente">
-              <div class="nome-cliente">
-                <strong>{{ cliente.nome }}</strong>
-                <app-genero-bag [genero]="cliente.genero"></app-genero-bag>
+    @if (clientesFiltrados.length > 0) {
+      <p-dataview
+        [value]="clientesFiltrados"
+        [style]="{ width: '100%' }"
+        [rows]="5"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords}"
+        [rowsPerPageOptions]="[10, 20, 30]"
+      >
+        <ng-template #list let-items>
+          <section class="lista-clientes">
+            @for (cliente of items; track cliente.id) {
+              <div [class]="'card-clientes ' + cliente.genero.toLowerCase()">
+                <div class="imagem-cliente"></div>
+                <div class="informacoes">
+                  <div class="header">
+                    <h3>{{ cliente.nome }}</h3>
+                    <strong
+                      ><i class="pi pi-phone"></i>{{ cliente.telefone }}</strong
+                    >
+                  </div>
+                  <div class="outras">
+                    <app-genero-bag [genero]="cliente.genero"></app-genero-bag>
+                    <span
+                      >Registrado em
+                      {{ cliente.registradoEm | date: "dd/MM/yyyy" }}</span
+                    >
+                  </div>
+                </div>
+                <button
+                  pButton
+                  [severity]="'secondary'"
+                  icon="fa fa-user"
+                  (click)="verDetalhesCliente(cliente.id)"
+                >
+                  Acessar Perfil
+                </button>
               </div>
-              <hr />
-              <span>Registrado Em: {{ cliente.registradoEm | date: 'dd/MM/yyyy' }}</span>
-            </div>
-            <div class="footer-card">
-              <p-button
-                icon="pi pi-user"
-                label="Ver"
-                severity="secondary"
-                [style]="{ width: '100%' }"
-                (click)="verDetalhesCliente(cliente.id)"
-              />
-            </div>
-          </div>
-        }
+            }
+          </section>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhum cliente encontrado!</span>
+        </ng-template>
+      </p-dataview>
+    } @else {
+      @if (filtros.nome.trim() !== "" || filtros.genero !== "") {
+        <strong>Nenhum cliente com os dados filtrados encontrado!</strong>
       } @else {
-        @if (filtros.nome.trim() !== "" || filtros.genero !== "") {
-          <strong>Nenhum cliente com os dados filtrados encontrado!</strong>
-        } @else {
-          <strong>Nenhum cliente cadastrado!</strong>
-        }
+        <strong>Nenhum cliente cadastrado!</strong>
       }
-    </section>
+    }
   </p-fieldset>
 </main>

@@ -1,4 +1,55 @@
 main {
+  display: flex;
+  padding: 1rem;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+
+.tipo-consulta,
+.veterinario-consulta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+
+  .informacos-tipo-consulta,
+  .informacoes-veterinario {
     display: flex;
-    padding: 1em;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    span {
+        border: 1px solid var(--color-border);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-weight: 600;
+        flex: 1 1 200px;
+
+        #avaliacao {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    }
+  }
+
+  .data-hora {
+    display: flex;
+    gap: 1rem;
+  }
+}
+textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  resize: vertical;
 }

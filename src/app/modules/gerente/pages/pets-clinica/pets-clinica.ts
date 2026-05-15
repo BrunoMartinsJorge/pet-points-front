@@ -25,6 +25,10 @@ export class PetsClinica implements OnInit {
   public petsFiltrados: PetsDto[] = [];
   public tutores: TutorDto[] = [];
 
+  public carregandoPets = false;
+  public carregandoTutores = false;
+  public carregandoRelatorio = false;
+
   public readonly generosOpcoes = GeneroEnumOpcoes;
   public readonly tipoAnimalOpcoes = PetOpcoes;
 
@@ -40,20 +44,29 @@ export class PetsClinica implements OnInit {
   }
 
   private buscarPets(): void {
+    this.carregandoPets = true;
     this.pets = [];
     this.petsFiltrados = [];
-    this.service.listarPets().subscribe((res: PetsDto[]) => {
-      this.pets = res;
-      this.petsFiltrados = res;
-      this.buscarTutores();
+    this.service.listarPets().subscribe({
+      next: (res: PetsDto[]) => {
+        this.pets = res;
+        this.petsFiltrados = res;
+        this.buscarTutores();
+        this.carregandoPets = false;
+      },
+      error: () => {
+        this.carregandoPets = false;
+      }
     });
   }
 
   private buscarTutores(): void {
+    this.carregandoTutores = true;
     this.tutores = [];
     this.service.buscarTutoresFiltro().subscribe({
       next: (res: TutorDto[]) => {
         this.tutores = res;
+        this.carregandoTutores = false;
         if (!this.tutores.find((tutor) => tutor.label === 'Todos')) {
           this.tutores.unshift({ label: 'Todos', value: null });
         }
@@ -99,11 +112,16 @@ export class PetsClinica implements OnInit {
   }
 
   public gerarRelatorio(): void {
+    this.carregandoRelatorio = true;
     this.service.gerarRelatorioPets(this.filtros).subscribe({
       next: (res: Blob) => {
         const file = new Blob([res], { type: 'application/pdf' });
         const fileURL = URL.createObjectURL(file);
         window.open(fileURL);
+        this.carregandoRelatorio = false;
+      },
+      error: () => {  
+        this.carregandoRelatorio = false;
       }
     })
   }

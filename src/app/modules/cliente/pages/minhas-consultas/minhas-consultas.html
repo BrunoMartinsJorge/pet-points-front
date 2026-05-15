@@ -1,8 +1,189 @@
 <main>
-  <p-fieldset
+  <!-- <p-fieldset
     legend="Consultas Agendadas ou Pendentes"
     [toggleable]="false"
   >
     
-  </p-fieldset>
+  </p-fieldset> -->
+  <p-button
+    label="Agendar Consulta"
+    severity="success"
+    (click)="agendarConsulta()"
+  />
 </main>
+<p-dialog
+  header="Agendar Consulta"
+  [(visible)]="visibilidadeDialogAgendamento"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: '50vw' }"
+>
+  <p-stepper [value]="1" [linear]="true">
+    <p-step-list>
+      <p-step [value]="1">Detalhes Consulta</p-step>
+      <p-step [value]="2">Veterinário</p-step>
+      <p-step [value]="3">Solicitar Agendamento</p-step>
+    </p-step-list>
+    <p-step-panels>
+      <p-step-panel [value]="1">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="tipo-consulta">
+            <p-select
+              [options]="tiposConsulta"
+              appendTo="body"
+              optionLabel="nome"
+              placeholder="Selecione o tipo de consulta"
+              (onChange)="selecionarTipoConsulta($event.value)"
+              [(ngModel)]="tipoConsultaSelecionado"
+            />
+            @if (tipoConsultaSelecionado) {
+              <hr />
+              <p-fieldset
+                legend="Informações do Tipo da Consulta"
+                [toggleable]="false"
+              >
+                <div class="informacos-tipo-consulta">
+                  <span>
+                    {{ tipoConsultaSelecionado.nome }}
+                  </span>
+                  <span>
+                    {{ tipoConsultaSelecionado.descricao }}
+                  </span>
+                  <span>
+                    {{ tipoConsultaSelecionado.valor | currency: "BRL" }}
+                  </span>
+                </div>
+              </p-fieldset>
+            }
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 1rem">
+            <p-button
+              label="Avançar"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              (onClick)="activateCallback(2); listarVeterinariosTipoConsulta()"
+              [disabled]="!tipoConsultaSelecionado"
+            />
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="2">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="veterinario-consulta">
+            <p-select
+              [options]="veterinarios"
+              appendTo="body"
+              optionLabel="nome"
+              placeholder="Selecione um veterinário"
+              [(ngModel)]="veterinarioSelecionado"
+              (onChange)="selecionarVeterinario($event.value)"
+            />
+            @if (veterinarioSelecionado) {
+              <p-fieldset legend="Veterinário Selecionado" [toggleable]="false">
+                <div class="informacoes-veterinario">
+                  <span>
+                    {{ veterinarioSelecionado.nome }}
+                  </span>
+                  <span id="avaliacao">
+                    <i class="fa-solid fa-star"></i
+                    >{{
+                      typeof veterinarioSelecionado.avaliacao === "number"
+                        ? veterinarioSelecionado.avaliacao
+                        : "Sem Avaliação"
+                    }}
+                  </span>
+                  <span>
+                    {{ veterinarioSelecionado.especializacoes }}
+                  </span>
+                </div>
+              </p-fieldset>
+              <hr />
+              <p-fieldset legend="Data e Hora da Consulta" [toggleable]="false">
+                <div class="data-hora">
+                  <p-datepicker
+                    [style]="{ width: '100%' }"
+                    appendTo="body"
+                    placeholder="Selecione a data da consulta"
+                    dateFormat="dd/mm/yy"
+                    [minDate]="dataMinima"
+                    [(ngModel)]="dataConsulta"
+                    (ngModelChange)="selecionarData($event)"
+                  />
+
+                  <p-select
+                    [options]="horariosDisponiveis"
+                    [(ngModel)]="horarioConsulta"
+                    placeholder="Selecione o horário"
+                    appendTo="body"
+                    [disabled]="
+                      !dataConsulta || horariosDisponiveis.length === 0
+                    "
+                  />
+                </div>
+              </p-fieldset>
+            }
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 1rem">
+            <p-button
+              label="Voltar"
+              icon="pi pi-arrow-left"
+              iconPos="right"
+              (onClick)="activateCallback(1)"
+              [severity]="'secondary'"
+            />
+            <p-button
+              label="Avançar"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              (onClick)="activateCallback(3)"
+              [disabled]="
+                !veterinarioSelecionado || !horarioConsulta || !dataConsulta
+              "
+            />
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="3">
+        <ng-template #content let-activateCallback="activateCallback">
+          <p-select
+            [options]="pets"
+            appendTo="body"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione um pet"
+            [(ngModel)]="idPetSelecionado"
+          />
+          <textarea
+            name="observacoes"
+            id="observacoes"
+            placeholder="Observações sobre a consulta..."
+            [(ngModel)]="observacoes"
+            pTextarea
+          ></textarea>
+          <hr />
+          <div style="display: flex; justify-content: space-between; gap: 1rem">
+            <p-button
+              label="Voltar"
+              icon="pi pi-arrow-left"
+              iconPos="right"
+              (onClick)="activateCallback(2)"
+              [severity]="'secondary'"
+            />
+            <p-button
+              label="Confirmar Agendamento"
+              icon="pi pi-check"
+              iconPos="right"
+              [severity]="'success'"
+              (onClick)="agendarConsulta()"
+              [disabled]="
+                !veterinarioSelecionado || !horarioConsulta || !dataConsulta || !idPetSelecionado
+              "
+            />
+          </div>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
+</p-dialog>

@@ -38,7 +38,11 @@
             optionValue="value"
             placeholder="Selecione um tipo de consulta"
             (onChange)="filtrarConsultas()"
-            [disabled]="carregandoConsultas || carregandoTiposConsultas || tiposConsultas.length === 0"
+            [disabled]="
+              carregandoConsultas ||
+              carregandoTiposConsultas ||
+              tiposConsultas.length === 0
+            "
           />
         </div>
       </div>
@@ -50,7 +54,9 @@
           (click)="limparFiltros()"
         />
         <p-button
-          [label]="carregandoRelatorio ? 'Gerando Relatório...' : 'Gerar Relatório'"
+          [label]="
+            carregandoRelatorio ? 'Gerando Relatório...' : 'Gerar Relatório'
+          "
           [disabled]="carregandoRelatorio"
           severity="success"
           [icon]="carregandoRelatorio ? 'pi pi-spin pi-spinner' : 'fa fa-file'"
@@ -111,42 +117,136 @@
         }
       </div>
     </p-fieldset>
-    <p-fieldset legend="Tipos de Consultas" [toggleable]="false">
-      <div class="lista-tipos-consultas">
-        @if (tiposConsultas.length === 0) {
-          @if (carregandoTiposConsultas) {
-            <p-progressSpinner></p-progressSpinner>
+    <section class="tipos-consultas-especializacoes">
+      <p-fieldset legend="Especializações" [toggleable]="false">
+        <div class="lista-tipos-consultas">
+          @if (especializacoes.length === 0) {
+            @if (carregandoTiposConsultas) {
+              <p-progressSpinner></p-progressSpinner>
+            } @else {
+              <span class="sem-resultados"
+                >Nenhuma tipo de consulta encontrado!</span
+              >
+            }
           } @else {
-            <span class="sem-resultados"
-              >Nenhuma tipo de consulta encontrado!</span
-            >
-          }
-        } @else {
-          @for (tipo of tiposConsultas; track tipo.id) {
-            <div class="card-tipo-consulta">
-              <div class="informacoes">
-                <strong>
-                  {{ tipo.nome }}
-                </strong>
-                <span
-                  >{{ tipo.descricao }} - <strong>Valor: </strong> R${{
-                    tipo.valor
-                  }}
-                </span>
+            <p-button
+              label="Adicionar Nova Especialização"
+              severity="info"
+              icon="fa fa-plus"
+              (click)="alterarVisibilidadeAdicionarEspecializacao()"
+              [style]="{ width: '100%' }"
+            />
+            @for (tipo of especializacoes; track tipo.id) {
+              <div class="card-tipo-consulta">
+                <div class="informacoes">
+                  <strong>
+                    {{ tipo.descricao }}
+                  </strong>
+                </div>
+                <p-button
+                  label="Ver"
+                  icon="fa fa-eye"
+                  severity="secondary"
+                  (click)="verDetalhesEspecializacao(tipo.id)"
+                />
               </div>
-              <p-button
-                label="Ver"
-                icon="fa fa-eye"
-                severity="secondary"
-                (click)="verDetalhesTipoConsulta(tipo.id)"
-              />
-            </div>
+            }
           }
-        }
-      </div>
-    </p-fieldset>
+        </div>
+      </p-fieldset>
+      <p-fieldset legend="Tipos de Consultas" [toggleable]="false">
+        <div class="lista-tipos-consultas">
+          @if (tiposConsultas.length === 0) {
+            @if (carregandoTiposConsultas) {
+              <p-progressSpinner></p-progressSpinner>
+            } @else {
+              <span class="sem-resultados"
+                >Nenhuma tipo de consulta encontrado!</span
+              >
+            }
+          } @else {
+            <p-button
+              label="Adicionar Novo Tipo de Consulta"
+              severity="info"
+              icon="fa fa-plus"
+              (click)="alterarNovoTipoConsulta()"
+              [style]="{ width: '100%' }"
+            />
+            @for (tipo of tiposConsultas; track tipo.id) {
+              <div class="card-tipo-consulta">
+                <div class="informacoes">
+                  <strong>
+                    {{ tipo.nome }}
+                  </strong>
+                  <span
+                    >{{ tipo.descricao }} - <strong>Valor: </strong> R${{
+                      tipo.valor
+                    }}
+                  </span>
+                </div>
+                <p-button
+                  label="Ver"
+                  icon="fa fa-eye"
+                  severity="secondary"
+                  (click)="verDetalhesTipoConsulta(tipo.id)"
+                />
+              </div>
+            }
+          }
+        </div>
+      </p-fieldset>
+    </section>
   </section>
 </main>
+<p-dialog
+  [(visible)]="visibilidadeDialogNovoTipoConsulta"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ maxWidth: '600px', width: '100%' }"
+  header="Novo Tipo de Consulta"
+>
+  <div class="valores-detalhes">
+    <div class="input-group">
+      <label for="nome">Nome</label>
+      <input
+        [(ngModel)]="novoTipoConsulta.nome"
+        type="text"
+        pInputText
+        id="nome"
+        placeholder="Digite o nome"
+      />
+    </div>
+    <div class="input-group">
+      <label for="valor">Valor</label>
+      <input
+        [(ngModel)]="novoTipoConsulta.valor"
+        min="0"
+        type="number"
+        pInputText
+        id="valor"
+        placeholder="Digite o valor"
+      />
+    </div>
+    <div class="input-group">
+      <label for="descricao">Descrição</label>
+      <textarea
+        [(ngModel)]="novoTipoConsulta.descricao"
+        pTextarea
+        id="descricao"
+        placeholder="Digite a descrição"
+      ></textarea>
+    </div>
+    <hr />
+    <div class="acoes">
+      <p-button
+        label="Adicionar"
+        severity="success"
+        [disabled]="!novoTipoConsultaValido"
+        (click)="registrarNovoTipoConsulta()"
+      />
+    </div>
+  </div>
+</p-dialog>
 <p-dialog
   (onHide)="limparEdicao()"
   [(visible)]="visibilidadeDialogDetalhesTipoConsulta"
@@ -180,6 +280,7 @@
               [disabled]="!edicaoHabilitadaTipoConsulta"
               [(ngModel)]="valoresEdicao.valor"
               type="number"
+              min="0"
               pInputText
               id="valor"
               placeholder="Digite o valor"
@@ -220,7 +321,23 @@
               track veterinario.id
             ) {
               <p-accordion-panel [value]="i">
-                <p-accordion-header>{{ veterinario.nome }}</p-accordion-header>
+                <p-accordion-header>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 0.5rem;
+                      flex-wrap: wrap;
+                    "
+                  >
+                    <p-button
+                      label="Remover"
+                      severity="danger"
+                      (click)="removerVeterinarioTipoConsulta(veterinario.id)"
+                    />
+                    {{ veterinario.nome }}
+                  </div>
+                </p-accordion-header>
                 <p-accordion-content>
                   @if (veterinario.especializacao.length > 0) {
                     <ul class="especializacoes">
@@ -253,7 +370,7 @@
                       track especializacao
                     ) {
                       <li>
-                        {{ especializacao }}
+                        {{ especializacao.descricao }}
                       </li>
                     }
                   </ul>
@@ -272,4 +389,126 @@
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
+</p-dialog>
+<p-dialog
+  [(visible)]="visibilidadeDialogEditarEspecializacao"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ maxWidth: '600px', width: '100%' }"
+  [header]="detalhesEspecializacao?.nome || 'Detalhes Especialização'"
+>
+  <p-tabs value="0">
+    <p-tablist>
+      <p-tab value="0">Informações</p-tab>
+      <p-tab value="1">Veterinários Relacionados</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        <div class="valores-detalhes">
+          <div class="input-group">
+            <label for="nome">Nome</label>
+            <input
+              [disabled]="!edicaoHabilitadaTipoConsulta"
+              [(ngModel)]="especializacaoEdicao.descricao"
+              type="text"
+              pInputText
+              id="nome"
+              placeholder="Digite o nome"
+            />
+          </div>
+          <hr />
+          <div class="acoes">
+            <p-button
+              [label]="edicaoHabilitadaTipoConsulta ? 'Não Editar' : 'Editar'"
+              severity="info"
+              (click)="alterarEdicao()"
+            />
+            <p-button
+              label="Salvar"
+              severity="success"
+              [disabled]="!edicaoHabilitadaTipoConsulta"
+              (click)="editarInformacoesTipoConsulta()"
+            />
+          </div>
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="1">
+        <div class="lista-veterinarios">
+          @if (detalhesEspecializacao === null) {
+            <span>Nenhuma especialização encontrada</span>
+          } @else {
+            @if (detalhesEspecializacao.veterinarios.length === 0) {
+              <span class="sem-resultados">Nenhum veterinário relacionado</span>
+            } @else {
+              <div class="lista-veterinarios">
+                @for (
+                  veterinario of detalhesEspecializacao.veterinarios;
+                  let i = $index;
+                  track veterinario.id
+                ) {
+                  <div class="card-veterinario">
+                    <span>
+                      <i class="fa fa-user-doctor"></i>
+                      {{ veterinario.nome }}</span
+                    >
+                    <p-button
+                      label="Remover"
+                      severity="danger"
+                      (click)="removerVeterinarioEspecializacao(veterinario.id)"
+                    />
+                  </div>
+                }
+              </div>
+            }
+          }
+        </div>
+        <hr />
+        <div class="lista-veterinarios">
+          @for (
+            veterinario of detalhesEspecializacao?.veterinariosNaoRelacionados;
+            track veterinario.id
+          ) {
+            <div class="card-veterinario">
+              <div class="informacoes">
+                <strong>{{ veterinario.nome }}</strong>
+              </div>
+              <p-button
+                label="Adicionar"
+                severity="success"
+                (click)="adicionarNovoVeterinarioEspecializacao(veterinario.id)"
+              />
+            </div>
+          }
+        </div>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</p-dialog>
+<p-dialog
+  [(visible)]="visibilidadeDialogAdicionarEspecializacao"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ maxWidth: '600px', width: '100%' }"
+  header="Adicionar Nova Especialização"
+>
+  <div class="input-group">
+    <label for="especializacao">Especialização</label
+    ><input
+      [(ngModel)]="novaEspecializacao.descricao"
+      type="text"
+      pInputText
+      id="especializacao"
+      placeholder="Digite a especialização"
+    />
+  </div>
+  <p-button
+    [style]="{ float: 'right' }"
+    label="Salvar"
+    severity="success"
+    (click)="adicionarEspecializacao()"
+    [disabled]="
+      novaEspecializacao.descricao === '' ||
+      novaEspecializacao.descricao.trim() === ''
+    "
+  />
 </p-dialog>

@@ -34,11 +34,30 @@
       >
         <p-button
           icon="fa fa-bell"
+          tooltipPosition="left"
           pTooltip="Notificações"
           severity="secondary"
           (click)="alterarPopover()"
         />
       </p-overlaybadge>
+      <!-- <div class="usuario">
+        <button
+          pButton
+          [outlined]="false"
+          [rounded]="true"
+          severity="secondary"
+          tooltipPosition="left"
+          pTooltip="Perfil"
+          (click)="alterarPopoverPerfil()"
+        >
+          @if (imagem === null) {
+            <i class="fa fa-user"></i>
+          } @else {
+            <img [src]="imagem" alt="" />
+          }
+        </button> 
+      </div>
+      -->
     </div>
   </header>
 }
@@ -74,3 +93,15 @@
     <strong style="text-align: center">Sem notificacoes</strong>
   }
 </p-popover>
+
+<!-- <p-popover #perfilOp>
+  <div class="informacoes-usuario">
+    <strong>
+      {{ getNomeUsuario.nome }}
+    </strong>
+    <span>
+      {{ getNomeUsuario.tipo }}
+    </span>
+    <button pButton severity="danger" (click)="sair()">Sair</button>
+  </div>
+</p-popover> -->

@@ -46,6 +46,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/sockjs-client": "^1.5.4",
     "angular-eslint": "21.0.1",
+    "autoprefixer": "^10.5.0",
     "eslint": "^9.39.1",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
@@ -53,6 +54,8 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.5.14",
+    "tailwindcss": "^4.3.0",
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.46.4"
   }

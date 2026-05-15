@@ -53,8 +53,9 @@ export class EstoqueEstoquista implements OnInit {
     this.service.buscarInformacoesCards().subscribe({
       next: (cards) => {
         this.cards = cards;
+        this.carregandoCards = false;
       },
-      complete: () => {
+      error: () => {
         this.carregandoCards = false;
       }
     });
@@ -155,8 +156,9 @@ export class EstoqueEstoquista implements OnInit {
         const file = new Blob([res], { type: 'application/pdf' });
         const fileURL = URL.createObjectURL(file);
         window.open(fileURL);
+        this.carregandoRelatorio = false;
       },
-      complete: () => {
+      error: () => {
         this.carregandoRelatorio = false;
       }
     });

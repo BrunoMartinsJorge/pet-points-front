@@ -86,13 +86,19 @@
         legend="Permissões"
         [toggleable]="false"
       >
-        <div class="lista-permissoes">
-          @for (permissao of getPermissoes; track permissao) {
-            <span class="permissao">
-              {{ permissao }}
-            </span>
-          }
-        </div>
+        @if (getPermissoes.length === 0) {
+          <strong style="display: flex; justify-content: center">
+            Por favor selecione um cargo
+          </strong>
+        } @else {
+          <div class="lista-permissoes">
+            @for (permissao of getPermissoes; track permissao) {
+              <span class="permissao">
+                {{ permissao }}
+              </span>
+            }
+          </div>
+        }
       </p-fieldset>
     </section>
     <section>
@@ -160,6 +166,17 @@
               placeholder="Selecione um gênero"
             ></p-select>
           </div>
+          @if (veterinario) {
+            <div class="input-group">
+              <label for="especializacao">Especialização</label>
+              <p-select
+                [options]="especialziacoes"
+                formControlName="especializacao"
+                appendTo="body"
+                placeholder="Selecione um gênero"
+              ></p-select>
+            </div>
+          }
           <div class="input-group">
             <label for="email">Data de Nascimento</label>
             <p-datepicker
@@ -226,7 +243,9 @@
               <li>
                 <span
                   ><strong>Data de Nascimento:</strong>
-                  {{ formulario.get("dataNascimento")?.value | date: "dd/MM/yyyy" }}</span
+                  {{
+                    formulario.get("dataNascimento")?.value | date: "dd/MM/yyyy"
+                  }}</span
                 >
               </li>
             </ul>

@@ -32,7 +32,6 @@ export class LogsSistema {
   constructor() {
     this.buscarLogs();
     this.buscarUsuariosLogs();
-    this.opcoesTipoLogs.unshift({ label: 'Todos', value: '' });
   }
 
   private buscarLogs(): void {
@@ -43,9 +42,13 @@ export class LogsSistema {
       next: (res: LogDto[]) => {
         this.listaLogs = res;
         this.logsFiltrados = res;
+        this.opcoesTipoLogs.unshift({ label: 'Todos', value: '' });
         this.formatarParaGrafico();
+        setTimeout(() => {
+          this.carregandoLogs = false;
+        }, 2000);
       },
-      complete: () => {
+      error: () => {
         setTimeout(() => {
           this.carregandoLogs = false;
         }, 2000);
@@ -74,8 +77,9 @@ export class LogsSistema {
         const file = new Blob([res], { type: 'application/pdf' });
         const fileURL = URL.createObjectURL(file);
         window.open(fileURL);
+        this.carregandoRelatorio = false;
       },
-      complete: () => {
+      error: () => {
         this.carregandoRelatorio = false;
       },
     });

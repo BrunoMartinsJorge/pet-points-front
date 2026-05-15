@@ -17,6 +17,7 @@ import { NotificacoesWsService } from '../../services/ws/notificacoes-ws-service
 import { NotificacoesService } from '../../services/notificacoes-service';
 import type { CheckboxChangeEvent } from 'primeng/checkbox';
 import { CheckboxModule } from 'primeng/checkbox';
+import { TokenService } from '../../../core/services/token-service';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -34,15 +35,20 @@ import { CheckboxModule } from 'primeng/checkbox';
   styleUrl: './header-pagina.scss',
 })
 export class HeaderPagina implements OnInit {
+  private readonly notificacoesWs = inject(NotificacoesWsService);
+  private readonly notificacoesService = inject(NotificacoesService);
+  private readonly tokenService = inject(TokenService);
+
   @ViewChild('op') op!: Popover;
+  @ViewChild('perfilOp') perfilOp!: Popover;
 
   public checked = false;
   private rotasService = inject(RotasService);
-  private notificacoesWs = inject(NotificacoesWsService);
-  private readonly notificacoesService = inject(NotificacoesService);
   public notificacoes: NotificacaoDto[] = [];
   public foiAbertoNotificiacoes = false;
   public notificacoesParaMarcarComoLidas: number[] = [];
+
+  public imagem = null;
 
   private readonly router = inject(Router);
   private readonly themeService = inject(ThemeService);
@@ -67,6 +73,10 @@ export class HeaderPagina implements OnInit {
   public alterarPopover(): void {
     this.op.toggle(event);
     this.foiAbertoNotificiacoes = true;
+  }
+
+  public alterarPopoverPerfil(): void {
+    this.perfilOp.toggle(event);
   }
 
   public voltar(): void {
@@ -128,5 +138,33 @@ export class HeaderPagina implements OnInit {
     else
       this.notificacoesParaMarcarComoLidas =
         this.notificacoesParaMarcarComoLidas.filter((n) => n !== idNotificacao);
+  }
+
+  public sair(): void {
+    this.tokenService.removeToken();
+  }
+
+  /**
+   *
+   * @description Busca o nome do usuário e o tipo de usuário a partir do token e os retorna
+   * @returns - {nome: string, tipo: string} - Nome do usuário e tipo de usuário
+   */
+  public get getNomeUsuario(): { nome: string; tipo: string } {
+    const token = this.tokenService.getToken;
+    if (!token)
+      return {
+        nome: '',
+        tipo: '',
+      };
+    const nomeUsuario = this.tokenService.decodeToken(token).nomeUsuario;
+    const permissoes: string = this.tokenService.decodeToken(token).permissao;
+    const permisaoTratada =
+      permissoes.charAt(0).toUpperCase() +
+      permissoes.slice(1).toLocaleLowerCase();
+
+    return {
+      nome: nomeUsuario,
+      tipo: permisaoTratada,
+    };
   }
 }

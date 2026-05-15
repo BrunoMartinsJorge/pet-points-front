@@ -8,7 +8,10 @@ import type { DetalhesTipoConsultaDto } from '../model/DetalhesTipoConsultaDto';
 import type { TipoConsultaForm } from '../form/TipoConsultaForm';
 import type { VeterinarioEspecializacoesDto } from '../model/VeterinarioEspecializacoesDto';
 import type { DetalhesConsultaDto } from '../model/DetalhesConsultaDto';
-import { FiltroConsultaForm } from '../form/FiltroConsultaForm';
+import type { FiltroConsultaForm } from '../form/FiltroConsultaForm';
+import type { EspecializacaoDto } from '../model/EspecializacaoDto';
+import type { EspecializacaoForm } from '../form/EspecializacaoForm';
+import type { DetalhesEspecializacaoDto } from '../model/DetalhesEspecializacaoDto';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +32,10 @@ export class ConsultasClinicaService {
     return this.http.get<OpcoesFiltro[]>(`${this.URL}/tipos-consulta-filtro`);
   }
 
+  public listarEspecializacoes(): Observable<EspecializacaoDto[]> {
+    return this.http.get<EspecializacaoDto[]>(`${this.URL}/especializacoes`);
+  }
+
   public listarClientesFiltros(): Observable<OpcoesFiltro[]> {
     return this.http.get<OpcoesFiltro[]>(`${this.URL}/clientes`);
   }
@@ -45,6 +52,10 @@ export class ConsultasClinicaService {
     return this.http.get<DetalhesConsultaDto>(`${this.URL}/detalhes-consulta/${idConsulta}`);
   }
 
+  public adicionarNovoTipoConsulta(novoTipo: TipoConsultaForm): Observable<DetalhesTipoConsultaDto> {
+    return this.http.put<DetalhesTipoConsultaDto>(`${this.URL}/adicionar-tipo-consulta`, novoTipo);
+  }
+
   public editarInformacoesTipoConsulta(valoresEdicao: TipoConsultaForm, idTipoConsulta: number): Observable<DetalhesTipoConsultaDto> {
     return this.http.put<DetalhesTipoConsultaDto>(`${this.URL}/editar-informacoes-tipo-consulta/${idTipoConsulta}`, valoresEdicao);
   }
@@ -57,7 +68,27 @@ export class ConsultasClinicaService {
     return this.http.put<void>(`${this.URL}/adicionar-veterinario-tipo-consulta/${idVeterinario}/${idTipoConsulta}`, {});
   }
 
+  public removerVeterinarioTipoConsulta(idVeterinario: number, idTipoConsulta: number): Observable<void> {
+    return this.http.delete<void>(`${this.URL}/remover-veterinario-tipo-consulta/${idVeterinario}/${idTipoConsulta}`, {});
+  }
+
+  public buscarDetalhesEspecializacoes(idEspecializacao: number): Observable<DetalhesEspecializacaoDto> {
+    return this.http.get<DetalhesEspecializacaoDto>(`${this.URL}/especializacoes/${idEspecializacao}`);
+  }
+
+  public adicionarNovaEspecializacao(form: EspecializacaoForm): Observable<void> {
+    return this.http.post<void>(`${this.URL}/especializacoes`, form);
+  }
+
   public gerarRelatorioConsultas(form: FiltroConsultaForm): Observable<Blob> {
     return this.http.put(`${this.URL}/relatorio`, form, { responseType: 'blob' });
+  }
+
+  public adicionarVeterinarioEspecializacao(idEspecializacao: number, idVeterinario: number): Observable<void> {
+    return this.http.put<void>(`${this.URL}/especializacoes/${idEspecializacao}/${idVeterinario}`, {});
+  }
+
+  public removerVeterinarioEspecializacao(idEspecializacao: number, idVeterinario: number): Observable<void> {
+    return this.http.delete<void>(`${this.URL}/especializacoes/${idEspecializacao}/${idVeterinario}`, {});
   }
 }

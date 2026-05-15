@@ -29,6 +29,7 @@ import { ToastModule } from 'primeng/toast';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { TooltipModule } from 'primeng/tooltip';
 import { PasswordModule } from 'primeng/password';
+import { DataViewModule } from 'primeng/dataview';
 
 @NgModule({
   providers: [MessageService],
@@ -63,6 +64,7 @@ import { PasswordModule } from 'primeng/password';
     ProgressSpinnerModule,
     RadioButtonModule,
     PasswordModule,
+    DataViewModule,
   ],
   exports: [
     CommonModule,
@@ -95,6 +97,7 @@ import { PasswordModule } from 'primeng/password';
     ProgressSpinnerModule,
     RadioButtonModule,
     PasswordModule,
+    DataViewModule,
   ],
 })
 export class PrimeNGModule {}

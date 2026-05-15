@@ -26,7 +26,7 @@
           <input
             type="text"
             pInputText
-            [(ngModel)]="detalhesConsulta.atendente.nome"
+            [value]="detalhesConsulta.atendente ? detalhesConsulta.atendente.nome : 'Não Possui Atendente'"
             disabled
           />
         </div>
@@ -67,7 +67,7 @@
               type="text"
               pInputText
               [value]="
-                detalhesConsulta.dataAtendimento | date: 'dd/MM/yyyy - HH:mm'
+                (detalhesConsulta.dataAtendimento | date: 'dd/MM/yyyy - HH:mm') || 'Não Atendida'
               "
               disabled
             />

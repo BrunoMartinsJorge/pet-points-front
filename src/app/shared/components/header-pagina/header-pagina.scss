@@ -14,6 +14,18 @@ header.header-page {
     align-items: center;
     grid-gap: 1em;
     flex-wrap: wrap;
+
+    .usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+
+      button {
+        height: 45px;
+        width: 45px;
+        clip-path: circle();
+      }
+    }
   }
 
   .descricao-pagina {
@@ -33,21 +45,43 @@ header.header-page {
   }
 }
 
-  .lista-notificacoes {
+.lista-notificacoes {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  margin-bottom: 1rem;
+
+  .notificacao {
     display: flex;
-    gap: 0.5rem;
-    flex-direction: column;
-    margin-bottom: 1rem;
+    align-items: center;
+    gap: 0.25rem;
+    height: 50px;
+    padding: 5px;
 
-    .notificacao {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      height: 50px;
-      padding: 5px;
-
-      &:nth-child(even) {
-        background-color: var(--color-border);
-      }
+    &:nth-child(even) {
+      background-color: var(--color-border);
     }
   }
+}
+
+div.informacoes-usuario {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  width: 120px;
+
+  strong {
+    font-size: 14px;
+  }
+
+  span {
+    font-size: 12px;
+    color: var(--color-text);
+  }
+
+  button {
+    width: 100%;
+  }
+}

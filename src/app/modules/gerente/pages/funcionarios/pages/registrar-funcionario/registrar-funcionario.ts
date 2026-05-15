@@ -1,11 +1,18 @@
+import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import { PrimeNGModule } from '../../../../../../shared/modules/prime-ng/prime-ng-module';
 import { FuncionarioServices } from '../../services/funcionario-services';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { getPermissoesPorUsuario } from '../../../../shared/TiposFuncionarios';
 import { InputMaskModule } from 'primeng/inputmask';
 import type { NovoFuncionarioForm } from './forms/NovoFuncionarioForm';
 import { MessageService } from 'primeng/api';
+import type { OpcoesFiltro } from '../../../consultas-clinica/model/OpcoesFiltro';
 
 @Component({
   selector: 'app-registrar-funcionario',
@@ -13,14 +20,21 @@ import { MessageService } from 'primeng/api';
   templateUrl: './registrar-funcionario.html',
   styleUrl: './registrar-funcionario.scss',
 })
-export class RegistrarFuncionario {
+export class RegistrarFuncionario implements OnInit {
   private readonly service = inject(FuncionarioServices);
   private readonly toast = inject(MessageService);
   public readonly generos = [
     { label: 'Masculino', value: 'M' },
     { label: 'Feminino', value: 'F' },
-  ]
+  ];
+
+  public especialziacoes: OpcoesFiltro[] = [];
+
   public formulario: FormGroup = this.gerarRelatorio();
+
+  ngOnInit(): void {
+    this.buscarEspecializacoes();
+  }
 
   private gerarRelatorio(): FormGroup {
     return new FormGroup({
@@ -32,6 +46,16 @@ export class RegistrarFuncionario {
       genero: new FormControl('', [Validators.required]),
       dataNascimento: new FormControl('', [Validators.required]),
       permissao: new FormControl('', [Validators.required]),
+      especializacao: new FormControl(''),
+    });
+  }
+
+  private buscarEspecializacoes(): void {
+    this.especialziacoes = [];
+    this.service.buscarEspecializacoes().subscribe({
+      next: (especializacoes) => {
+        this.especialziacoes = especializacoes;
+      },
     });
   }
 
@@ -39,8 +63,12 @@ export class RegistrarFuncionario {
     return getPermissoesPorUsuario(this.formulario.get('permissao')?.value);
   }
 
+  public get veterinario(): boolean {
+    return this.formulario.get('permissao')?.value === 'V';
+  }
+
   public cadastrarFuncionario(): void {
-    if(this.formulario.invalid) return;
+    if (this.formulario.invalid) return;
     const funcionario = this.formulario.value;
     const payload: NovoFuncionarioForm = {
       nome: funcionario.nome,
@@ -50,8 +78,9 @@ export class RegistrarFuncionario {
       telefone: funcionario.telefone,
       genero: funcionario.genero,
       dataNascimento: funcionario.dataNascimento,
-      permissao: funcionario.permissao
-    }
+      permissao: funcionario.permissao,
+      especializacao: funcionario.especializacao || null,
+    };
     this.service.cadastrarFuncionario(payload).subscribe({
       next: () => {
         this.toast.add({
@@ -61,7 +90,7 @@ export class RegistrarFuncionario {
         });
         this.formulario.reset();
       },
-    })
+    });
   }
 
   public get getDescricaoCargo(): string {
