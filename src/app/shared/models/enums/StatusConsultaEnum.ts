@@ -1,8 +1,8 @@
 export enum StatusConsultaEnum {
-  PENDENTE = 'Pendente',
-  APROVADA = 'Aprovada',
-  REPROVADA = 'Reprovada',
-  INICIADO = 'Iniciado',
-  FINALIZADO = 'Finalizado',
-  CANCELADO = 'Cancelado',
+  Pendente = 'PENDENTE',
+  Aprovada = 'APROVADA',
+  Reprovada = 'REPROVADA',
+  Iniciado = 'INICIADO',
+  Finalizado = 'FINALIZADO',
+  Cancelado = 'CANCELADO',
 }

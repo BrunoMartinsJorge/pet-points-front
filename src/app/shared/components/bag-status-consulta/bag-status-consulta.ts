@@ -8,9 +8,9 @@ import type { StatusConsultaEnum } from '../../models/enums/StatusConsultaEnum';
   styleUrl: './bag-status-consulta.scss',
 })
 export class BagStatusConsulta {
-  @Input() status: StatusConsultaEnum | null = null;
+  @Input() status: StatusConsultaEnum | null | undefined = null;
 
   public get getTexto(): string {
-    return this.status === null ? '' : this.status.toString()[0] + this.status.toString().slice(1).toLowerCase();
+    return this.status === null || this.status === undefined ? '' : this.status.toString()[0] + this.status.toString().slice(1).toLowerCase();
   }
 }
