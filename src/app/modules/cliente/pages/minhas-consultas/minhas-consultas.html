@@ -107,6 +107,10 @@
             </div>
           </ng-template>
         </p-dataview>
+      } @else {
+        <span class="sem-resultados"
+          >Nenhuma consulta no histórico no momento.</span
+        >
       }
     </p-fieldset>
   </section>
@@ -489,24 +493,25 @@
           </div>
         </ng-template>
       </p-step-panel>
-
       <p-step-panel [value]="3">
         <ng-template #content let-activateCallback="activateCallback">
-          <p-select
-            [options]="pets"
-            appendTo="body"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Selecione um pet"
-            [(ngModel)]="idPetSelecionado"
-          />
-          <textarea
-            name="observacoes"
-            id="observacoes"
-            placeholder="Observações sobre a consulta..."
-            [(ngModel)]="observacoes"
-            pTextarea
-          ></textarea>
+          <div style="gap: 1rem; display: flex; flex-direction: column">
+            <p-select
+              [options]="pets"
+              appendTo="body"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecione um pet"
+              [(ngModel)]="idPetSelecionado"
+            />
+            <textarea
+              name="observacoes"
+              id="observacoes"
+              placeholder="Observações sobre a consulta..."
+              [(ngModel)]="observacoes"
+              pTextarea
+            ></textarea>
+          </div>
           <hr />
           <div style="display: flex; justify-content: space-between; gap: 1rem">
             <p-button
