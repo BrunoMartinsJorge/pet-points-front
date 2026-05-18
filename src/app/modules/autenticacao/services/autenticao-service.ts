@@ -15,8 +15,28 @@ export class AutenticaoService {
     return this.http.post<{ token: string }>(`${this.URL}/login`, payload);
   }
 
-  public registro(payload: FormRegistro): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${this.URL}/register`, payload);
+  public registro(
+    payload: FormRegistro,
+    foto?: File,
+  ): Observable<{ token: string }> {
+    const formData = new FormData();
+
+    formData.append('nome', payload.nome);
+    formData.append('genero', payload.genero);
+    formData.append('cpf', payload.cpf);
+    formData.append('email', payload.email);
+    formData.append('telefone', payload.telefone);
+    formData.append('senha', payload.senha);
+    formData.append(
+      'dataNascimento',
+      payload.dataNascimento.toISOString().split('T')[0],
+    );
+
+    if (foto) {
+      formData.append('foto', foto);
+    }
+
+    return this.http.post<{ token: string }>(`${this.URL}/register`, formData);
   }
 
   public solicitarCodigoAlteracaoSenha(email: string): Observable<void> {
@@ -35,8 +55,11 @@ export class AutenticaoService {
     );
   }
 
-  public alterarSenha(email: string,
-    codigo: string, novaSenha: string): Observable<void> {
+  public alterarSenha(
+    email: string,
+    codigo: string,
+    novaSenha: string,
+  ): Observable<void> {
     return this.http.put<void>(
       `${this.URL}/redefinir-senha?email=${email}&novaSenha=${novaSenha}&codigo=${codigo}`,
       {},

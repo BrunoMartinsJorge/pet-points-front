@@ -6,10 +6,17 @@ import { AutenticaoService } from '../../../services/autenticao-service';
 import { StepperModule } from 'primeng/stepper';
 import type { FormRegistro } from '../../forms/FormRegistro';
 import { GeneroEnum } from '../../../../../shared/models/enums/GeneroEnum';
+import type { FileSelectEvent} from 'primeng/fileupload';
+import { FileUploadModule } from 'primeng/fileupload';
+
+/*interface UploadEvent {
+    originalEvent: Event;
+    files: File[];
+}*/
 
 @Component({
   selector: 'app-register-form',
-  imports: [PrimeNGModule, StepperModule],
+  imports: [PrimeNGModule, StepperModule, FileUploadModule],
   templateUrl: './register-form.html',
   styleUrl: './register-form.scss',
 })
@@ -51,8 +58,15 @@ export class RegisterForm {
         Validators.required,
         Validators.minLength(10),
       ]),
+      foto: new FormControl(null),
       dataNascimento: new FormControl('', [Validators.required]),
     });
+  }
+
+  public carregarArquivo(event: FileSelectEvent): void {    
+    const file = event.files[0];
+    if (file)
+      this.registroForm.get('foto')?.setValue(file);
   }
 
   public logarUsuario(): void {
@@ -99,7 +113,8 @@ export class RegisterForm {
       telefone: values.telefone,
       dataNascimento: values.dataNascimento,
     };
-    this.service.registro(registroPayload).subscribe({
+    const file: File = values.foto;
+    this.service.registro(registroPayload, file).subscribe({
       next: (res) => {
         const token = res.token || '';
         this.tokenService.setToken(token);

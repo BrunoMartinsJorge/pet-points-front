@@ -77,7 +77,9 @@ section.sidebar-element {
         padding-left: 1.5em;
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease, opacity 0.3s ease;
+        transition:
+          max-height 0.3s ease,
+          opacity 0.3s ease;
         opacity: 0;
 
         li {
@@ -149,6 +151,20 @@ section.sidebar-element {
     justify-content: center;
     gap: 0.8em;
 
+    .imagem {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
     .info-perfil {
       display: none;
       flex-direction: column;
@@ -175,7 +191,7 @@ section.sidebar-element {
     }
 
     i {
-      cursor: pointer;
+      display: none;
     }
   }
 
@@ -236,6 +252,11 @@ section.sidebar-element {
           height: auto;
           transition: all 0.4s ease-in-out;
         }
+      }
+
+      i {
+        display: block;
+        cursor: pointer;
       }
     }
   }

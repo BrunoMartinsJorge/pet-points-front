@@ -114,6 +114,26 @@
                 [maxDate]="dataMaxima"
               />
             </div>
+            <div class="arquivo">
+              <p-fileupload
+                #fu
+                mode="basic"
+                chooseLabel="Selecionar Foto"
+                chooseIcon="pi pi-upload"
+                [multiple]="false"
+                name="demo[]"
+                [fileLimit]="1"
+                accept="image/*"
+                maxFileSize="1000000"
+                (onSelect)="carregarArquivo($event)"
+              >
+            </p-fileupload>
+              <p-button
+                label="Enviar Foto"
+                (onClick)="fu.upload()"
+                severity="secondary"
+              />
+            </div>
             <div class="botoes">
               <p-button
                 icon="pi pi-arrow-left"

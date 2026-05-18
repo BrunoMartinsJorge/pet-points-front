@@ -63,6 +63,9 @@
   </ul>
 
   <div class="user-avatar">
+    <div class="imagem">
+      <img [src]="urlImagem" alt="Avatar do usuário" />
+    </div>
     <div class="info-perfil" (click)="acessarPerfil()">
       <span id="nome">{{ getNomeUsuario.nome }}</span>
       <span id="tipo">{{ getNomeUsuario.tipo }}</span>

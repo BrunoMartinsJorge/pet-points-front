@@ -21,6 +21,7 @@ export class Sidebar {
   public sidebarIsOpen = false;
   public listOfRoutes: ListOfRoutes[] = [];
   private subMenuStates: Record<string, boolean> = {};
+  public urlImagem = '';
 
   private readonly tokenService = inject(TokenService);
   private readonly router = inject(Router);
@@ -29,6 +30,7 @@ export class Sidebar {
 
   constructor() {
     this.carregarRotasPermitidas();
+    this.urlImagem = this.getImagemUsuario;
   }
 
   /**
@@ -116,6 +118,13 @@ export class Sidebar {
       nome: nomeUsuario,
       tipo: permisaoTratada,
     };
+  }
+
+  private get getImagemUsuario(): string {
+    const token = this.tokenService.getToken;
+    if (!token) return '';
+    const urlImagem = this.tokenService.decodeToken(token).imagem;
+    return ('http://localhost:8080/autenticacao/imagem/'+urlImagem) || '';
   }
 
   /**
