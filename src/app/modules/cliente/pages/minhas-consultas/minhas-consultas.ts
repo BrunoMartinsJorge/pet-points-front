@@ -47,10 +47,22 @@ export class MinhasConsultas implements OnInit {
   public pets: OptionSelect[] = [];
   public idPetSelecionado: number | null = null;
   public observacoes = '';
+  public formaPagamento = '';
 
   public consultaSelecionada: MinhasConsultasDto | null = null;
   public detalhesConsultaSelecionada: DetalhesConsultaSelecionadaDto | null =
     null;
+
+  public readonly formasPagamento = [
+    {
+      label: 'Pix',
+      value: 'PIX',
+    },
+    {
+      label: 'Presencial',
+      value: 'PRESENCIAL',
+    },
+  ];
 
   ngOnInit(): void {
     this.listarHistoricoConsultas();
@@ -146,7 +158,7 @@ export class MinhasConsultas implements OnInit {
         this.listarConsultasPendentesConfirmadasOuIniciadas();
         this.listarConsultasPendentes();
         this.listarHistoricoConsultas();
-      }
+      },
     });
   }
 
@@ -173,8 +185,10 @@ export class MinhasConsultas implements OnInit {
 
   public get possuiMotivosCancelamentoIndeferimento(): boolean {
     if (!this.consultaSelecionada) return false;
-    return this.consultaSelecionada.statusConsulta === 'REPROVADA' || 
-           this.consultaSelecionada.statusConsulta === 'CANCELADO';
+    return (
+      this.consultaSelecionada.statusConsulta === 'REPROVADA' ||
+      this.consultaSelecionada.statusConsulta === 'CANCELADO'
+    );
   }
 
   public gerarHorarios(): void {
@@ -259,11 +273,32 @@ export class MinhasConsultas implements OnInit {
     });
   }
 
-  private gerarDataHoraConsulta(): Date {
+  private gerarDataHoraConsulta(): string {
     const dataHora = new Date(this.dataConsulta);
+
     const [hours, minutes] = this.horarioConsulta.split(':').map(Number);
+
     dataHora.setHours(hours, minutes, 0, 0);
-    return dataHora;
+
+    const ano = dataHora.getFullYear();
+    const mes = String(dataHora.getMonth() + 1).padStart(2, '0');
+    const dia = String(dataHora.getDate()).padStart(2, '0');
+
+    const hora = String(dataHora.getHours()).padStart(2, '0');
+    const minuto = String(dataHora.getMinutes()).padStart(2, '0');
+
+    return `${ano}-${mes}-${dia}T${hora}:${minuto}:00`;
+  }
+
+  private limparFormularioSolicitacao(): void {
+    this.visibilidadeDialogAgendamento = false;
+    this.tipoConsultaSelecionado = null;
+    this.veterinarioSelecionado = null;
+    this.horarioConsulta = '';
+    this.dataConsulta = new Date();
+    this.idPetSelecionado = null;
+    this.observacoes = '';
+    this.formaPagamento = '';
   }
 
   public agendarConsulta(): void {
@@ -273,10 +308,12 @@ export class MinhasConsultas implements OnInit {
       idTipoConsulta: this.tipoConsultaSelecionado!.id,
       dataConsulta: this.gerarDataHoraConsulta(),
       observacao: this.observacoes,
+      formaPagamento: this.formaPagamento,
     };
 
     this.minhasConsultasService.agendarConsulta(form).subscribe({
       next: () => {
+        this.limparFormularioSolicitacao();
         this.toast.add({
           severity: 'success',
           summary: 'Sucesso',

@@ -496,14 +496,24 @@
       <p-step-panel [value]="3">
         <ng-template #content let-activateCallback="activateCallback">
           <div style="gap: 1rem; display: flex; flex-direction: column">
-            <p-select
-              [options]="pets"
-              appendTo="body"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Selecione um pet"
-              [(ngModel)]="idPetSelecionado"
-            />
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <p-select
+                [options]="pets"
+                appendTo="body"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Selecione um pet"
+                [(ngModel)]="idPetSelecionado"
+              />
+              <p-select
+                [options]="formasPagamento"
+                appendTo="body"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Forma de Pagamento"
+                [(ngModel)]="formaPagamento"
+              />
+            </div>
             <textarea
               name="observacoes"
               id="observacoes"
@@ -531,7 +541,8 @@
                 !veterinarioSelecionado ||
                 !horarioConsulta ||
                 !dataConsulta ||
-                !idPetSelecionado
+                !idPetSelecionado ||
+                !formaPagamento
               "
             />
           </div>

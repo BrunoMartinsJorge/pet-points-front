@@ -3,5 +3,6 @@ export interface SolicitacaoConsultaForm {
   idVeterinario: number;
   idTipoConsulta: number;
   observacao: string;
-  dataConsulta: Date;
+  dataConsulta: string;
+  formaPagamento: string;
 }
