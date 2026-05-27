@@ -1,82 +1,198 @@
+hr {
+  border: none;
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+  margin: 0.5rem 0;
+}
+
 main {
   display: flex;
-  flex-direction: column;
-  grid-gap: 1em;
-  height: 100%;
-  padding: 1em;
-
-  section {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 1em;
-
-    p-fieldset {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-  }
-}
-
-.cards-list {
-  flex: 1;
-  display: flex;
+  padding: 1rem;
+  gap: 1rem;
   flex-wrap: wrap;
-  grid-gap: 1em;
-  width: 100%;
+  p-fieldset {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 250px;
 
-  div.card {
-    flex: 1 1 calc(50% - 1em);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5em;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    padding: 1em 2.5em;
-    transition: all 0.4s ease-in-out;
+    &:nth-child(1) {
+      flex: 1 1 100%;
+      .lista-consultas {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        flex: 1 1 calc(70% - 0.5rem);
+        min-width: 400px;
 
-    i#icon {
-      font-size: 4.5em;
-      color: var(--color-primary);
+        div.consulta-card {
+          cursor: pointer;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          border: 1px solid var(--color-border);
+          align-items: center;
+          border-radius: 4px;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left: 5px solid var(--color-card-primary);
+
+          &:nth-child(even) {
+            border-left: 5px solid var(--color-card-secondary);
+          }
+
+          .body-card {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 0;
+            gap: 1rem;
+
+            span.tipo-consulta {
+              font-size: 0.8rem;
+              font-weight: 600;
+              border: 1px solid var(--color-border);
+              border-radius: 4px;
+              padding: 0.25rem 0.5rem;
+              margin: 0;
+            }
+
+            span.veterinario,
+            span.pet {
+              font-size: 0.9rem;
+              font-weight: 600;
+              text-decoration: underline;
+            }
+          }
+
+          div span.solicitado-em {
+            font-size: 0.8rem;
+            padding-right: 0.5rem;
+          }
+        }
+      }
     }
 
-    div.infos {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25em;
+    &:nth-child(2) {
+      flex: 1 1 calc(50% - 0.5rem);
+      .lista-pagamentos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
 
-      span#titulo {
-        font-size: 1em;
-      }
+        .card-pagamento {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.27rem;
+          padding: 0.5rem 1rem;
+          border: 1px solid var(--color-border);
+          flex-direction: column;
+          border-radius: 4px;
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+          flex: 1 1 calc(50% - 0.5rem);
+          max-width: 410px;
+          border-top: 5px solid var(--color-card-primary);
 
-      span#descricao {
-        font-size: 1.2em;
-        font-weight: bold;
-        color: var(--color-text-secondary);
+          &:nth-child(even) {
+            border-top: 5px solid var(--color-card-secondary);
+          }
+
+          span {
+            width: 100%;
+            text-align: center;
+
+            &.em-tempo {
+              font-size: 0.8rem;
+              font-weight: 600;
+              border: 1px solid var(--dourado);
+              color: var(--dourado);
+              border-radius: 4px;
+              padding: 0.25rem 0.5rem;
+              margin: 0;
+            }
+
+            &.atrasado {
+              font-size: 0.8rem;
+              font-weight: 600;
+              border: 1px solid var(--reprovado);
+              color: var(--reprovado);
+              border-radius: 4px;
+              padding: 0.25rem 0.5rem;
+              margin: 0;
+            }
+          }
+
+          .forma-pagamento {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            align-items: center;
+            flex-direction: column;
+
+            i {
+              font-size: 2rem;
+            }
+          }
+
+          span.data-limite {
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            margin: 0;
+          }
+        }
       }
     }
-  }
-}
 
-.lista-atendimentos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1em;
-  overflow-y: auto;
-  max-height: 300px;
+    &:nth-child(3) {
+      flex: 1 1 calc(50% - 0.5rem);
 
-  .atendimento {
-    min-height: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    padding: 1em;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    text-align: center;
-    flex: 1 1 calc(50% - 2em);
-    // max-width: 250px;
+      .lista-atendimentos {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .card-atendimento {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          border: 1px solid var(--color-border);
+          align-items: center;
+          border-radius: 4px;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left: 5px solid var(--color-card-primary);
+          min-height: 75px;
+          justify-content: space-between;
+
+          &:nth-child(even) {
+            border-left: 5px solid var(--color-card-secondary);
+          }
+
+          .icon {
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: var(--color-border);
+          }
+
+          .informacoes {
+            font-size: 0.9rem;
+            font-weight: 600;
+            flex: 1 1 60%;
+            word-wrap: break-word;
+            word-break: break-all;
+          }
+        }
+      }
+    }
   }
 }

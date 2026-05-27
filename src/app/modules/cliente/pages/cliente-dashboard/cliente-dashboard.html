@@ -1,53 +1,138 @@
 <main>
-  <section>
-    <div class="cards-list">
-      <div class="card">
-        <i id="icon" class="pi pi-users"></i>
-        <div class="infos">
-          <span id="titulo">Teste</span>
-          <span id="descricao">Descrição</span>
-        </div>
-      </div>
-      <div class="card">
-        <i id="icon" class="pi pi-users"></i>
-        <div class="infos">
-          <span id="titulo">Teste</span>
-          <span id="descricao">Descrição</span>
-        </div>
-      </div>
-      <div class="card">
-        <i id="icon" class="pi pi-users"></i>
-        <div class="infos">
-          <span id="titulo">Teste</span>
-          <span id="descricao">Descrição</span>
-        </div>
-      </div>
-    </div>
-    <p-fieldset
-      legend="Atendimentos Pendentes"
-      [toggleable]="false"
-    >
-      <div class="lista-atendimentos">
-        @for (atendimento of atendimentos; track atendimento.id) {
-          <div class="atendimento">
-            <div class="assunto">
-              {{ atendimento.assunto }}
-            </div>
-            <div class="data">
-              {{ atendimento.data }}
-            </div>
-            <p-button
-              icon="pi pi-send"
-              label="Enviar Mensagem"
-              severity="secondary"
-            />
+  @if (carregandoConsultasAgendadas) {
+    <p-skeleton width="100%" height="42.5vh"></p-skeleton>
+  } @else {
+    <p-fieldset legend="Consultas Agendadas" [toggleable]="false">
+      <p-dataview
+        #dv
+        [value]="consultasAgendadas"
+        [paginator]="true"
+        [rows]="6"
+      >
+        <ng-template #list let-consultas>
+          <div class="lista-consultas">
+            @for (consulta of consultas; track consulta.id) {
+              <div class="consulta-card">
+                <div
+                  style="
+                    min-width: 200px;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 0.5rem;
+                  "
+                >
+                  <div class="body-card">
+                    <span class="tipo-consulta">{{
+                      consulta.tipoConsulta
+                    }}</span>
+                    <span class="veterinario">
+                      Veterinário: {{ consulta.veterinario }}
+                    </span>
+                    <span class="pet"> Pet: {{ consulta.pet }} </span>
+                  </div>
+                  <div>
+                    <span class="solicitado-em"
+                      >Data e Hora da Consulta:
+                      {{ consulta.dataConsulta }}</span
+                    >
+                    <span class="solicitado-em"
+                      >Solicitado Em: {{ consulta.dataSolicitacao }}</span
+                    >
+                  </div>
+                </div>
+                <p-button
+                  label="Ver"
+                  icon="fa fa-eye"
+                  severity="secondary"
+                  (click)="acessarConsulta(consulta)"
+                />
+              </div>
+            }
           </div>
-        }
-      </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhuma consulta agendada!</span>
+        </ng-template>
+      </p-dataview>
     </p-fieldset>
-  </section>
-  <section>
-    <p-fieldset legend="Meus Pets" [toggleable]="false"> </p-fieldset>
-    <p-fieldset legend="Consultas Agendadas" [toggleable]="false"> </p-fieldset>
-  </section>
+  }
+  @if (carregandoPagamentosPendentes) {
+    <p-skeleton width="calc(50% - 0.5rem)" height="42.5vh"></p-skeleton>
+  } @else {
+    <p-fieldset legend="Pagamentos Pendentes/Atrasados" [toggleable]="false">
+      <p-dataview
+        #dv
+        [value]="pagamentosPendentes"
+        [paginator]="true"
+        [rows]="2"
+      >
+        <ng-template #list let-pagamentos>
+          <div class="lista-pagamentos">
+            @for (pagamento of pagamentos; track pagamento.id) {
+              <div class="card-pagamento">
+                <span [ngClass]="pagamento.atrasado ? 'atrasado' : 'em-tempo'">
+                  {{ pagamento.atrasado ? "Atrasado" : "Em Tempo" }}
+                </span>
+                <hr />
+                <div class="forma-pagamento">
+                  <strong>
+                    Forma de Pagamento - {{ pagamento.tipoPagamento }}
+                  </strong>
+                  <i [ngClass]="iconePagamento(pagamento)"></i>
+                </div>
+                <span class="data-limite">
+                  Data Limite: {{ pagamento.dataLimitePagamento }}
+                </span>
+                <hr />
+                <p-button
+                  label="Acessar Pagamento"
+                  icon="fa fa-eye"
+                  severity="secondary"
+                  [style]="{ width: '100%' }"
+                />
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados"
+            >Nenhum pagamento pendente ou atrasado!</span
+          >
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  }
+  @if (carregandoAtendimentosPendentes) {
+    <p-skeleton width="calc(50% - 0.5rem)" height="42.5vh"></p-skeleton>
+  } @else {
+    <p-fieldset legend="Atendimentos Pendentes" [toggleable]="false">
+      <p-dataview
+        #dv
+        [value]="atendimentosPendentes"
+        [paginator]="true"
+        [rows]="3"
+      >
+        <ng-template #list let-atendimentos>
+          <div class="lista-atendimentos">
+            @for (atendimento of atendimentos; track atendimento.id) {
+              <div class="card-atendimento">
+                <div class="icon">
+                  <i class="fa fas fas fa-headset"></i>
+                </div>
+                <div class="informacoes">
+                  {{ atendimento.mensagem }}
+                </div>
+                <p-button icon="fa fa-eye" severity="secondary" />
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhum atendimento pendente!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  }
 </main>
