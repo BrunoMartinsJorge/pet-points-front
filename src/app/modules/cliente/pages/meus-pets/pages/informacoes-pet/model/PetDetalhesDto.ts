@@ -1,4 +1,5 @@
 import type { GeneroEnum } from "../../../../../../../shared/models/enums/GeneroEnum";
+import type { StatusPerfilEnum } from "../../../../../../../shared/models/enums/StatusPerfilEnum";
 import type { TipoAnimalEnum } from "../../../../../../../shared/models/enums/TipoAnimalEnum";
 
 export interface PetDetalhesDto {
@@ -11,6 +12,7 @@ export interface PetDetalhesDto {
   observacoes: string;
   imagem: string;
   petsRelacionados: PetSemelhantesDto[];
+  status: StatusPerfilEnum;
 }
 
 export interface PetSemelhantesDto {

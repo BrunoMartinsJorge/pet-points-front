@@ -1,27 +1,43 @@
 <main>
   <section>
-    <p-fieldset legend="Meus Pets" [style]="{ height: '100%' }">
-      @if (pets === []) {
-        <h3>Nenhum pet cadastrado</h3>
+    <p-fieldset legend="Meus Pets">
+      @if (pets.length === 0) {
+        <span class="sem-resultados">Nenhum pet encontrado!</span>
       } @else {
-        <div class="lista-pets">
-          @for (pet of pets; track pet.id) {
-            <app-pet-card [pet]="pet"></app-pet-card>
-          }
-        </div>
+        <p-dataview [value]="pets" [rows]="4" [paginator]="true">
+          <ng-template #list let-petsLista>
+            <div class="lista-pets">
+              @for (pet of petsLista; track pet.id) {
+                <app-pet-card [pet]="pet"></app-pet-card>
+              }
+            </div> </ng-template
+        ></p-dataview>
       }
     </p-fieldset>
   </section>
   <section>
-    <p-fieldset legend="Meus Pets com Consultas" [style]="{ height: '100%' }">
-      @if (consultas === []) {
-        <h3>Nenhuma consulta cadastrada</h3>
+    <p-fieldset legend="Meus Pets com Consultas">
+      @if (consultas.length === 0) {
+        <span class="sem-resultados">Nenhuma consulta encontrada!</span>
       } @else {
-        @for (consulta of consultas; track consulta.id) {
-          <app-consulta-pet-card [consulta]="consulta"></app-consulta-pet-card>
-        }
+        <p-dataview [value]="consultas" [rows]="4" [paginator]="true">
+          <ng-template #list let-consultasLista>
+            <div class="lista-consultas">
+              @for (consulta of consultasLista; track consulta.id) {
+                <app-consulta-pet-card
+                  [consulta]="consulta"
+                ></app-consulta-pet-card>
+              }
+            </div> </ng-template
+        ></p-dataview>
       }
     </p-fieldset>
-    <p-button icon="fa fa-plus" label="Adicionar Novo Pet" [style]="{ width: '100%' }" severity="success" (click)="adicionarNovoPet()"></p-button>
+    <p-button
+      icon="fa fa-plus"
+      label="Adicionar Novo Pet"
+      [style]="{ width: '100%', margin: '1rem 0' }"
+      severity="success"
+      (click)="adicionarNovoPet()"
+    ></p-button>
   </section>
 </main>

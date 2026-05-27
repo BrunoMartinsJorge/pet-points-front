@@ -7,4 +7,6 @@ export interface MeuPetConsultaDto {
   tipoConsulta: string;
   solicitadoEm: string;
   dataConsulta: string;
+  imagem: string;
+  idPet: number;
 }

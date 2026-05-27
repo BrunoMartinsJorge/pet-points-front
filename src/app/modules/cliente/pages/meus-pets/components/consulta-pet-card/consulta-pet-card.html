@@ -1,13 +1,24 @@
 @if (consulta !== null) {
   <div class="card">
-    <div class="foto"></div>
+    <div class="foto">
+      @if (consulta.imagem !== null) {
+        <img [src]="getUrlImagem(consulta)" alt="{{ consulta.pet }}" />
+      } @else {
+        <i class="fa-solid fa-paw"></i>
+      }
+    </div>
     <div class="info">
-      <span>{{ consulta.tipoConsulta }} - <app-bag-status-consulta [status]="consulta.status"></app-bag-status-consulta></span>
+      <span
+        >{{ consulta.tipoConsulta }} -
+        <app-bag-status-consulta
+          [status]="consulta.status"
+        ></app-bag-status-consulta
+      ></span>
       <hr />
       <span class="info-pet"
         >{{ consulta.pet }} - {{ consulta.dataConsulta }}</span
       >
     </div>
-    <p-button icon="pi pi-eye"/>
+    <p-button icon="pi pi-eye" (click)="acessarConsulta(consulta)" />
   </div>
 }

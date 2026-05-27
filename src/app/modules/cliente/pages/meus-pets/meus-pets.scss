@@ -13,7 +13,7 @@ main {
   }
 
   p-fieldset {
-    height: 100% !important;
+    height: 100%;
     overflow-y: auto;
   }
 
@@ -32,8 +32,11 @@ main {
   section:nth-child(2) {
     flex: 1;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    grid-gap: 1em;
+
+    .lista-consultas {
+      display: flex;
+      flex-direction: column;
+      grid-gap: 1em;
+    }
   }
 }

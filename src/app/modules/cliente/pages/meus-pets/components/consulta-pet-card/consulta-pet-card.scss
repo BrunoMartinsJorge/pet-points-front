@@ -1,30 +1,43 @@
 div.card {
-    display: flex;
-    border: 1px solid var(--color-border);
-    padding: 1em;
-    border-radius: 0.5em;
-    min-height: 100px;
-    background-color: var(--color-secondary);
+  display: flex;
+  border: 1px solid var(--color-border);
+  padding: 1em;
+  border-radius: 0.5em;
+  min-height: 100px;
+  background-color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  grid-gap: 1em;
+
+  div.foto {
+    width: 100px;
+    height: 100px;
     display: flex;
     align-items: center;
-    grid-gap: 1em;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--color-border);
 
-    div.foto {
-        width: 100px;
-        height: 100px;
-        display: block;
-        border-radius: 50%;
-        background-color: #ccc;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
     }
 
-    div.info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        
-        hr {
-            width: 100%;
-        }
+    i {
+        font-size: 2em;
     }
+  }
+
+  div.info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    hr {
+      width: 100%;
+    }
+  }
 }

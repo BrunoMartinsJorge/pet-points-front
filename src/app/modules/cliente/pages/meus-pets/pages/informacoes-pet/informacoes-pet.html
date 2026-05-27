@@ -1,79 +1,422 @@
+<p-toast></p-toast>
 <main>
   <section>
-    <p-fieldset
-      legend="Dados do Pet Selecionado"
-      [toggleable]="false"
-      [style]="{ height: '100%' }"
-    >
-      <div class="informacoes-pet">
-        <div class="imagem"></div>
+    <p-fieldset legend="Informações Gerais" [toggleable]="false">
+      @if (petSelecionado === null || petSelecionado === undefined) {
+        <p>Selecione um pet para visualizar suas informações.</p>
+      } @else {
         <div class="informacoes">
-          <strong
-            >{{ petSelecionado?.nome }} - {{ petSelecionado?.raca }}</strong
-          >
-          <br />
-          <span class="data">{{ petSelecionado?.dataNascimento }}</span>
-          <span class="data">{{ petSelecionado?.dataRegistro }}</span>
-          @if (petSelecionado) {
-            <span class="tags">
-              <app-tipo-pet-bag [tipo]="petSelecionado.tipo"></app-tipo-pet-bag>
-              <app-genero-bag [genero]="petSelecionado.genero"></app-genero-bag>
-            </span>
-          }
-        </div>
-        <p-button icon="fa-solid fa-id-card" (click)="buscarCarteirinha()" />
-      </div>
-      <hr />
-      <br />
-      <div>
-        <label for="observacoes">Observações</label>
-        <textarea
-          name=""
-          id="observacoes"
-          pTextarea
-          style="width: 100%; height: 150px"
-          disabled
-        ></textarea>
-      </div>
-      <br />
-      <hr />
-      <br />
-      <p-fieldset legend="Pets Relacionados" [toggleable]="false">
-        <div class="cards">
-          @for (pet of petsRelacionados; track pet.id) {
-            <button class="card" (click)="acessarPet(pet.id)">
-              <div class="imagem-pet"></div>
-              <div>
-                <strong>{{ pet.nome }}</strong>
-                <br />
-                <span class="tags">
-                  <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
-                  <app-genero-bag [genero]="pet.genero"></app-genero-bag>
+          <div class="imagem">
+            @if (petSelecionado.imagem !== null) {
+              <img
+                [src]="getUrlImagem(petSelecionado)"
+                alt="{{ petSelecionado.nome }}"
+              />
+            } @else {
+              <i class="fa-solid fa-paw"></i>
+            }
+          </div>
+          <div class="dados">
+            <div>
+              <h3>{{ petSelecionado.nome }}</h3>
+              <div class="bags">
+                <span
+                  [ngClass]="'status ' + petSelecionado.status.toLowerCase()"
+                >
+                  {{ petSelecionado.status === "A" ? "Ativo" : "Desativado" }}
                 </span>
+                <span>
+                  {{ petSelecionado.raca }}
+                </span>
+                <app-tipo-pet-bag
+                  [tipo]="petSelecionado.tipo"
+                ></app-tipo-pet-bag>
+                <app-genero-bag
+                  [genero]="petSelecionado.genero"
+                ></app-genero-bag>
               </div>
-            </button>
-          }
+            </div>
+            <hr />
+            <div class="dados-informacoes">
+              <span><strong>Raça:</strong> {{ petSelecionado.raca }}</span>
+              <div class="datas">
+                <span
+                  ><strong>Data de Nascimento:</strong>
+                  {{ petSelecionado.dataNascimento }}</span
+                >
+                <span
+                  ><strong>Data de Registro:</strong>
+                  {{ petSelecionado.dataRegistro }}</span
+                >
+              </div>
+            </div>
+          </div>
         </div>
-      </p-fieldset>
+      }
+      <hr />
+      <label for="informacoes">Observações:</label>
+      <textarea
+        name="informacoes"
+        id="informacoes"
+        pTextarea
+        disabled
+        [value]="petSelecionado?.observacoes"
+      ></textarea>
+      <hr />
+      <div class="acoes">
+        <p-button
+          pTooltip="Editar Pet"
+          icon="fa fa-edit"
+          severity="primary"
+          (click)="alterarVisibilidadeDialogEditarPet()"
+        />
+        <p-button
+          pTooltip="Gerar Carteirinha"
+          icon="fa fa-id-card"
+          severity="info"
+          (click)="buscarCarteirinha()"
+        />
+        <p-button
+          pTooltip="Desativar Pet"
+          [disabled]="petSelecionado?.status === 'D'"
+          icon="fa fa-trash"
+          severity="danger"
+          (click)="alterarVisibilidadeDialogDesativarPet()"
+        />
+      </div>
+    </p-fieldset>
+    <p-fieldset legend="Consultas do Pet" [toggleable]="false">
+      <p-dataview [value]="consultasPet" [rows]="4" [paginator]="true">
+        <ng-template #list let-consultas>
+          <div class="lista-consultas">
+            @for (consulta of consultas; track consulta?.id) {
+              <div class="consulta-card">
+                <div
+                  style="
+                    min-width: 200px;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                  "
+                >
+                  <div class="body-card">
+                    <app-bag-status-consulta
+                      [status]="consulta.statusConsulta"
+                    ></app-bag-status-consulta>
+                    <strong
+                      >Veterinário: {{ consulta.veterinarioConsulta }}</strong
+                    >
+                    <span class="tipo-consulta">{{
+                      consulta.tipoConsulta
+                    }}</span>
+                  </div>
+                  <hr />
+                  <div>
+                    <span class="solicitado-em"
+                      >Data e Hora da Consulta:
+                      {{
+                        consulta.dataHoraConsulta | date: "dd/MM/yyyy - HH:mm"
+                      }}</span
+                    >
+                  </div>
+                </div>
+                <p-button
+                  label="Ver"
+                  icon="fa fa-eye"
+                  severity="secondary"
+                  (click)="acessarConsulta(consulta)"
+                />
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+        </ng-template>
+      </p-dataview>
     </p-fieldset>
   </section>
   <section>
-    <p-fieldset
-      legend="Consultas do Pet"
-      [toggleable]="false"
-      [style]="{ height: '100%' }"
-    >
+    <p-fieldset legend="Pets Relacionados" [toggleable]="false">
+      <p-dataview [value]="petsRelacionados" [rows]="4" [paginator]="true">
+        <ng-template #list let-pets>
+          <div class="lista-pets-relacionados">
+            @for (pet of pets; track pet?.id) {
+              <div class="pet-relacionado-card">
+                <div class="imagem">
+                  @if (pet.arquivo !== null) {
+                    <img [src]="getUrlImagem(pet)" alt="{{ pet.nome }}" />
+                  } @else {
+                    <i class="fa-solid fa-paw"></i>
+                  }
+                </div>
+                <div class="dados">
+                  <strong>{{ pet.nome }}</strong>
+                  <div class="bags">
+                    <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
+                    <app-genero-bag [genero]="pet.genero"></app-genero-bag>
+                  </div>
+                </div>
+                <p-button
+                  label="Ver"
+                  icon="fa fa-eye"
+                  severity="secondary"
+                  (click)="acessarPet(pet.id)"
+                />
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Pet relacionado encontrada!</span>
+        </ng-template>
+      </p-dataview>
     </p-fieldset>
   </section>
 </main>
-<p-dialog header="header" [(visible)]="modalCarteirinha" [modal]="true">
-      <div class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-content">
-        <div
-          [innerHTML]="htmlCarteirinha"
-        ></div>
+<p-dialog
+  header="Editar Pet"
+  [(visible)]="visibilidadeDialogEditarPet"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ maxWidth: '600px', width: '100%' }"
+  [draggable]="false"
+>
+  @if (formularioEdicao) {
+    <form [formGroup]="formularioEdicao">
+      <div class="inputs">
+        <div class="input-group">
+          <label for="nome">Nome</label>
+          <input
+            id="nome"
+            type="text"
+            pInputText
+            formControlName="nome"
+            [ngClass]="{
+              'p-invalid':
+                formularioEdicao.get('nome')?.invalid &&
+                formularioEdicao.get('nome')?.touched,
+            }"
+          />
+        </div>
+        <div class="input-group">
+          <label for="raca">Raça</label>
+          <input
+            id="raca"
+            type="text"
+            pInputText
+            formControlName="raca"
+            [ngClass]="{
+              'p-invalid':
+                formularioEdicao.get('raca')?.invalid &&
+                formularioEdicao.get('raca')?.touched,
+            }"
+          />
+        </div>
+        <div class="input-group">
+          <label for="sexo">Sexo</label>
+          <p-select
+            [options]="[
+              { label: 'Masculino', value: 'M' },
+              { label: 'Feminino', value: 'F' },
+            ]"
+            formControlName="sexo"
+            appendTo="body"
+          ></p-select>
+        </div>
+        <div class="input-group">
+          <label for="tipo">Tipo</label>
+          <p-select
+            [options]="[
+              {
+                label: 'Cachorro',
+                value: 'CACHORRO',
+              },
+              {
+                label: 'Gato',
+                value: 'GATO',
+              },
+              {
+                label: 'Coelho',
+                value: 'COELHO',
+              },
+              {
+                label: 'Peixe',
+                value: 'PEIXE',
+              },
+              {
+                label: 'Hamster',
+                value: 'HAMSTER',
+              },
+              {
+                label: 'Pássaro',
+                value: 'PASSARO',
+              },
+            ]"
+            formControlName="tipo"
+            appendTo="body"
+          ></p-select>
+        </div>
       </div>
+      <div class="maior">
+        <label for="dataNascimento">Data de Nascimento</label>
+        <p-datepicker
+          id="dataNascimento"
+          formControlName="dataNascimento"
+          appendTo="body"
+          dateFormat="dd/mm/yy"
+          [style]="{ width: '100%' }"
+          showIcon
+        ></p-datepicker>
+      </div>
+      <div class="maior">
+        <label for="observacoes">Observações</label>
+        <textarea
+          id="observacoes"
+          pInputTextarea
+          formControlName="observacoes"
+          [style]="{ width: '100%' }"
+          rows="4"
+        ></textarea>
+      </div>
+      <div class="maior">
+        <div class="upload-container">
+          <p-fileupload
+            #fu
+            mode="basic"
+            chooseLabel="Selecionar Foto"
+            chooseIcon="pi pi-upload"
+            [multiple]="false"
+            name="demo[]"
+            [fileLimit]="1"
+            accept="image/*"
+            maxFileSize="1000000"
+            (onSelect)="carregarArquivo($event)"
+          >
+            @if (formularioEdicao.get("foto")?.value) {
+              @if (petSelecionado) {
+                <img
+                  [src]="getUrlImagem(petSelecionado)"
+                  alt="Foto do Pet"
+                  class="preview-imagem"
+                />
+              }
+            } @else {
+              <ng-template #empty>
+                <div>Faça o upload da foto aqui</div>
+              </ng-template>
+            }
+            <ng-template #empty>
+              <div>Faça o upload da foto aqui</div>
+            </ng-template>
+          </p-fileupload>
+        </div>
+      </div>
+      <hr />
+      <div class="acoes">
+        <p-button
+          label="Salvar"
+          icon="fa-solid fa-floppy-disk"
+          severity="success"
+          (click)="salvarEdicao()"
+          [disabled]="formularioEdicao.invalid"
+          [style]="{ width: '100%' }"
+        />
+      </div>
+    </form>
+  }
+</p-dialog>
+<p-dialog
+  header="Desativar Pet"
+  [(visible)]="visibilidadeDialogDesativarPet"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ maxWidth: '600px', width: '100%' }"
+  [draggable]="false"
+>
+  @if (petDesativar) {
+    <div class="alerta">
+      <h2>Tem certeza que deseja desativar o pet?</h2>
+      <p>
+        Caso sim, você não poderá mais solicitar consultas ao pet ou editar suas
+        informações, apenas ver suas informações
+      </p>
     </div>
-  </div>
+    <hr />
+    @if (petDesativar.possuiConsultasEmAndamento) {
+      <p class="qtd-consultas">
+        O pet possui consultas iniciadas no momento, então, você deve aguardar a
+        finalização dessa(s) consulta(s).
+      </p>
+    } @else {
+      @if (petDesativar.consultas.length > 0) {
+        <p class="qtd-consultas">
+          O pet possui {{ petDesativar.consultas.length }} consultas pendentes
+          no momento, caso desative o pet, as consultas seram
+          <strong>canceladas!</strong>.
+        </p>
+      } @else {
+        <p class="qtd-consultas">
+          O pet não possui consultas pendentes ou em andamento.
+        </p>
+      }
+    }
+    <p-fieldset legend="Consultas Pendentes ou Iniciadas" [toggleable]="false">
+      <p-dataview
+        [value]="petDesativar.consultas"
+        [rows]="4"
+        [paginator]="true"
+      >
+        <ng-template #list let-consultas>
+          <div class="lista-consultas-pendentes">
+            @for (consulta of consultas; track consulta.id) {
+              <div class="card-consulta">
+                <app-bag-status-consulta
+                  [status]="consulta.status"
+                ></app-bag-status-consulta>
+                <strong>{{ consulta.dataConsulta }}</strong>
+                <span class="tipo-consulta">{{ consulta.tipoConsulta }}</span>
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados"
+            >Nenhuma consulta pendente ou em andamento!</span
+          >
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+    <hr />
+    <p-button
+      label="Desativar"
+      [disabled]="
+        petDesativar.possuiConsultasEmAndamento ||
+        petSelecionado?.status === 'D'
+      "
+      severity="danger"
+      icon="fa fa-trash"
+      [style]="{ width: '100%' }"
+      (click)="desativarPet()"
+    />
+  }
+</p-dialog>
+<p-dialog
+  header="Carteirinha do Pet"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [(visible)]="visibilidadeDialogCarteirinha"
+>
+  <hr />
+  <div [innerHTML]="htmlCarteirinha"></div>
+  <hr />
+  <p-button
+    label="Baixar"
+    severity="success"
+    icon="fa fa-download"
+    [style]="{ width: '100%' }"
+    (click)="baixarCarteirinha()"
+  />
 </p-dialog>

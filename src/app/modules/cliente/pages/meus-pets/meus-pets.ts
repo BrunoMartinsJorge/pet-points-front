@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { MeusPetsService } from './services/meus-pets-service';
 import { PrimeNGModule } from '../../../../shared/modules/prime-ng/prime-ng-module';
 import type { MeuPetDto } from './models/MeuPetDto';
-import { PetCard } from "./components/pet-card/pet-card";
-import { ConsultaPetCard } from "./components/consulta-pet-card/consulta-pet-card";
+import { PetCard } from './components/pet-card/pet-card';
+import { ConsultaPetCard } from './components/consulta-pet-card/consulta-pet-card';
 import type { MeuPetConsultaDto } from './models/MeuPetConsultaDto';
 import { Router } from '@angular/router';
 
@@ -20,31 +20,37 @@ export class MeusPets {
   pets: MeuPetDto[] = [];
   consultas: MeuPetConsultaDto[] = [];
 
-  constructor(){
+  constructor() {
     this.buscarMeusPets();
     this.buscarAsConsultasDeMeusPets();
   }
 
   /**
-   * 
+   *
    * @description Lista todos os pets do cliente
    */
   private buscarMeusPets(): void {
     this.pets = [];
-    this.service.buscarMeusPets().subscribe((res: MeuPetDto[]) => {
-      this.pets = res;
+    this.service.buscarMeusPets().subscribe({
+      next: (res: MeuPetDto[]) => {
+        this.pets = res;
+      }
     });
   }
 
   /**
-   * 
+   *
    * @description Lista todas as consultas de seus pets que estejam: Aprovadas, Em Andamento ou Pendentes
    */
   private buscarAsConsultasDeMeusPets(): void {
     this.consultas = [];
-    this.service.buscarAsConsultasDeMeusPets().subscribe((res: MeuPetConsultaDto[]) => {
-      this.consultas = res;
-    });
+    this.service
+      .buscarAsConsultasDeMeusPets()
+      .subscribe({
+        next: (res: MeuPetConsultaDto[]) => {
+          this.consultas = res;
+        }
+      });
   }
 
   public adicionarNovoPet(): void {

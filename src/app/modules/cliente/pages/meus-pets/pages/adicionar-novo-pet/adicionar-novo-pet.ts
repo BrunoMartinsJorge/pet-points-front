@@ -1,12 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { PrimeNGModule } from '../../../../../../shared/modules/prime-ng/prime-ng-module';
 import { GeneroEnum } from '../../../../../../shared/models/enums/GeneroEnum';
-import { getIconePorTipoPet, PetOpcoes, PetTipoEnum } from '../../../../../../shared/models/PetOpcoes';
+import {
+  getIconePorTipoPet,
+  PetOpcoes,
+  PetTipoEnum,
+} from '../../../../../../shared/models/PetOpcoes';
 import { MeusPetsService } from '../../services/meus-pets-service';
 import { MessageService } from 'primeng/api';
 import type { NovoPetForm } from '../../models/form/NovoPetForm';
+import type { FileSelectEvent } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-adicionar-novo-pet',
@@ -15,42 +26,29 @@ import type { NovoPetForm } from '../../models/form/NovoPetForm';
   styleUrl: './adicionar-novo-pet.scss',
 })
 export class AdicionarNovoPet {
-public petForm!: FormGroup;
+  public petForm!: FormGroup;
   public petOpcoes = PetOpcoes;
   public animateIcon = false;
   public generoOpcoes = [
     { label: 'Feminino', value: GeneroEnum.FEMININO },
     { label: 'Masculino', value: GeneroEnum.MASCULINO },
   ];
-  selectedFile: File | null = null;
   uploadStatus = '';
   uuidGerado: string | null = null;
   private readonly service = inject(MeusPetsService);
   private readonly toast = inject(MessageService);
 
-  constructor(
-    // private uploadService: ArquivosService
-  ) {
+  constructor() {
     this.gerarFormularioPet();
-  }
-
-  public onFileSelected(event: any): void {
-    this.selectedFile = event.files[0];
   }
 
   public trocarTipoPet(): void {
     this.animateIcon = true;
   }
 
-  onUpload(): void {
-    if (!this.selectedFile) {
-      this.uploadStatus = 'Nenhum arquivo selecionado';
-      return;
-    }
-    // this.uploadService.upload(this.selectedFile).subscribe((uuid) => {
-    //     this.petForm.get('imagem')?.setValue(uuid);
-    //   }
-    // );
+  public carregarArquivo(event: FileSelectEvent): void {
+    const file = event.files[0];
+    if (file) this.petForm.get('foto')?.setValue(file);
   }
 
   public gerarFormularioPet(): void {
@@ -63,6 +61,7 @@ public petForm!: FormGroup;
       observacoes: new FormControl(''),
       imagem: new FormControl(''),
       sexo: new FormControl(GeneroEnum.FEMININO, [Validators.required]),
+      foto: new FormControl(null),
     });
   }
 
@@ -98,10 +97,10 @@ public petForm!: FormGroup;
       raca: petForm.raca,
       genero: petForm.sexo,
       dataNascimento: petForm.dataNascimento,
-      observacoes: petForm.observacoes,
-      imagem: petForm.imagem,
-    }
-    this.service.cadastrarPet(payload).subscribe({
+      observacoes: petForm.observacoes
+    };
+    const file: File = petForm.foto;
+    this.service.cadastrarPet(payload, file).subscribe({
       next: () => {
         this.toast.add({
           severity: 'success',
@@ -110,6 +109,6 @@ public petForm!: FormGroup;
         });
         this.goToBackPage();
       },
-    })
+    });
   }
 }
