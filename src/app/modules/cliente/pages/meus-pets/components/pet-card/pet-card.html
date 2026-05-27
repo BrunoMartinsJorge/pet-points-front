@@ -1,17 +1,24 @@
 @if (pet !== null) {
-  <div class="card">
-    <div class="foto" style="width: 100px;height: 100px;"></div>
+  <div [ngClass]="'card ' + pet.status.toLowerCase()">
+    <div class="foto" style="width: 100px; height: 100px">
+      @if (pet.imagem !== null) {
+        <img [src]="getUrlImagem(pet)" alt="{{ pet.nome }}" />
+      } @else {
+        <i class="fa-solid fa-paw"></i>
+      }
+    </div>
     <div class="info">
       <div>
         <strong>{{ pet.nome }} - {{ pet.raca }}</strong>
         <app-genero-bag [genero]="pet.genero"></app-genero-bag>
+        <span [ngClass]="'status ' + pet.status.toLowerCase()">{{ pet.status === "A" ? "Ativo" : "Desativado" }}</span>
         <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
       </div>
-      <hr>
+      <hr />
       <div>
-        <span>Nascido em {{pet.dataNascimento | date: 'dd/MM/yyyy'}}</span>
+        <span>Nascido em {{ pet.dataNascimento | date: "dd/MM/yyyy" }}</span>
       </div>
     </div>
-    <p-button icon="pi pi-eye" (click)="acessarPet()"/>
+    <p-button icon="pi pi-eye" (click)="acessarPet()" />
   </div>
 }

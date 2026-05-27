@@ -20,4 +20,9 @@ export class PetCard {
   public acessarPet(): void {
     this.router.navigate([`/cliente/meus-pets/informacoes/${this.pet.id}`]);
   }
+
+  public getUrlImagem(pet: MeuPetDto): string {
+    if (pet.imagem == null) return '';
+    return 'http://localhost:8080/cliente/meus-pets/imagem/' + pet.id;
+  }
 }
