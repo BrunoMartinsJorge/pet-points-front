@@ -13,10 +13,18 @@ import { BagStatusConsulta } from '../../../../shared/components/bag-status-cons
 import type { MinhasConsultasDto } from './models/MinhasConsultasDto';
 import type { DetalhesConsultaSelecionadaDto } from './models/DetalhesConsultaSelecionadaDto';
 import type { CancelarConsultaForm } from './form/CancelarConsultaForm';
+import type { PagamentoDto } from './models/PagamentoDto';
+import { TipoPagamentoEnum } from '../../../../shared/models/enums/TipoPagamentoEnum';
+import { TipoPagamentoOpcoes } from '../../../../shared/models/enums/TipoPagamentoEnum';
+import { StatusPagamentoEnum } from '../../../../shared/models/enums/StatusPagamentoEnum';
+import type { FileSelectEvent } from 'primeng/fileupload';
+import { RatingModule } from 'primeng/rating';
+import type { AvaliacaoConsultaDto } from './models/AvaliacaoConsultaDto';
+import type { AvaliacaoConsultaForm } from './form/AvaliacaoConsultaForm';
 
 @Component({
   selector: 'app-minhas-consultas',
-  imports: [PrimeNGModule, StepperModule, BagStatusConsulta],
+  imports: [PrimeNGModule, StepperModule, BagStatusConsulta, RatingModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './minhas-consultas.html',
   styleUrl: './minhas-consultas.scss',
@@ -40,6 +48,8 @@ export class MinhasConsultas implements OnInit {
   public veterinarios: VeterinarioTipoConsultaDto[] = [];
   public veterinarioSelecionado: VeterinarioTipoConsultaDto | null = null;
   public horariosPreenchidos: DiaConsultasVeterinarioDto[] = [];
+  public pagamento: PagamentoDto | null = null;
+
   public readonly dataMinima: Date = new Date();
   public dataConsulta!: Date;
   public horarioConsulta!: string;
@@ -47,22 +57,31 @@ export class MinhasConsultas implements OnInit {
   public pets: OptionSelect[] = [];
   public idPetSelecionado: number | null = null;
   public observacoes = '';
-  public formaPagamento = '';
+  public formaPagamento: TipoPagamentoEnum = TipoPagamentoEnum.PIX;
 
   public consultaSelecionada: MinhasConsultasDto | null = null;
   public detalhesConsultaSelecionada: DetalhesConsultaSelecionadaDto | null =
     null;
+  private formaPagamentoAtual: TipoPagamentoEnum | null = null;
 
-  public readonly formasPagamento = [
-    {
-      label: 'Pix',
-      value: 'PIX',
-    },
-    {
-      label: 'Presencial',
-      value: 'PRESENCIAL',
-    },
-  ];
+  public avaliacao = {
+    pontuacao: 0,
+    observacoes: '',
+  };
+
+  public jaAvaliado = false;
+
+  public get getFormaPagamentoAtual(): TipoPagamentoEnum | null {
+    return this.formaPagamentoAtual;
+  }
+
+  public get consultaPodeSerAvaliada(): boolean {
+    if (!this.consultaSelecionada) return false;
+    if (this.consultaSelecionada.statusConsulta !== 'FINALIZADO') return false;
+    return true;
+  }
+
+  public readonly formasPagamento = TipoPagamentoOpcoes;
 
   ngOnInit(): void {
     this.listarHistoricoConsultas();
@@ -70,6 +89,32 @@ export class MinhasConsultas implements OnInit {
     this.listarConsultasPendentesConfirmadasOuIniciadas();
     this.listarTiposConsulta();
     this.buscarPets();
+    this.existeConsultaPreSelecionada();
+  }
+
+  private existeConsultaPreSelecionada(): void {
+    if (!this.minhasConsultasService.acessoPorPetSelecionado) return;
+
+    const consultaPreSelecionada =
+      this.minhasConsultasService.consultaSelecionada;
+
+    if (consultaPreSelecionada) {
+      this.selecionarConsulta(consultaPreSelecionada);
+      this.minhasConsultasService.acessoPorPetSelecionado = false;
+      return;
+    }
+
+    this.minhasConsultasService.buscarConsultaPorId().subscribe({
+      next: (response: MinhasConsultasDto) => {
+        if (!response) return;
+
+        this.minhasConsultasService.consultaSelecionada = response;
+
+        this.selecionarConsulta(response);
+
+        this.minhasConsultasService.acessoPorPetSelecionado = false;
+      },
+    });
   }
 
   private listarHistoricoConsultas(): void {
@@ -107,8 +152,24 @@ export class MinhasConsultas implements OnInit {
       next: (detalhes) => {
         this.detalhesConsultaSelecionada = detalhes;
         this.visibilidadeDialogDetalhesConsulta = true;
+        this.buscarPagamentoConsultaSelecionada();
+        this.buscarAvaliacao();
       },
     });
+  }
+
+  private buscarPagamentoConsultaSelecionada(): void {
+    if (!this.consultaSelecionada) return;
+    this.pagamento = null;
+    this.formaPagamentoAtual = null;
+    this.minhasConsultasService
+      .buscarPagamentoPorConsulta(this.consultaSelecionada.id)
+      .subscribe({
+        next: (pagamento) => {
+          this.pagamento = pagamento;
+          this.formaPagamentoAtual = pagamento.forma;
+        },
+      });
   }
 
   public selecionarTipoConsulta(tipoConsulta: TiposConsultaDto): void {
@@ -298,7 +359,7 @@ export class MinhasConsultas implements OnInit {
     this.dataConsulta = new Date();
     this.idPetSelecionado = null;
     this.observacoes = '';
-    this.formaPagamento = '';
+    this.formaPagamento = TipoPagamentoEnum.PIX;
   }
 
   public agendarConsulta(): void {
@@ -322,5 +383,111 @@ export class MinhasConsultas implements OnInit {
         this.listarConsultasPendentesConfirmadasOuIniciadas();
       },
     });
+  }
+
+  public get podeAlterarFormaPagamento(): boolean {
+    if (!this.pagamento) return false;
+    return (
+      this.pagamento.status === StatusPagamentoEnum.REPROVADO ||
+      this.pagamento.status === StatusPagamentoEnum.PENDENTE
+    );
+  }
+
+  public novoComprovante: File | null = null;
+
+  public carregarArquivo(event: FileSelectEvent): void {
+    const file = event.files[0];
+    if (file) this.novoComprovante = file;
+  }
+
+  public registrarNovoComprovante(): void {
+    if (!this.consultaSelecionada || !this.novoComprovante) return;
+    this.minhasConsultasService
+      .registrarComprovante(this.consultaSelecionada.id, this.novoComprovante)
+      .subscribe({
+        next: () => {
+          this.toast.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Comprovante registrado com sucesso!',
+          });
+        },
+      });
+  }
+
+  public baixarComprovante(): void {
+    if (!this.pagamento) return;
+    const comprovante = this.pagamento.comprovante;
+    if (comprovante.length === 0) return;
+    const byteCharacters = atob(comprovante);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: this.pagamento.tipoArquivo });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  }
+
+  public alterarFormaPagamento(): void {
+    if (
+      !this.formaPagamentoAtual ||
+      !this.pagamento ||
+      !this.consultaSelecionada
+    )
+      return;
+    if (this.formaPagamento === this.pagamento.forma || !this.formaPagamento)
+      return;
+    this.minhasConsultasService
+      .alterarFormaPagamentoPorConsulta(
+        this.consultaSelecionada.id,
+        this.pagamento.forma,
+      )
+      .subscribe({
+        next: () => {
+          this.toast.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Forma de pagamento alterada com sucesso!',
+          });
+          this.buscarPagamentoConsultaSelecionada();
+        },
+      });
+  }
+
+  public avaliarConsulta(): void {
+    if (!this.consultaSelecionada) return;
+    const form: AvaliacaoConsultaForm = {
+      pontuacao: this.avaliacao.pontuacao,
+      observacoes: this.avaliacao.observacoes,
+    };
+    this.minhasConsultasService
+      .enviarAvaliacaoConsulta(form, this.consultaSelecionada.id)
+      .subscribe({
+        next: () => {
+          this.toast.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Consulta avaliada com sucesso!',
+          });
+          this.buscarAvaliacao();
+        },
+      });
+  }
+
+  private buscarAvaliacao(): void {
+    if (!this.consultaSelecionada) return;
+    this.minhasConsultasService
+      .buscarAvaliacaoConsulta(this.consultaSelecionada.id)
+      .subscribe({
+        next: (response: AvaliacaoConsultaDto) => {
+          if (response.pontuacao) {
+            this.avaliacao.pontuacao = response.pontuacao;
+            this.avaliacao.observacoes = response.observacoes;
+            this.jaAvaliado = true;
+          }
+        },
+      });
   }
 }

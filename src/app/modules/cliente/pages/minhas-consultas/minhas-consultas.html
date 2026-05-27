@@ -189,6 +189,8 @@
       <p-tablist>
         <p-tab value="0">Informações</p-tab>
         <p-tab value="1">Participantes</p-tab>
+        <p-tab value="2">Pagamento</p-tab>
+        <p-tab value="3" [disabled]="!consultaPodeSerAvaliada">Avaliação</p-tab>
       </p-tablist>
       <p-tabpanels>
         <p-tabpanel value="0">
@@ -321,6 +323,188 @@
               <h4>{{ consultaSelecionada?.petConsulta }}</h4>
             </div>
           </p-fieldset>
+        </p-tabpanel>
+        <p-tabpanel value="2">
+          @if (!pagamento) {
+          } @else {
+            @if (pagamento.atrasado) {
+              <div class="pagamento-atrasado">
+                <div class="atrasado">
+                  <i class="pi pi-exclamation-triangle"></i>
+                  <span>Pagamento Atrasado!</span>
+                </div>
+              </div>
+            }
+            <div class="forma-pagamento-status">
+              <div class="input-group">
+                <label for="formaPagamento">Forma de Pagamento</label>
+                <p-select
+                  [options]="formasPagamento"
+                  [(ngModel)]="pagamento.forma"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Forma de Pagamento"
+                  appendTo="body"
+                  [disabled]="!podeAlterarFormaPagamento"
+                />
+              </div>
+              <span [ngClass]="pagamento.status.toLowerCase()">
+                {{ pagamento.status.toString() | textoFormat }}
+              </span>
+            </div>
+            <div class="informacoes-pagamento">
+              <div class="input-group">
+                <label for="dataPagamento">Data de Pagamento</label>
+                <input
+                  type="text"
+                  disabled
+                  [value]="pagamento.dataPagamento"
+                  pInputText
+                />
+              </div>
+              <div class="input-group">
+                <label for="dataLimitePagamento"
+                  >Data Limite de Pagamento</label
+                >
+                <input
+                  type="text"
+                  disabled
+                  [value]="pagamento.dataLimite"
+                  pInputText
+                />
+              </div>
+              <div class="input-group">
+                <label for="dataPagamento">Data Pagamento></label>
+                <input
+                  type="text"
+                  disabled
+                  [value]="pagamento.dataPagamento"
+                  pInputText
+                />
+              </div>
+              <div class="input-group">
+                <label for="valor">Valor da Consulta></label>
+                <input
+                  type="text"
+                  disabled
+                  [value]="pagamento.valor"
+                  pInputText
+                />
+              </div>
+            </div>
+            <p-fieldset
+              legend="Comprovante"
+              [toggleable]="pagamento.comprovante.length > 0"
+            >
+              @if (pagamento.comprovante.length === 0) {
+                @if (pagamento.forma === "PIX") {
+                  <span class="sem-resultados"
+                    >Nenhum comprovante enviado!</span
+                  >
+                } @else {
+                  <span class="sem-resultados"
+                    >Esse modo de pagamento ainda nao possui comprovante!</span
+                  >
+                }
+                <br />
+              }
+              @if (
+                pagamento.status !== "APROVADO" && pagamento.forma === "PIX"
+              ) {
+                <div class="comprovante">
+                  <p-button
+                    pTooltip="Enviar Comprovante"
+                    severity="success"
+                    icon="pi pi-send"
+                    [disabled]="novoComprovante === null"
+                    (click)="registrarNovoComprovante()"
+                  />
+                  <p-button
+                    pTooltip="Baixar Comprovante"
+                    severity="info"
+                    icon="pi pi-download"
+                    [disabled]="pagamento.comprovante.length === 0"
+                    (click)="baixarComprovante()"
+                  />
+                  <p-fileupload
+                    #fu
+                    mode="basic"
+                    chooseLabel="Selecionar Arquivo/Foto"
+                    chooseIcon="pi pi-upload"
+                    [multiple]="false"
+                    [fileLimit]="1"
+                    accept="image/*, application/pdf"
+                    maxFileSize="1000000"
+                    (onSelect)="carregarArquivo($event)"
+                    [auto]="true"
+                  >
+                    <ng-template pTemplate="empty"> fezes </ng-template>
+                  </p-fileupload>
+                </div>
+              }
+            </p-fieldset>
+            @if (
+              getFormaPagamentoAtual !== null &&
+              getFormaPagamentoAtual !== pagamento.forma
+            ) {
+              <br />
+              <p-button
+                label="Alterar Forma de Pagamento"
+                severity="info"
+                icon="fa fa-edit"
+                [style]="{ width: '100%' }"
+                (click)="alterarFormaPagamento()"
+              />
+            }
+            @if (pagamento.status === "REPROVADO") {
+              <div class="input-group">
+                <label for="motivoIndeferimento">Motivo Indeferimento</label>
+                <input
+                  type="text"
+                  disabled
+                  [value]="pagamento.motivoIndeferimento"
+                  pInputText
+                />
+              </div>
+            }
+          }
+        </p-tabpanel>
+        <p-tabpanel value="3">
+          <p class="legenda">
+            Gostaria de avaliar o profissional que realizou a consulta?
+          </p>
+          <div class="formulario-avaliacao-consulta">
+            <div class="input-group">
+              <label for="pontuacao">Pontuação</label>
+              <p-rating
+                stars="5"
+                [(ngModel)]="avaliacao.pontuacao"
+                [disabled]="jaAvaliado"
+              />
+            </div>
+            <hr />
+            <div class="input-group">
+              <label for="observacoes">Observações</label>
+              <textarea
+                name="observacoes"
+                id="observacoes"
+                [(ngModel)]="avaliacao.observacoes"
+                pInputTextarea
+                rows="5"
+                style="max-height: 250px; resize: none"
+                placeholder="Digite aqui suas observações caso tenha..."
+                [disabled]="jaAvaliado"
+              ></textarea>
+            </div>
+          </div>
+          <p-button
+            label="Enviar Avaliação"
+            icon="fa fa-send"
+            severity="success"
+            [style]="{ width: '100%' }"
+            [disabled]="!avaliacao.pontuacao || jaAvaliado"
+            (click)="avaliarConsulta()"
+          />
         </p-tabpanel>
       </p-tabpanels>
     </p-tabs>
@@ -496,7 +680,7 @@
       <p-step-panel [value]="3">
         <ng-template #content let-activateCallback="activateCallback">
           <div style="gap: 1rem; display: flex; flex-direction: column">
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap">
               <p-select
                 [options]="pets"
                 appendTo="body"
