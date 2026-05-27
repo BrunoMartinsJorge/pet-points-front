@@ -9,10 +9,6 @@ export enum PetTipoEnum {
 
 export const PetOpcoes = [
     {
-        label: 'Todos',
-        value: ''
-    },
-    {
         label: 'Cachorro',
         value: PetTipoEnum.CACHORRO
     },

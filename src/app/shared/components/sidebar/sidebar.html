@@ -64,12 +64,18 @@
 
   <div class="user-avatar">
     <div class="imagem">
-      <img [src]="urlImagem" alt="Avatar do usuário" />
+      @if (urlImagem !== "") {
+        <img [src]="urlImagem" alt="Avatar do usuário" />
+      } @else {
+        <div class="sem-imagem">
+          <i class="pi pi-user"></i>
+        </div>
+      }
     </div>
     <div class="info-perfil" (click)="acessarPerfil()">
       <span id="nome">{{ getNomeUsuario.nome }}</span>
       <span id="tipo">{{ getNomeUsuario.tipo }}</span>
     </div>
-    <i class="pi pi-sign-out" (click)="sairPerfil()"></i>
+    <i class="pi pi-sign-out" id="sair-perfil" (click)="sairPerfil()"></i>
   </div>
 </section>

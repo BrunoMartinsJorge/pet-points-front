@@ -1,4 +1,4 @@
 export enum StatusPerfilEnum {
-  A = 'ATIVO',
-  D = 'DESATIVADO',
+  ATIVO = 'A',
+  DESATIVADO = 'D',
 }

@@ -34,7 +34,7 @@ export class Sidebar {
   }
 
   /**
-   * 
+   *
    * @description Verifica se a rota está ativa comparando o caminho da rota com o caminho atual do router
    * @param route - {RoutesModel} - Rota a ser verificada
    * @returns - {boolean} - Verdadeiro se a rota estiver ativa
@@ -44,7 +44,7 @@ export class Sidebar {
   }
 
   /**
-   * 
+   *
    * @description Carrega as rotas permitidas para o usuário a partir do serviço de rotas e as converte para o formato do sidebar
    */
   private carregarRotasPermitidas(): void {
@@ -55,7 +55,7 @@ export class Sidebar {
   }
 
   /**
-   * 
+   *
    * @description Converte as rotas do formato do Angular para o formato do sidebar
    * @param routes - {Routes} - Rotas a serem convertidas
    * @returns - {ListOfRoutes[]} - Rotas convertidas para o formato do sidebar
@@ -89,7 +89,7 @@ export class Sidebar {
   }
 
   /**
-   * 
+   *
    * @description Altera o estado da sidebar entre aberto e fechado
    */
   public mudarEstadoSidebar(): void {
@@ -97,7 +97,7 @@ export class Sidebar {
   }
 
   /**
-   * 
+   *
    * @description Busca o nome do usuário e o tipo de usuário a partir do token e os retorna
    * @returns - {nome: string, tipo: string} - Nome do usuário e tipo de usuário
    */
@@ -124,11 +124,14 @@ export class Sidebar {
     const token = this.tokenService.getToken;
     if (!token) return '';
     const urlImagem = this.tokenService.decodeToken(token).imagem;
-    return ('http://localhost:8080/autenticacao/imagem/'+urlImagem) || '';
+
+    return urlImagem !== ''
+      ? 'http://localhost:8080/autenticacao/imagem/' + urlImagem
+      : '';
   }
 
   /**
-   * 
+   *
    * @description Remove o token e efetua o logout do usuário
    */
   public sairPerfil(): void {
@@ -136,7 +139,7 @@ export class Sidebar {
   }
 
   /**
-   * 
+   *
    * @description Navega para a página de perfil do usuário
    */
   public acessarPerfil(): void {
@@ -144,7 +147,7 @@ export class Sidebar {
   }
 
   /**
-   * 
+   *
    * @description Altera o estado do submenu entre aberto e fechado
    * @param i - {number} - Índice da rota
    * @param j - {number} - Índice da sub-rota
@@ -155,7 +158,7 @@ export class Sidebar {
   }
 
   /**
-   * 
+   *
    * @description Verifica se o submenu está aberto ou fechado
    * @param i - {number} - Índice da rota
    * @param j - {number} - Índice da sub-rota
