@@ -1,0 +1,147 @@
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  section.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .card-pagamentos {
+      flex: 1 1 calc(33% - 0.5rem);
+      min-width: 200px;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 2rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+
+      i {
+        font-size: 3.5em;
+      }
+
+      .infos {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
+
+        h4 {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  section.pagamentos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    p-fieldset {
+      flex: 1 1 calc(50% - 0.5rem);
+      min-width: 200px;
+
+      .lista-pagamentos {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .card-pagamento {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          border: 1px solid var(--color-border);
+          border-radius: 4px;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          padding: 1rem;
+          justify-content: space-between;
+
+          &:nth-child(even) {
+            border-left: 5px solid var(--color-card-primary);
+          }
+
+          &:nth-child(odd) {
+            border-left: 5px solid var(--color-card-secondary);
+          }
+
+          .forma-pagamento {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+
+            i {
+              font-size: 2em;
+            }
+
+            .body-card {
+              display: flex;
+              gap: 0.5rem;
+            }
+          }
+          .badges {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+
+            .status-pagamento {
+              padding: 0.5rem;
+              border: 2px solid var(--color-border);
+              border-radius: 4px;
+              font-weight: 600;
+
+              &.pendente {
+                border-color: var(--pendente);
+                color: var(--pendente);
+              }
+
+              &.enviado {
+                border-color: var(--enviado);
+                color: var(--enviado);
+              }
+
+              &.aprovado {
+                border-color: var(--aprovado);
+                color: var(--aprovado);
+              }
+
+              &.reprovado {
+                border-color: var(--reprovado);
+                color: var(--reprovado);
+              }
+            }
+
+            #pagamento-atrasado {
+              padding: 0.5rem;
+              border-radius: 4px;
+              font-weight: 600;
+
+              &.atrasado {
+                color: var(--reprovado);
+                border: 1px solid var(--reprovado);
+              }
+
+              &.em-tempo {
+                color: var(--dourado);
+                border: 1px solid var(--dourado);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
