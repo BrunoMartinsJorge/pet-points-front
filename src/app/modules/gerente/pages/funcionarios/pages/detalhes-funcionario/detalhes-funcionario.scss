@@ -1,14 +1,13 @@
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 1em 0;
+}
 main {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-
-  hr {
-    border: none;
-    border-top: 1px solid var(--color-border);
-    margin: 1em 0;
-  }
 
   div.informacoes-funcionario {
     display: flex;
@@ -24,6 +23,13 @@ main {
       display: block;
       border-radius: 50%;
       background-color: gray;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
 
     .informacoes {
@@ -87,6 +93,7 @@ main {
     margin-top: 1rem;
     display: flex;
     justify-content: end;
+    gap: 1rem;
   }
 
   .lista-avaliacoes {
@@ -175,7 +182,6 @@ main {
         }
       }
 
-
       div span.movimentado-em,
       div span.solicitado-em {
         font-size: 0.8rem;
@@ -187,6 +193,22 @@ main {
         margin-left: 0.15rem;
         text-decoration: underline;
       }
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+
+  .input-group {
+    margin: 0;
+    flex: 1 1 calc(50% - 0.5rem);
+
+    .p-datepicker.input {
+      width: 100%;
     }
   }
 }

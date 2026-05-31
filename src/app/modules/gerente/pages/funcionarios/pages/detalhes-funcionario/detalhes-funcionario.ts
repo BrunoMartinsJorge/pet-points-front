@@ -13,6 +13,10 @@ import type { MovimentacoesEstoquistaDto } from '../../models/MovimentacoesEstoq
 import { BagTipoMovimentacao } from '../../../../../../shared/components/bag-tipo-movimentacao/bag-tipo-movimentacao';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FuncionariosOpcoesForm } from '../../../../shared/TiposFuncionarios';
+import type { FileSelectEvent } from 'primeng/fileupload';
+import type { NovoFuncionarioForm } from '../registrar-funcionario/forms/NovoFuncionarioForm';
 
 @Component({
   selector: 'app-detalhes-funcionario',
@@ -50,6 +54,25 @@ export class DetalhesFuncionario implements OnInit {
 
   public desativandoFuncionario = false;
 
+  public visibilidadeDialogEditarFuncionario = false;
+  // public editarFuncionarioForm: EditarFuncionarioForm = {
+  //   email: '',
+  //   senha: '',
+  //   telefone: '',
+  //   genero: GeneroEnum.MASCULINO,
+  //   dataNascimento: new Date(),
+  //   permissao: TiposFuncionarios.A,
+  // };
+
+  public readonly generos = [
+    { label: 'Masculino', value: 'M' },
+    { label: 'Feminino', value: 'F' },
+  ];
+
+  public readonly permissoes = FuncionariosOpcoesForm;
+
+  public formularioEditarFuncionario!: FormGroup;
+
   ngOnInit(): void {
     this.ID_FUNCIONARIO = this.getFuncionarioId();
     this.buscarFuncionario();
@@ -61,6 +84,66 @@ export class DetalhesFuncionario implements OnInit {
       id = Number(params.get('id') || null);
     });
     return id;
+  }
+
+  public alterarVisibilidadeEditarFuncionario(): void {
+    this.gerarFormularioEditarFuncionario();
+    this.visibilidadeDialogEditarFuncionario =
+      !this.visibilidadeDialogEditarFuncionario;
+  }
+
+  private gerarFormularioEditarFuncionario(): void {
+    if (!this.funcionario) return;
+    this.formularioEditarFuncionario = new FormGroup({
+      nome: new FormControl(this.funcionario.nome, [
+        Validators.required,
+        Validators.minLength(3),
+      ]),
+      email: new FormControl(this.funcionario.email, [
+        Validators.required,
+        Validators.email,
+      ]),
+      telefone: new FormControl(this.funcionario.telefone, [
+        Validators.required,
+      ]),
+      genero: new FormControl(this.funcionario.genero, [Validators.required]),
+      dataNascimento: new FormControl(
+        this.funcionario.dataNascimento
+          ? new Date(this.funcionario.dataNascimento)
+          : null,
+        [Validators.required],
+      ),
+      permissao: new FormControl(this.funcionario.permissao, [
+        Validators.required,
+      ]),
+      imagem: new FormControl(null),
+    });
+  }
+
+  public get getImagemFuncionario(): string {
+    if (!this.funcionario) return '';
+    const uuid = this.funcionario.arquivo || '';
+    return uuid !== '' ? 'http://localhost:8080/arquivos/' + uuid : '';
+  }
+
+  public carregarArquivo(event: FileSelectEvent): void {
+    const file = event.files[0];
+    if (file) this.formularioEditarFuncionario.get('imagem')?.setValue(file);
+  }
+
+  public enviarAlteracoes(): void {
+    if (!this.funcionario) return;
+    const payload = this.formularioEditarFuncionario
+      .value as NovoFuncionarioForm;
+    const file = this.formularioEditarFuncionario.get('imagem')?.value as File;
+    this.service
+      .editarFuncionario(this.funcionario.id, payload, file)
+      .subscribe({
+        next: () => {
+          this.visibilidadeDialogEditarFuncionario = false;
+          this.buscarFuncionario();
+        },
+      });
   }
 
   private buscarFuncionario(): void {

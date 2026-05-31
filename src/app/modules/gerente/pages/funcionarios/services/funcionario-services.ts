@@ -51,4 +51,22 @@ export class FuncionarioServices {
   public buscarMovimentacoesPorFuncionario(id: number): Observable<MovimentacoesEstoquistaDto[]> {
     return this.http.get<MovimentacoesEstoquistaDto[]>(`${this.URL}/movimentacoes/${id}`);
   }
+
+  public editarFuncionario(id: number, funcionario: NovoFuncionarioForm, foto?: File): Observable<FuncionarioDto> {
+    const formData = new FormData();
+    const tipoFuncionario = funcionario.permissao.charAt(0);
+    formData.append('nome', funcionario.nome);
+    formData.append('genero', funcionario.genero);
+    formData.append('email', funcionario.email);
+    formData.append('telefone', funcionario.telefone);
+    formData.append('permissao', tipoFuncionario);    
+    formData.append(
+      'dataNascimento',
+      funcionario.dataNascimento.toISOString().split('T')[0],
+    );
+    if (foto) {
+      formData.append('foto', foto);
+    }
+    return this.http.put<FuncionarioDto>(`${this.URL}/${id}`, formData);
+  }
 }

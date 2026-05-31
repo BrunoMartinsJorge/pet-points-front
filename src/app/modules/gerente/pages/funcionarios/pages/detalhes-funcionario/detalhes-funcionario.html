@@ -10,7 +10,9 @@
     } @else {
       <p-fieldset legend="Detalhes do Funcionario">
         <div class="informacoes-funcionario">
-          <div class="imagem"></div>
+          <div class="imagem">
+            <img [src]="getImagemFuncionario" alt="Imagem do funcionário">
+          </div>
           <div class="informacoes">
             <div class="header">
               <h3>{{ funcionario.nome }}</h3>
@@ -21,7 +23,7 @@
               <span>Email: {{ funcionario.email }}</span>
               <span>CPF: {{ funcionario.cpf | converterCpf }}</span>
               <span>Registrado em {{ funcionario.dataCadastro }}</span>
-              <span>Data de Nascimento {{ funcionario.dataNascimento }}</span>
+              <span>Data de Nascimento {{ funcionario.dataNascimento | date: "dd/MM/yyyy" }}</span>
               <span>Telefone: {{ funcionario.telefone }}</span>
               <span class="genero">
                 <app-genero-bag [genero]="funcionario.genero"></app-genero-bag>
@@ -30,6 +32,12 @@
           </div>
         </div>
         <div class="acoes">
+          <p-button
+            label="Editar Funcionário"
+            severity="info"
+            icon="fa fa-user-edit"
+            (click)="alterarVisibilidadeEditarFuncionario()"
+          />
           <p-button
             label="Desativar Funcionario"
             severity="danger"
@@ -173,3 +181,102 @@
     }
   }
 </main>
+<p-dialog
+  header="Editar Funcionário"
+  [(visible)]="visibilidadeDialogEditarFuncionario"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ maxWidth: '600px', width: '100%' }"
+  [draggable]="false"
+>
+  @if (formularioEditarFuncionario) {
+    <form [formGroup]="formularioEditarFuncionario">
+      <div class="input-group">
+        <label for="nome">Nome</label>
+        <input
+          formControlName="nome"
+          type="text"
+          pInputText
+          id="nome"
+          placeholder="Digite o nome"
+        />
+      </div>
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input
+          formControlName="email"
+          type="email"
+          pInputText
+          id="email"
+          placeholder="Digite o email"
+        />
+      </div>
+      <div class="input-group">
+        <label for="telefone">Telefone</label>
+        <input
+          formControlName="telefone"
+          type="email"
+          pInputText
+          id="telefone"
+          placeholder="Digite o telefone"
+        />
+      </div>
+      <div class="input-group">
+        <label for="email">Gênero</label>
+        <p-select
+          [options]="generos"
+          formControlName="genero"
+          appendTo="body"
+          placeholder="Selecione um gênero"
+        ></p-select>
+      </div>
+      <div class="input-group">
+        <label for="email">Permissão</label>
+        <p-select
+          [options]="permissoes"
+          formControlName="permissao"
+          appendTo="body"
+          placeholder="Selecione um gênero"
+        ></p-select>
+      </div>
+      <div class="input-group">
+        <label for="email">Data de Nascimento</label>
+        <p-datepicker
+          placeholder="Data de Nascimento"
+          formControlName="dataNascimento"
+          dateFormat="dd/mm/yy"
+          appendTo="body"
+        />
+      </div>
+      <p-button
+        icon="fa fa-download"
+        severity="secondary"
+        [disabled]="
+          funcionario?.arquivo === '' || funcionario?.arquivo === undefined
+        "
+      />
+      <p-fileupload
+        #fu
+        mode="basic"
+        chooseLabel="Selecionar Foto"
+        chooseIcon="pi pi-upload"
+        [multiple]="false"
+        name="demo[]"
+        [fileLimit]="1"
+        accept="image/*"
+        maxFileSize="1000000"
+        (onSelect)="carregarArquivo($event)"
+      >
+      </p-fileupload>
+    </form>
+    <hr />
+    <p-button
+      label="Salvar"
+      icon="pi pi-check"
+      styleClass="p-button-success"
+      (click)="enviarAlteracoes()"
+      [disabled]="formularioEditarFuncionario.invalid"
+      [style]="{ width: '100%' }"
+    ></p-button>
+  }
+</p-dialog>
