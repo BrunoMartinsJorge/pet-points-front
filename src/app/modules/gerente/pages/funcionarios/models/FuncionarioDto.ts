@@ -8,8 +8,9 @@ export interface FuncionarioDto {
   cpf: string;
   telefone: string;
   genero: GeneroEnum;
-  dataNascimento: string;
+  dataNascimento: Date;
   dataCadastro: string;
   permissao: string;
   statusPerfil: StatusPerfilEnum;
+  arquivo: string;
 }
