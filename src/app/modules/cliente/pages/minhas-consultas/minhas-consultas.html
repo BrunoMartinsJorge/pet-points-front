@@ -349,7 +349,7 @@
                 />
               </div>
               <span [ngClass]="pagamento.status.toLowerCase()">
-                {{ pagamento.status.toString() | textoFormat }}
+                {{ pagamento.status.toString() | titlecase }}
               </span>
             </div>
             <div class="informacoes-pagamento">
@@ -438,7 +438,7 @@
                     (onSelect)="carregarArquivo($event)"
                     [auto]="true"
                   >
-                    <ng-template pTemplate="empty"> fezes </ng-template>
+                    <ng-template pTemplate="empty"></ng-template>
                   </p-fileupload>
                 </div>
               }
