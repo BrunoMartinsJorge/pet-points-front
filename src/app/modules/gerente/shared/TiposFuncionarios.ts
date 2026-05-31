@@ -28,6 +28,25 @@ export const FuncionariosOpcoes = [
   },
 ];
 
+export const FuncionariosOpcoesForm = [
+  {
+    label: 'Gerente',
+    value: TiposFuncionarios.G,
+  },
+  {
+    label: 'Atendente',
+    value: TiposFuncionarios.A,
+  },
+  {
+    label: 'Veterinario',
+    value: TiposFuncionarios.V,
+  },
+  {
+    label: 'Estoquista',
+    value: TiposFuncionarios.E,
+  },
+];
+
 const iconePrefixo = 'fa fa-';
 
 export function getIconePorTipoFuncionario(tipo: TiposFuncionarios): string {
