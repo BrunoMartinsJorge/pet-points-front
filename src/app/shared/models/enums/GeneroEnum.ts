@@ -16,4 +16,15 @@ export const GeneroEnumOpcoes = [
         label: 'Feminino',
         value: GeneroEnum.FEMININO
     }
-]
+];
+
+export const GeneroEnumOpcoesFormulario = [
+    {
+        label: 'Masculino',
+        value: GeneroEnum.MASCULINO
+    },
+    {
+        label: 'Feminino',
+        value: GeneroEnum.FEMININO
+    }
+];
