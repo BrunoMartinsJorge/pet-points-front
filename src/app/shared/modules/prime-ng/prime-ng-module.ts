@@ -30,7 +30,6 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
 import { TooltipModule } from 'primeng/tooltip';
 import { PasswordModule } from 'primeng/password';
 import { DataViewModule } from 'primeng/dataview';
-import { TextoFormatPipe } from '../../pipes/texto-format-pipe';
 
 @NgModule({
   providers: [MessageService],
@@ -66,7 +65,6 @@ import { TextoFormatPipe } from '../../pipes/texto-format-pipe';
     RadioButtonModule,
     PasswordModule,
     DataViewModule,
-    TextoFormatPipe,
   ],
   exports: [
     CommonModule,
@@ -100,7 +98,6 @@ import { TextoFormatPipe } from '../../pipes/texto-format-pipe';
     RadioButtonModule,
     PasswordModule,
     DataViewModule,
-    TextoFormatPipe,
   ],
 })
 export class PrimeNGModule {}
