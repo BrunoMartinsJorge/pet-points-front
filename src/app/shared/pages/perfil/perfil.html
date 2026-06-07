@@ -1,0 +1,153 @@
+<main>
+  @if (carregandoUsuario) {
+    <p-skeleton width="100%" height="300px"></p-skeleton>
+  } @else {
+    <p-fieldset legend="Perfil do Usuário">
+      <section
+        class="informacoes-usuario"
+        [class.imagem]="getImagemUsuario || novaImagem.url"
+      >
+        <div>
+          <app-imagem
+            [urlImagem]="novaImagem.url || getImagemUsuario"
+            [alt]="'Imagem do Usuário'"
+            [imagemRedonda]="false"
+            [tamanhoTotal]="true"
+            [width]="'200px'"
+            [preview]="true"
+          />
+          @if (podeEditar) {
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 0.5rem;
+              "
+            >
+              <p-fileupload
+                #fu
+                mode="basic"
+                [chooseLabel]="
+                  novaImagem ? 'Alterar Imagem' : 'Carregar Imagem'
+                "
+                chooseIcon="pi pi-upload"
+                [multiple]="false"
+                name="demo[]"
+                [fileLimit]="1"
+                accept="image/*"
+                maxFileSize="1000000"
+                (onSelect)="carregarArquivo($event)"
+                [auto]="true"
+                [disabled]="!podeEditar"
+                [style]="{ width: '100%' }"
+              />
+            </div>
+          }
+        </div>
+        <form [formGroup]="informacoesUsuario">
+          <div class="input-group">
+            <label for="nome">Nome</label>
+            <input
+              id="nome"
+              type="text"
+              formControlName="nome"
+              [disabled]="true"
+              pInputText
+            />
+          </div>
+          <div class="input-group">
+            <label for="cpf">CPF</label>
+            <input
+              id="cpf"
+              type="text"
+              formControlName="cpf"
+              [disabled]="true"
+              pInputText
+            />
+          </div>
+          <div class="input-group">
+            <label for="dataNascimento">Data de Nascimento</label>
+            <p-datepicker
+              formControlName="dataNascimento"
+              appendTo="body"
+              [disabled]="!podeEditar"
+              inputId="dataNascimento"
+              dateFormat="dd/mm/yy"
+              [fluid]="true"
+              [showIcon]="true"
+            />
+          </div>
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              [disabled]="true"
+              pInputText
+            />
+          </div>
+          <div class="input-group">
+            <label for="telefone">Telefone</label>
+            <input
+              id="telefone"
+              type="text"
+              formControlName="telefone"
+              [disabled]="true"
+              pInputText
+            />
+          </div>
+          <div class="input-group">
+            <label for="genero">Gênero</label>
+            <p-select [options]="tiposGeneros" formControlName="genero">
+            </p-select>
+          </div>
+        </form>
+      </section>
+      <div class="acoes">
+        @if (podeEditar) {
+          <p-button
+            label="Salvar Alterações"
+            severity="success"
+            icon="fa fa-save"
+            (click)="enviarAlteracoes()"
+          />
+        }
+        <p-button
+          label="Editar Perfil"
+          severity="secondary"
+          icon="fa fa-user-edit"
+          (click)="alterarPermissaoEdicao()"
+        />
+        <p-button
+          label="Desativar Perfil"
+          severity="danger"
+          icon="fa fa-user-minus"
+          (click)="desativarPerfil($event)"
+        />
+      </div>
+    </p-fieldset>
+    <p-confirmdialog>
+      <ng-template pTemplate="message">
+        <div class="mensagem-desativacao">
+          <i class="pi pi-exclamation-triangle"></i>
+          <span>
+            Tem certeza que deseja desativar seu perfil? Essa ação não pode ser desfeita.
+          </span>
+          <hr>
+          Suas consultas seram canceladas e seus pets serão desabilitados.
+        </div>
+      </ng-template>
+    </p-confirmdialog>
+  }
+  <hr />
+  @switch (getTipoUsuario) {
+    @case ("CLIENTE") {
+      <section class="outras-informacoes cliente">
+        <p-fieldset legend="Meus Pets"> </p-fieldset>
+        <p-fieldset legend="Pagamentos"> </p-fieldset>
+      </section>
+    }
+  }
+</main>
