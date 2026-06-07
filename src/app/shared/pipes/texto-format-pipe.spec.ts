@@ -1,8 +1,8 @@
-import { TextoFormatPipe } from './texto-format-pipe';
+import { titlecasePipe } from './texto-format-pipe';
 
-describe('TextoFormatPipe', () => {
+describe('titlecasePipe', () => {
   it('create an instance', () => {
-    const pipe = new TextoFormatPipe();
+    const pipe = new titlecasePipe();
     expect(pipe).toBeTruthy();
   });
 });
