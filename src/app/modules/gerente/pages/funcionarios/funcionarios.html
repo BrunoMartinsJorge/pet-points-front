@@ -87,7 +87,9 @@
               <div
                 [class]="'card-funcionario ' + funcionario.statusPerfil.toLowerCase()"
               >
-                <div class="imagem-funcionario"></div>
+                <div class="imagem-funcionario">
+                  <img [src]="getImagemFuncionario(funcionario)" alt="Imagem do funcionário">
+                </div>
                 <div class="informacoes">
                   <div class="header">
                     <h3>{{ funcionario.nome }}</h3>

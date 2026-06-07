@@ -1,0 +1,14 @@
+.imagem-vazia {
+  background-color: var(--color-border);
+  width: 100px;
+  height: 100px;
+
+  &.imagem-redonda {
+    border-radius: 50%;
+  }
+
+  &.tamanho-total {
+    display: block;
+    height: 100%;
+  }
+}

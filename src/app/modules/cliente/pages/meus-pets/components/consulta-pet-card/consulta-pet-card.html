@@ -1,12 +1,13 @@
 @if (consulta !== null) {
   <div class="card">
-    <div class="foto">
-      @if (consulta.imagem !== null) {
-        <img [src]="getUrlImagem(consulta)" alt="{{ consulta.pet }}" />
-      } @else {
-        <i class="fa-solid fa-paw"></i>
-      }
-    </div>
+    <app-imagem
+      [urlImagem]="getUrlImagem(consulta)"
+      [alt]="consulta.pet"
+      [width]="'100'"
+      [height]="'100'"
+      [preview]="false"
+      [imagemRedonda]="true"
+    ></app-imagem>
     <div class="info">
       <span
         >{{ consulta.tipoConsulta }} -

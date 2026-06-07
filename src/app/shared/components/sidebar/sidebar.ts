@@ -123,10 +123,10 @@ export class Sidebar {
   private get getImagemUsuario(): string {
     const token = this.tokenService.getToken;
     if (!token) return '';
-    const urlImagem = this.tokenService.decodeToken(token).imagem;
+    const idUsuario = this.tokenService.decodeToken(token).id_usuario;
 
-    return urlImagem !== ''
-      ? 'http://localhost:8080/autenticacao/imagem/' + urlImagem
+    return idUsuario !== ''
+      ? 'http://localhost:8080/arquivos/usuario/' + idUsuario
       : '';
   }
 
@@ -143,7 +143,8 @@ export class Sidebar {
    * @description Navega para a página de perfil do usuário
    */
   public acessarPerfil(): void {
-    this.router.navigate(['atendente/perfil']);
+    const tipoUsuario = this.getNomeUsuario.tipo.toLocaleLowerCase();
+    this.router.navigate([`/${tipoUsuario}/perfil`]);
   }
 
   /**

@@ -5,10 +5,11 @@ import { GeneroBag } from '../../../../../../shared/components/genero-bag/genero
 import { TipoPetBag } from '../../../../../../shared/components/tipo-pet-bag/tipo-pet-bag';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
+import { Imagem } from '../../../../../../shared/components/imagem/imagem';
 
 @Component({
   selector: 'app-pet-card',
-  imports: [CommonModule, GeneroBag, TipoPetBag, ButtonModule],
+  imports: [CommonModule, GeneroBag, TipoPetBag, ButtonModule, Imagem],
   templateUrl: './pet-card.html',
   styleUrl: './pet-card.scss',
 })

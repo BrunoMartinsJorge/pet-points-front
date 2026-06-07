@@ -4,10 +4,11 @@ import type { MeuPetConsultaDto } from '../../models/MeuPetConsultaDto';
 import { BagStatusConsulta } from '../../../../../../shared/components/bag-status-consulta/bag-status-consulta';
 import { Router } from '@angular/router';
 import { MinhasConsultasService } from '../../../minhas-consultas/services/minhas-consultas-service';
+import { Imagem } from '../../../../../../shared/components/imagem/imagem';
 
 @Component({
   selector: 'app-consulta-pet-card',
-  imports: [PrimeNGModule, BagStatusConsulta],
+  imports: [PrimeNGModule, BagStatusConsulta, Imagem],
   templateUrl: './consulta-pet-card.html',
   styleUrl: './consulta-pet-card.scss',
 })

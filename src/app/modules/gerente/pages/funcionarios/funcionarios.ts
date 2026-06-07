@@ -7,7 +7,7 @@ import type { FuncionarioDto } from './models/FuncionarioDto';
 import { Router } from '@angular/router';
 import type { FiltroFuncionariosForm } from './form/FiltroFuncionariosForm';
 import { ConverterCpfPipe } from '../../../../shared/pipes/converter-cpf-pipe';
-import { GeneroBag } from "../../../../shared/components/genero-bag/genero-bag";
+import { GeneroBag } from '../../../../shared/components/genero-bag/genero-bag';
 
 @Component({
   selector: 'app-funcionarios',
@@ -119,5 +119,11 @@ export class Funcionarios implements OnInit {
         this.carregandoRelatorio = false;
       },
     });
+  }
+
+  public getImagemFuncionario(funcionario: FuncionarioDto): string {
+    if (!funcionario) return '';
+    const uuid = funcionario.arquivo || '';
+    return uuid !== '' ? 'http://localhost:8080/arquivos/' + uuid : '';
   }
 }
