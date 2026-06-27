@@ -27,50 +27,61 @@ section.informacoes-pagamento {
   }
   .badges {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 0.5rem;
 
-    .status-pagamento {
+    span.status-pagamento {
       padding: 0.5rem;
-      border: 2px solid var(--color-border);
-      border-radius: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
       font-weight: 600;
+      font-size: 0.8em;
+      right: 0;
+      position: relative;
+      float: right;
 
+      &.atrasado,
+      &.reprovado {
+        border-color: var(--bag-reprovado);
+        color: var(--bag-reprovado);
+        background-color: var(--bag-reprovado-foreground);
+      }
+
+      &.em-tempo,
       &.pendente {
-        border-color: var(--pendente);
-        color: var(--pendente);
+        border-color: var(--bag-pendente);
+        color: var(--bag-pendente);
+        background-color: var(--bag-pendente-foreground);
       }
 
       &.enviado {
-        border-color: var(--enviado);
-        color: var(--enviado);
+        border-color: var(--bag-iniciado);
+        color: var(--bag-iniciado);
+        background-color: var(--bag-iniciado-foreground);
       }
 
       &.aprovado {
         border-color: var(--aprovado);
         color: var(--aprovado);
-      }
-
-      &.reprovado {
-        border-color: var(--reprovado);
-        color: var(--reprovado);
+        background-color: var(--aprovado-foreground);
       }
     }
-    #pagamento-atrasado {
+    span {
       padding: 0.5rem;
-      border-radius: 4px;
+      border-radius: 8px;
       font-weight: 600;
-
-      &.atrasado {
-        color: var(--reprovado);
-        border: 1px solid var(--reprovado);
+      font-size: 0.8em;
+      &.em-tempo {
+        border: 1px solid var(--bag-pendente);
+        color: var(--bag-pendente);
+        background-color: var(--bag-pendente-foreground);
       }
 
-      &.em-tempo {
-        color: var(--dourado);
-        border: 1px solid var(--dourado);
+      &.atrasado {
+        border: 1px solid var(--bag-reprovado);
+        color: var(--bag-reprovado);
+        background-color: var(--bag-reprovado-foreground);
       }
     }
   }

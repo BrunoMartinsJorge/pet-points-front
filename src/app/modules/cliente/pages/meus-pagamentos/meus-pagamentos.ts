@@ -5,7 +5,7 @@ import { PrimeNGModule } from '../../../../shared/modules/prime-ng/prime-ng-modu
 import type { PagamentosDto } from './models/PagamentosDto';
 import type { CardsPagamentoDto } from './models/CardsPagamentoDto';
 import { TipoPagamentoEnum } from '../../../../shared/models/enums/TipoPagamentoEnum';
-import { DetalhesPagamento } from "./components/detalhes-pagamento/detalhes-pagamento";
+import { DetalhesPagamento } from './components/detalhes-pagamento/detalhes-pagamento';
 
 @Component({
   selector: 'app-meus-pagamentos',
@@ -47,14 +47,28 @@ export class MeusPagamentos implements OnInit {
   public visibilidadeDialogDetalhesPagamento = false;
 
   ngOnInit(): void {
+    this.verificarPagamentoPreSelecionadoExiste();
     this.buscarInformacoesCards();
     this.listarPagamentosPendentesAtrasados();
     this.listarPagamentosReprovados();
     this.listarHistoricoPagamentos();
   }
 
+  private verificarPagamentoPreSelecionadoExiste(): void {
+    if (!this.service.redirecionadoParaPagamento) return;
+    const id = this.service.idPagamentoSelecionado;
+    if (id === null) return;
+    this.service.buscarPagamento(id).subscribe({
+      next: (response: PagamentosDto) => {
+        this.selecionarPagamento(response);
+        this.service.idPagamentoSelecionado = null;
+        this.service.redirecionadoParaPagamento = false;
+      },
+    });
+  }
+
   /**
-   * 
+   *
    * @description Metodo responsável por carregar alterações feitas no componente de a detalhes-pagamento
    */
   public carregarAlteracoes(): void {
@@ -65,7 +79,7 @@ export class MeusPagamentos implements OnInit {
   }
 
   /**
-   * 
+   *
    * @description Metodo responsável por buscar as informacoes dos cards iniciais de pagamento
    */
   private buscarInformacoesCards(): void {
@@ -85,7 +99,7 @@ export class MeusPagamentos implements OnInit {
   }
 
   /**
-   * 
+   *
    * @description Metodo responsável por listar os pagamentos com status pendentes ou que estejam atrasados
    */
   private listarPagamentosPendentesAtrasados(): void {
@@ -101,7 +115,7 @@ export class MeusPagamentos implements OnInit {
   }
 
   /**
-   * 
+   *
    * @description Metodo responsável por listar os pagamentos reprovados
    */
   private listarPagamentosReprovados(): void {
@@ -117,7 +131,7 @@ export class MeusPagamentos implements OnInit {
   }
 
   /**
-   * 
+   *
    * @description Metodo responsável por listar os pagamentos com status finalizado ou enviado
    */
   private listarHistoricoPagamentos(): void {
@@ -133,7 +147,7 @@ export class MeusPagamentos implements OnInit {
   }
 
   /**
-   * 
+   *
    * @param tipoPagamento {TipoPagamentoEnum} tipoPagamento - Tipo ou forma de pagamento escolhida
    * @description Metodo responsável por retornar o icone referente ao tipo de pagamento
    * @returns {string} iconePagamento - icone referente ao tipo de pagamento
@@ -147,7 +161,7 @@ export class MeusPagamentos implements OnInit {
   }
 
   /**
-   * 
+   *
    * @param pagamento {PagamentosDto} pagamento - Pagamento selecionado
    * @description Metodo responsável por selecionar um pagamento
    */

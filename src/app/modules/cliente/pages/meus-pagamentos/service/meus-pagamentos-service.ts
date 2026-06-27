@@ -54,4 +54,8 @@ export class MeusPagamentosService {
   public alterarFormaPagamento(idPagamento: number, novaForma: TipoPagamentoEnum): Observable<void> {
     return this.http.put<void>(`${this.URL}/alterar-forma-pagamento/${idPagamento}/${novaForma}`, {});
   }
+
+  public buscarPagamento(idPagamento: number): Observable<PagamentosDto> {
+    return this.http.get<PagamentosDto>(`${this.URL}/${idPagamento}`);
+  }
 }
