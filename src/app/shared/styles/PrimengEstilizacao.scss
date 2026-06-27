@@ -1,9 +1,14 @@
 input,
 .p-button {
-    border-radius: 2px !important;
+  border-radius: 2px !important;
 }
 
 .p-fieldset,
 .p-password-input {
   width: 100%;
+}
+
+p-paginator {
+  margin-top: 1rem;
+  border-radius: 0 !important;
 }
