@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -30,9 +30,10 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
 import { TooltipModule } from 'primeng/tooltip';
 import { PasswordModule } from 'primeng/password';
 import { DataViewModule } from 'primeng/dataview';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   imports: [
     CommonModule,
     ButtonModule,
@@ -65,6 +66,7 @@ import { DataViewModule } from 'primeng/dataview';
     RadioButtonModule,
     PasswordModule,
     DataViewModule,
+    ConfirmDialogModule,
   ],
   exports: [
     CommonModule,
@@ -98,6 +100,7 @@ import { DataViewModule } from 'primeng/dataview';
     RadioButtonModule,
     PasswordModule,
     DataViewModule,
+    ConfirmDialogModule,
   ],
 })
 export class PrimeNGModule {}
