@@ -1,3 +1,5 @@
-<span id="status" class="{{status?.toLocaleLowerCase()}}">
-    {{getTexto}}
-</span>
+@if (status !== null && status !== undefined) {
+  <span [ngClass]="'status ' + status.toLowerCase()">
+    {{ getTexto }}
+  </span>
+}
