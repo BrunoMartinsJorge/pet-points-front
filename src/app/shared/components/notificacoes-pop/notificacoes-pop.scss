@@ -1,0 +1,51 @@
+.lista-notificacoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 14px;
+
+  .notificacao-card {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 375px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.25rem;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .icon {
+      display: flex;
+      padding: 0.5rem;
+      border-radius: 4px;
+      background-color: var(--bag-iniciado);
+      color: var(--color-text);
+    }
+
+    .infos {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+
+      span {
+        &.titulo {
+          font-weight: 600;
+        }
+        &.mensagem {
+          font-size: 12px;
+          color: var(--color-text);
+        }
+        &.data {
+          display: flex;
+          gap: 0.25rem;
+          align-items: center;
+          font-size: 12px;
+          color: var(--color-text);
+        }
+      }
+    }
+  }
+}

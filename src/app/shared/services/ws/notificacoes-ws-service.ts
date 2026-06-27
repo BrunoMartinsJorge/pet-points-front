@@ -5,6 +5,7 @@ import { environment } from '../../../core/environments/environment-dev';
 import SockJS from 'sockjs-client';
 import { TokenService } from '../../../core/services/token-service';
 import { NotificacoesService } from '../notificacoes-service';
+import type { TiposNotificacoesEnum } from '../../models/enums/TiposNotificacoesEnum';
 
 export interface NotificacaoDto {
   id: number;
@@ -12,6 +13,7 @@ export interface NotificacaoDto {
   mensagem: string;
   data: string;
   lida: boolean;
+  tipo: TiposNotificacoesEnum;
 }
 
 @Injectable({
@@ -84,6 +86,7 @@ export class NotificacoesWsService {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public novaMensagem(mensagem: any): void {
     if (mensagem == null) return;
     this.client.publish({

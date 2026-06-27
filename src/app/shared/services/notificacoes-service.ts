@@ -26,8 +26,6 @@ export class NotificacoesService {
   }
 
   public marcarNotificacoesComoLidas(idNotificacoes: number[]): Observable<void> {
-    console.log("Chegou aqui", idNotificacoes);
-    
     return this.http.put<void>(`${this.URL}/marcar-lidas`, idNotificacoes);
   }
 }
