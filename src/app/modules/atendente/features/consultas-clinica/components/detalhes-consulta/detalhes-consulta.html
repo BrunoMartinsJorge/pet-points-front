@@ -1,0 +1,264 @@
+<p-toast />
+<p-dialog
+  header="Detalhes da Consulta"
+  [(visible)]="visibilidade"
+  [draggable]="false"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  (onHide)="fecharDetalhesConsulta()"
+>
+  @if (consultaSelecionada === null) {
+  } @else {
+    <div class="informacoes-consulta">
+      <div class="basicas">
+        <span class="info">
+          <i class="fa fas fa-user"></i>
+          {{ consultaSelecionada.solicitante }}
+        </span>
+        <span class="info">
+          <i class="fa fas fa-paw"></i>
+          {{ consultaSelecionada.pet }}
+        </span>
+        <span class="info">
+          <i class="fa fas fa-user-md"></i>
+          {{ consultaSelecionada.veterinario }}
+        </span>
+      </div>
+      <div class="badges">
+        <app-bag-status-consulta
+          [status]="consultaSelecionada.status"
+        ></app-bag-status-consulta>
+        <span class="data-consulta">
+          <i class="fa fas fa-calendar"></i>
+          {{ consultaSelecionada.dataConsulta }}
+        </span>
+      </div>
+    </div>
+    <hr />
+    <p-tabs [value]="etapa">
+      {{ etapa }}
+      <p-tablist>
+        <p-tab [value]="0" (click)="etapa = 0">Detalhes</p-tab>
+        <p-tab [value]="1" (click)="etapa = 1">Pagamento</p-tab>
+        <p-tab [value]="2" (click)="etapa = 2" [disabled]="getConsultaFinalizada"
+          >Avaliação</p-tab
+        >
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel [value]="0">
+          <div class="info-input">
+            <label for="observacoes">Observações</label>
+            <textarea
+              disabled
+              id="observacoes"
+              pInputTextarea
+              rows="4"
+              [(ngModel)]="consultaSelecionada.observacoes"
+            >
+            </textarea>
+          </div>
+          <div class="informacoes">
+            <div class="info-input">
+              <label for="iniciadoEm">Iniciado em</label>
+              <input
+                pInputText
+                fluid="true"
+                disabled
+                id="iniciadoEm"
+                [ngModel]="consultaSelecionada.iniciadoEm || 'Não Iniciada'"
+              />
+            </div>
+            <div class="info-input">
+              <label for="finalizadoEm">Finalizado em</label>
+              <input
+                pInputText
+                fluid="true"
+                disabled
+                id="finalizadoEm"
+                [ngModel]="consultaSelecionada.finalizadoEm || 'Não Finalizada'"
+              />
+            </div>
+            <hr />
+            <div class="info-input">
+              <label for="tipoConsulta">Tipo de consulta</label>
+              <input
+                fluid="true"
+                disabled
+                id="tipoConsulta"
+                type="text"
+                pInputText
+                [(ngModel)]="consultaSelecionada.tipoConsulta"
+              />
+            </div>
+            <div class="info-input">
+              <label for="solicitadoEm">Solicitado em</label>
+              <input
+                pInputText
+                fluid="true"
+                disabled
+                id="solicitadoEm"
+                [ngModel]="consultaSelecionada.solicitadoEm"
+              />
+            </div>
+            <hr />
+            <div class="info-input">
+              <label for="deferidoEm">Deferido em</label>
+              <input
+                pInputText
+                fluid="true"
+                disabled
+                id="deferidoEm"
+                [ngModel]="
+                  consultaSelecionada.deferidoEm || 'Não Deferida/Indeferida'
+                "
+              />
+            </div>
+            <div class="info-input">
+              <label for="dataConsulta">Data da consulta</label>
+              <input
+                pInputText
+                fluid="true"
+                disabled
+                id="dataConsulta"
+                [ngModel]="consultaSelecionada.dataConsulta"
+              />
+            </div>
+            <hr />
+            @if (consultaSelecionada.status === "FINALIZADO") {
+              <div class="info-input">
+                <label for="resumoConsulta">Resumo da consulta</label>
+                <textarea
+                  disabled
+                  id="resumoConsulta"
+                  pInputTextarea
+                  rows="4"
+                  [(ngModel)]="consultaSelecionada.resumoConsulta"
+                >
+                </textarea>
+              </div>
+            }
+            @if (consultaSelecionada.status === "CANCELADO") {
+              <div class="info-input">
+                <label for="canceladoEm">Cancelado em</label>
+                <input
+                  pInputText
+                  fluid="true"
+                  disabled
+                  id="canceladoEm"
+                  [ngModel]="consultaSelecionada.canceladoEm || 'Não Cancelada'"
+                />
+              </div>
+            }
+          </div>
+
+          @if (
+            consultaSelecionada.status === "CANCELADO" ||
+            consultaSelecionada.status === "REPROVADA"
+          ) {
+            <div class="info-input">
+              <label for="motivoCancelamento">Motivo do cancelamento</label>
+              <textarea
+                disabled
+                id="motivoCancelamento"
+                pInputTextarea
+                rows="4"
+                [(ngModel)]="consultaSelecionada.motivoCancelamento"
+              >
+              </textarea>
+            </div>
+          }
+        </p-tabpanel>
+        <p-tabpanel [value]="1">
+          @if (pagamento === null || carregandoPagamento) {
+          } @else {
+            <div class="header">
+              <span id="data">
+                <i class="fa fas fa-calendar"></i>
+                {{ pagamento.enviadoEm || "Não Enviado" }}
+              </span>
+              <span
+                [ngClass]="'status-pagamento ' + pagamento.status.toLowerCase()"
+              >
+                {{ pagamento.status | titlecase }}
+              </span>
+            </div>
+            <div class="opcoes">
+              <input
+                type="text"
+                disabled
+                [value]="pagamento.formaPagamento"
+                pInputText
+              />
+              <p-togglebutton
+                [(ngModel)]="aprovarComprovante"
+                onLabel="Aprovar"
+                offLabel="Reprovar"
+                [disabled]="pagamento.comprovante === null"
+                (click)="motivoIndeferimento = ''"
+              />
+            </div>
+            <hr />
+            <textarea
+              placeholder="Digite o motivo do indeferimento do pagamento"
+              name="motivo_indeferimento"
+              id="motivo_indeferimento"
+              pInputTextarea
+              rows="5"
+              [disabled]="pagamento.comprovante === null || aprovarComprovante"
+              [(ngModel)]="motivoIndeferimento"
+            ></textarea>
+            <hr />
+            <br />
+            <div class="acoes">
+              <p-button
+                icon="pi pi-download"
+                label="Baixar Comprovante"
+                [disabled]="pagamento.comprovante === null"
+                severity="info"
+                variant="outlined"
+                (click)="baixarComprovante()"
+              />
+              <p-button
+                icon="pi pi-send"
+                label="Enviar Deferimento/Indeferimento"
+                [disabled]="!habilitarBotaoEnviarAvaliacao"
+                severity="success"
+                (click)="enviarAvaliacaoComprovante()"
+              />
+            </div>
+          }
+        </p-tabpanel>
+        <p-tabpanel [value]="2">
+          @if (avaliacao === null || carregandoAvaliacao) {
+            <br />
+            <p-skeleton height="50px"></p-skeleton>
+            <br />
+            <p-skeleton height="200px"></p-skeleton>
+            <br />
+            <span style="display: flex; align-items: end; justify-content: end">
+              <p-skeleton height="25px" width="150px"></p-skeleton>
+            </span>
+          } @else {
+            <span class="pontuacao">
+              Pontuação: <p-rating [(ngModel)]="avaliacao.pontuacao" />
+            </span>
+            <textarea
+              name=""
+              id=""
+              pTextarea
+              rows="4"
+              disabled
+              [ngModel]="avaliacao.observacoes"
+              [autoResize]="false"
+              style="resize: none; overflow-y: auto; height: 200px; width: 100%"
+            ></textarea>
+            <span id="data">
+              {{ avaliacao.enviadoEm || "Não Avaliado" }}
+              <i class="fa fas fa-calendar"></i>
+            </span>
+          }
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  }
+</p-dialog>
