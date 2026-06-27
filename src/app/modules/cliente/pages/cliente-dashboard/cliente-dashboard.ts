@@ -8,6 +8,7 @@ import { ClienteDashboardService } from './service/cliente-dashboard-service';
 import { MinhasConsultasService } from '../minhas-consultas/services/minhas-consultas-service';
 import { Router } from '@angular/router';
 import { TipoPagamentoEnum } from '../../../../shared/models/enums/TipoPagamentoEnum';
+import { MeusPagamentosService } from '../meus-pagamentos/service/meus-pagamentos-service';
 
 @Component({
   selector: 'app-cliente-dashboard',
@@ -18,10 +19,8 @@ import { TipoPagamentoEnum } from '../../../../shared/models/enums/TipoPagamento
 export class ClienteDashboard implements OnInit {
   private readonly service = inject(ClienteDashboardService);
   private readonly consultaService = inject(MinhasConsultasService);
+  private readonly pagamentosService = inject(MeusPagamentosService);
   private readonly router = inject(Router);
-
-  public consultasPendentes: ConsultasDashboardDto[] = [];
-  public carregandoConsultasPendentes = false;
 
   public pagamentosPendentes: PagamentosPendentesDto[] = [];
   public carregandoPagamentosPendentes = false;
@@ -100,6 +99,12 @@ export class ClienteDashboard implements OnInit {
     this.consultaService.idConsultaSelecionada = consulta.id;
     this.consultaService.acessoPorPetSelecionado = true;
     this.router.navigate([`/cliente/minhas-consultas`]);
+  }
+
+  public acessarPagamento(pagamento: PagamentosPendentesDto): void {
+    this.pagamentosService.idPagamentoSelecionado = pagamento.id;
+    this.pagamentosService.redirecionadoParaPagamento = true;
+    this.router.navigate([`/cliente/meus-pagamentos`]);
   }
 
   public iconePagamento(pagamento: PagamentosPendentesDto): string {

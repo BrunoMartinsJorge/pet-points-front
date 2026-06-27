@@ -180,9 +180,9 @@ textarea {
   justify-content: end;
 
   .atrasado {
-    color: var(--reprovado);
+    color: var(--bag-reprovado);
     font-weight: 600;
-    border: 1px solid var(--reprovado);
+    border: 1px solid var(--bag-reprovado);
     display: flex;
     padding: 0.5em;
     border-radius: 10px;
@@ -212,10 +212,11 @@ textarea {
     font-weight: 600;
 
     &.pendente {
-      border-color: var(--pendente);
-      color: var(--pendente);
+      border-color: var(--bag-pendente);
+      color: var(--bag-pendente);
     }
 
+    &.iniciado,
     &.enviado {
       border-color: var(--enviado);
       color: var(--enviado);
@@ -227,8 +228,8 @@ textarea {
     }
 
     &.reprovado {
-      border-color: var(--reprovado);
-      color: var(--reprovado);
+      border-color: var(--bag-reprovado);
+      color: var(--bag-reprovado);
     }
   }
 }

@@ -207,9 +207,12 @@
               <hr />
               <p-fieldset
                 [legend]="
-                  consultaSelecionada?.statusConsulta === 'CANCELADO'
-                    ? 'Motivo Cancelamento'
-                    : 'Motivo Indeferimento'
+                  consultaSelecionada !== null
+                    ? consultaSelecionada.statusConsulta.toString() ===
+                      'CANCELADO'
+                      ? 'Motivo Cancelamento'
+                      : 'Motivo Indeferimento'
+                    : 'Consulta Não Selecionada'
                 "
                 [toggleable]="true"
               >
@@ -217,9 +220,12 @@
                   <textarea
                     disabled
                     [value]="
-                      consultaSelecionada?.statusConsulta === 'CANCELADO'
+                    consultaSelecionada !== null ?
+                      consultaSelecionada.statusConsulta.toString() ===
+                      'CANCELADO'
                         ? detalhesConsultaSelecionada?.motivoCancelamento
                         : detalhesConsultaSelecionada?.motivoIndeferimento
+                      : 'Consulta Não Selecionada'
                     "
                     pInputTextarea
                     rows="5"

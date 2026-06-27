@@ -21,6 +21,7 @@ import type { FileSelectEvent } from 'primeng/fileupload';
 import { RatingModule } from 'primeng/rating';
 import type { AvaliacaoConsultaDto } from './models/AvaliacaoConsultaDto';
 import type { AvaliacaoConsultaForm } from './form/AvaliacaoConsultaForm';
+import { StatusConsultaEnum } from '../../../../shared/models/enums/StatusConsultaEnum';
 
 @Component({
   selector: 'app-minhas-consultas',
@@ -77,7 +78,10 @@ export class MinhasConsultas implements OnInit {
 
   public get consultaPodeSerAvaliada(): boolean {
     if (!this.consultaSelecionada) return false;
-    if (this.consultaSelecionada.statusConsulta !== 'FINALIZADO') return false;
+    if (
+      this.consultaSelecionada.statusConsulta !== StatusConsultaEnum.FINALIZADO
+    )
+      return false;
     return true;
   }
 
@@ -239,7 +243,9 @@ export class MinhasConsultas implements OnInit {
       'FINALIZADO',
     ];
     return this.consultaSelecionada?.statusConsulta &&
-      !tipos_nao_cancelaveis.includes(this.consultaSelecionada.statusConsulta)
+      !tipos_nao_cancelaveis.includes(
+        this.consultaSelecionada.statusConsulta.toString(),
+      )
       ? true
       : false;
   }
@@ -247,8 +253,9 @@ export class MinhasConsultas implements OnInit {
   public get possuiMotivosCancelamentoIndeferimento(): boolean {
     if (!this.consultaSelecionada) return false;
     return (
-      this.consultaSelecionada.statusConsulta === 'REPROVADA' ||
-      this.consultaSelecionada.statusConsulta === 'CANCELADO'
+      this.consultaSelecionada.statusConsulta ===
+        StatusConsultaEnum.REPROVADA ||
+      this.consultaSelecionada.statusConsulta === StatusConsultaEnum.CANCELADO
     );
   }
 

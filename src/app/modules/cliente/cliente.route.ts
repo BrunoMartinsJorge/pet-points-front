@@ -119,6 +119,21 @@ export const ROTAS_CLIENTES: Routes = [
         },
         canActivate: [authGuard],
       },
+      {
+        path: 'perfil',
+        title: 'Perfil',
+        loadComponent: () => import('../../shared/pages/perfil/perfil').then(m => m.Perfil),
+        data: {
+          RULE: 'CLIENTE',
+          visible: false,
+          nome: 'Perfil',
+          icone: 'pi pi-user',
+          voltar: true,
+          descricao: 'Perfil do cliente',
+          group: '',
+        },
+        canActivate: [authGuard],
+      },
     ],
   },
 ];

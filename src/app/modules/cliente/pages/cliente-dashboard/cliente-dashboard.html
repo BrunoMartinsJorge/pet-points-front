@@ -7,39 +7,45 @@
         #dv
         [value]="consultasAgendadas"
         [paginator]="true"
-        [rows]="6"
+        [rows]="3"
       >
         <ng-template #list let-consultas>
           <div class="lista-consultas">
             @for (consulta of consultas; track consulta.id) {
               <div class="consulta-card">
-                <div
-                  style="
-                    min-width: 200px;
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    gap: 0.5rem;
-                  "
-                >
-                  <div class="body-card">
-                    <span class="tipo-consulta">{{
-                      consulta.tipoConsulta
-                    }}</span>
-                    <span class="veterinario">
-                      Veterinário: {{ consulta.veterinario }}
-                    </span>
-                    <span class="pet"> Pet: {{ consulta.pet }} </span>
-                  </div>
+                <div class="informacoes-card">
                   <div>
-                    <span class="solicitado-em"
-                      >Data e Hora da Consulta:
-                      {{ consulta.dataConsulta }}</span
+                    <strong class="tipo-consulta">
+                      {{ consulta.tipoConsulta }}
+                    </strong>
+                    <span
+                      [ngClass]="
+                        'status-consulta ' + consulta.status.toLowerCase()
+                      "
                     >
-                    <span class="solicitado-em"
-                      >Solicitado Em: {{ consulta.dataSolicitacao }}</span
-                    >
+                      {{ consulta.status | titlecase }}
+                    </span>
+                  </div>
+                  <div class="veterinario-pet">
+                    <span class="veterinario">
+                      <i class="fa fa-user-doctor"></i
+                      >{{ consulta.veterinario }}
+                    </span>
+                    <span class="pet">
+                      <i class="fa fa-paw"></i> {{ consulta.pet }}
+                    </span>
+                  </div>
+                  <div class="datas">
+                    <span>
+                      Data da Consulta:
+                      {{ consulta.dataConsulta }}
+                    </span>
+                    <span>
+                      Solicitada em:
+                      {{
+                        consulta.dataSolicitacao
+                      }}
+                    </span>
                   </div>
                 </div>
                 <p-button
@@ -66,31 +72,54 @@
         #dv
         [value]="pagamentosPendentes"
         [paginator]="true"
-        [rows]="2"
+        [rows]="5"
       >
         <ng-template #list let-pagamentos>
           <div class="lista-pagamentos">
             @for (pagamento of pagamentos; track pagamento.id) {
-              <div class="card-pagamento">
-                <span [ngClass]="pagamento.atrasado ? 'atrasado' : 'em-tempo'">
-                  {{ pagamento.atrasado ? "Atrasado" : "Em Tempo" }}
-                </span>
-                <hr />
-                <div class="forma-pagamento">
-                  <strong>
-                    Forma de Pagamento - {{ pagamento.tipoPagamento }}
-                  </strong>
-                  <i [ngClass]="iconePagamento(pagamento)"></i>
+              <div
+                [ngClass]="
+                  'card-pagamento ' +
+                  (pagamento.atrasado
+                    ? ' atrasado'
+                    : pagamento.statusPagamento.toLowerCase())
+                "
+              >
+                <div class="status-valor">
+                  <span
+                    [ngClass]="
+                      'status-pagamento ' +
+                      (pagamento.atrasado
+                        ? 'atrasado'
+                        : pagamento.statusPagamento.toLowerCase())
+                    "
+                  >
+                    {{
+                      pagamento.atrasado
+                        ? "Atrasado"
+                        : (pagamento.statusPagamento | titlecase)
+                    }}
+                  </span>
+                  <span class="valor">
+                    {{ pagamento.valor | currency: "BRL" }}
+                  </span>
                 </div>
-                <span class="data-limite">
-                  Data Limite: {{ pagamento.dataLimitePagamento }}
+                <div class="forma-pagamento">
+                  <i [class]="iconePagamento(pagamento.tipoPagamento)"></i>
+                  <span>
+                    {{ pagamento.tipoPagamento | titlecase }}
+                  </span>
+                </div>
+                <span class="data-limite-pagamento">
+                  <i class="fa far fa-calendar-alt"></i> Limite:
+                  {{ pagamento.dataLimitePagamento }}
                 </span>
-                <hr />
                 <p-button
                   label="Acessar Pagamento"
                   icon="fa fa-eye"
-                  severity="secondary"
+                  (click)="acessarPagamento(pagamento)"
                   [style]="{ width: '100%' }"
+                  severity="secondary"
                 />
               </div>
             }
@@ -118,11 +147,26 @@
           <div class="lista-atendimentos">
             @for (atendimento of atendimentos; track atendimento.id) {
               <div class="card-atendimento">
-                <div class="icon">
-                  <i class="fa fas fas fa-headset"></i>
-                </div>
                 <div class="informacoes">
-                  {{ atendimento.mensagem }}
+                  <div class="icon">
+                    <i class="fa fas fas fa-headset"></i>
+                  </div>
+                  <div>
+                    <div class="informacoes-status">
+                      <p>
+                        {{ atendimento.mensagem }}
+                      </p>
+                      <span class="status">
+                        {{ atendimento.status | titlecase }}
+                      </span>
+                    </div>
+                    <span class="data-solicitacao">
+                      <i class="fa far fa-clock"></i>Solicitado em:
+                      {{
+                        atendimento.dataSolicitacao
+                      }}
+                    </span>
+                  </div>
                 </div>
                 <p-button icon="fa fa-eye" severity="secondary" />
               </div>

@@ -3,68 +3,21 @@
 @import url("app/shared/styles/ThemesCollors.scss");
 @import url("app/shared/styles/PrimengEstilizacao.scss");
 
-html, body {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+html,
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+  background-color: var(--background);
 }
 
 body {
   overflow-x: hidden !important;
   width: 100vw;
-}
-
-div.carteirinha {
-  display: flex;
-  text-orientation: sideways;
-  border: 1px solid #ccc;
-  width: 480px;
-  height: 610px;
-  margin: 1em;
-  background-color: #fff;
-  color: #333;
-}
-
-div.lateral {
-  background-color: #0c6369;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  color: #fff;
-  font-weight: bolder;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 0.5em;
-  letter-spacing: 0.1rem;
-  text-align: center;
-}
-
-div.pet-info {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  grid-gap: 1em;
-  padding: 0.5em;
-}
-
-div.pet-foto {
-  border: 1px dashed #0c6369;
-  width: 100%;
-  height: 46%;
-  padding: 0.5em;
-}
-
-div.imagem {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-div.imagem img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .input-group {
@@ -82,6 +35,105 @@ span.sem-resultados {
   font-weight: 600;
   display: flex;
   flex: 1;
+  text-align: center;
   align-items: center;
   justify-content: center;
+}
+
+.header-fieldset {
+  display: flex;
+  align-items: center;
+  grid-gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+hr {
+  border: none;
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+
+// div.carteirinha {
+//   width: 420px;
+//   height: 520px;
+//   border: 1px solid #ddd;
+
+//   .lateral {
+//     width: 40px;
+//     background-color: #0c6369;
+//     color: #fff;
+//     text-align: center;
+//     vertical-align: middle;
+//     font-weight: bold;
+//     font-size: 12px;
+//     letter-spacing: 2px;
+//   }
+
+//   .titulo-rotacionado {
+//     writing-mode: vertical-rl;
+//     transform: rotate(180deg);
+//   }
+
+//   .pet-info {
+//     padding: 10px;
+//     background: #fafafa;
+//   }
+
+//   .pet-foto {
+//     text-align: center;
+//     padding: 10px;
+//     background: #e9eef0;
+//   }
+
+//   .pet-foto img {
+//     width: 150px;
+//     height: 150px;
+//   }
+
+//   .infos {
+//     margin-top: 10px;
+//     border: 1px solid #ddd;
+//     background: #fff;
+//   }
+
+//   .section-title {
+//     background: #ffffff;
+//     color: #0c6369;
+//     font-weight: bold;
+//     font-size: 11px;
+//     padding: 4px;
+//     border-bottom: 1px solid #ddd;
+//   }
+
+//   .data {
+//     width: 100%;
+//     border-bottom: 1px dashed #eee;
+//   }
+
+//   .data td {
+//     padding: 4px 6px;
+//     font-size: 13px;
+//   }
+
+//   .label {
+//     font-weight: bold;
+//     color: #333;
+//     width: 40%;
+//   }
+
+//   .value {
+//     color: #666;
+//   }
+// }
+
+.loading {
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  flex-direction: column;
+  gap: 0.5rem;
 }
