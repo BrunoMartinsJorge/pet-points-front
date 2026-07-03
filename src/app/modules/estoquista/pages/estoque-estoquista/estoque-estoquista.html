@@ -10,28 +10,42 @@
       }
     } @else {
       <div class="card">
-        <i class="fas fa-coins"></i>
+        <div class="icon valor">
+          <i class="fas fa-coins"></i>
+        </div>
         <div class="informacoes">
           <span id="titulo">Valor Total em Estoque</span>
-          <span id="descricao"
-            >R$ {{ cards.valorTotalEstoque | number: "1.2-2" }}</span
-          >
+          <span>
+            <strong id="descricao">
+              R$ {{ cards.valorTotalEstoque | number: "1.2-2" }}
+            </strong>
+          </span>
         </div>
       </div>
       <div class="card">
-        <i class="fas fa-box"></i>
+        <div class="icon quantidade">
+          <i class="fas fa-box"></i>
+        </div>
         <div class="informacoes">
           <span id="titulo">Produtos em Estoque</span>
-          <span id="descricao"
-            >{{ cards.quantidadeProdutosEstoque }} Produtos</span
-          >
+          <span>
+            <strong id="descricao">
+              {{ cards.quantidadeProdutosEstoque }}
+            </strong>
+            Produtos
+          </span>
         </div>
       </div>
       <div class="card">
-        <i class="fas fa-triangle-exclamation"></i>
+        <div class="icon limite">
+          <i class="fas fa-triangle-exclamation"></i>
+        </div>
         <div class="informacoes">
           <span id="titulo">Produtos Abaixo do Estoque</span>
-          <span id="descricao">{{ cards.produtosAbaixoEstoque }} Produtos</span>
+          <span>
+            <strong id="descricao">{{ cards.produtosAbaixoEstoque }}</strong>
+            Produtos
+          </span>
         </div>
       </div>
     }
@@ -116,7 +130,9 @@
             [disabled]="carregandoRelatorio"
             label="Gerar Relatório"
             severity="success"
-            [icon]="carregandoRelatorio ? 'fa fa-spin fa-spinner' : 'fa fa-file'"
+            [icon]="
+              carregandoRelatorio ? 'fa fa-spin fa-spinner' : 'fa fa-file'
+            "
             (click)="gerarRelatorio()"
           ></p-button>
         </div>

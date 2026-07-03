@@ -39,6 +39,7 @@ export class TokenService {
       nomeUsuario: token.nomeUsuario,
       idUsuario: token.id_usuario,
       permissoes: token.permissoes,
+      imagem: token.imagem
     };
   }
 

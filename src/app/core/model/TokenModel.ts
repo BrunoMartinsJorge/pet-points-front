@@ -3,4 +3,5 @@ export interface TokenModel {
     nomeUsuario: string;
     idUsuario: number;
     permissoes: string[];
+    imagem: string;
 }

@@ -1,87 +1,90 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Injectable } from '@angular/core';
-import { Client } from '@stomp/stompjs';
+import { inject, Injectable, NgZone } from '@angular/core';
+import { Client, type StompSubscription } from '@stomp/stompjs';
 import { BehaviorSubject } from 'rxjs';
 import SockJS from 'sockjs-client';
 import { environment } from '../../../core/environments/environment-dev';
+import { TokenService } from '../../../core/services/token-service';
+import type { MensagemInterna } from '../../models/ChatModels';
 
-@Injectable({
-  providedIn: 'root',
-})
+/**
+ * WebSocket do chat interno. Mesmo padrão do NotificacoesWsService:
+ * conecta uma única vez e assina o tópico dentro do onConnect.
+ * Endpoint: /ws/chat-interno | envia: /app/chat-interno/send
+ * recebe:  /topic/chat-interno/{idChat}
+ */
+@Injectable({ providedIn: 'root' })
 export class ChatInternoWsService {
-  private client!: Client;
-  private lastMessageId?: number;
-  private lastSessionId?: number;
-  private lastSessionText?: string;
-  private lastMessageText?: string;
+  private tokenService = inject(TokenService);
+  private zone = inject(NgZone);
   private env = environment;
-
-  private messagesSubject = new BehaviorSubject<any[]>([]);
-  messages$ = this.messagesSubject.asObservable();
-
-  private sessionSubject = new BehaviorSubject<any[]>([]);
-  sessions$ = this.sessionSubject.asObservable();
-
-  // constructor(private notif: NotificationService) {}
-
-  private subscribed = false;
-
-  connect() {
-    const token = localStorage.getItem('token');
-
+ 
+  private client!: Client;
+  private conectado = false;
+  private idChatAtual: number | null = null;
+  private assinatura?: StompSubscription;
+ 
+  // Fonte única de verdade das mensagens do chat aberto (como o notificacoes$).
+  private mensagensSubject = new BehaviorSubject<MensagemInterna[]>([]);
+  mensagens$ = this.mensagensSubject.asObservable();
+ 
+  connect(): void {
+    if (this.client) return; // já criado -> não recria (evita conexões duplicadas)
+ 
+    const token = this.tokenService.getToken;
+ 
     this.client = new Client({
-      webSocketFactory: () => new SockJS(`${this.env.api}/ws/cliente`),
+      webSocketFactory: () => new SockJS(`${this.env.api}/ws/chat-interno`),
       reconnectDelay: 5000,
-      connectHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
+      connectHeaders: { Authorization: `Bearer ${token}` },
     });
-
+ 
     this.client.onConnect = () => {
-      if (!this.subscribed) {
-        this.client.subscribe('/topic/cliente', (frame) => {
-          const msg = JSON.parse(frame.body) as any;
-          if (!msg || !msg.message || msg.message.trim() === '') {
-            return;
-          }
-          if (msg.id && msg.id === this.lastMessageId) {
-            return;
-          }
-          if (!msg.id && msg.message === this.lastMessageText) {
-            return;
-          }
-          if (msg.id) {
-            this.lastMessageId = msg.id;
-          }
-          this.lastMessageText = msg.message;
-          const current = this.messagesSubject.value;
-          this.messagesSubject.next([...current, msg]);
-        });
-        this.subscribed = true;
-      }
+      this.conectado = true;
+      // (re)assina o chat atual assim que a conexão estiver pronta
+      if (this.idChatAtual != null) this.assinarTopico(this.idChatAtual);
     };
-
+ 
+    // Se a inscrição for recusada pelo back, o erro aparece aqui.
+    this.client.onStompError = (frame) =>
+      console.error('STOMP erro (chat-interno):', frame.headers['message'], frame.body);
+ 
     this.client.activate();
   }
-
-  public novaSessao(mensagem: string) {
-    if (!mensagem || mensagem.trim() === '') return;
-    this.client.publish({
-      destination: '/app/cliente/nova-sessao',
-      body: mensagem,
+ 
+  /** Abre um chat: semeia o histórico e assina o tópico. */
+  abrirChat(idChat: number, historico: MensagemInterna[] = []): void {
+    this.idChatAtual = idChat;
+    this.mensagensSubject.next(historico);
+    if (this.conectado) this.assinarTopico(idChat);
+    // se ainda não conectou, o onConnect assina sozinho
+  }
+ 
+  private assinarTopico(idChat: number): void {
+    this.assinatura?.unsubscribe();
+    this.assinatura = this.client.subscribe(`/topic/chat-interno/${idChat}`, (frame) => {
+      const msg = JSON.parse(frame.body) as MensagemInterna;
+      this.zone.run(() =>
+        this.mensagensSubject.next([...this.mensagensSubject.value, msg]),
+      );
     });
   }
-
-  sendMessage(message: any) {
-    if (!message.mensagem || message.mensagem.trim() === '') return;
+ 
+  enviar(payload: { idChat: number | null; idDestinatario: number; mensagem: string }): void {
+    if (!payload.mensagem?.trim()) return;
+    if (!this.client?.connected) {
+      console.warn('WebSocket do chat interno ainda não conectado.');
+      return;
+    }
     this.client.publish({
-      destination: '/app/cliente/send',
-      body: JSON.stringify(message),
+      destination: '/app/chat-interno/send',
+      body: JSON.stringify(payload),
     });
   }
-
-  disconnect() {
-    if (this.client) this.client.deactivate();
-    this.subscribed = false;
+ 
+  disconnect(): void {
+    this.assinatura?.unsubscribe();
+    this.client?.deactivate();
+    this.conectado = false;
   }
 }

@@ -1,7 +1,8 @@
-import type { Routes } from "@angular/router";
-import { Veterinario } from "./veterinario";
-import { authGuard } from "../../core/guards/auth-guard";
-import { DashboardVeterinario } from "./pages/dashboard-veterinario/dashboard-veterinario";
+import type { Routes } from '@angular/router';
+import { Veterinario } from './veterinario';
+import { authGuard } from '../../core/guards/auth-guard';
+import { DashboardVeterinario } from './pages/dashboard-veterinario/dashboard-veterinario';
+import { Perfil } from '../../shared/pages/perfil/perfil';
 
 export const ROTAS_VETERINARIOS: Routes = [
   {
@@ -25,6 +26,20 @@ export const ROTAS_VETERINARIOS: Routes = [
           icone: 'pi pi-home',
           group: '',
           descricao: 'Dashboard do Veterinário',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'perfil',
+        title: 'Perfil',
+        component: Perfil,
+        data: {
+          RULE: 'VETERINARIO',
+          visible: false,
+          nome: 'Perfil',
+          icone: 'fa fa-user',
+          group: '',
+          descricao: 'Perfil do Veterinário',
         },
         canActivate: [authGuard],
       },

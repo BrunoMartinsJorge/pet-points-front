@@ -123,8 +123,9 @@ export class Sidebar {
   private get getImagemUsuario(): string {
     const token = this.tokenService.getToken;
     if (!token) return '';
+    const imagem = this.tokenService.decodeToken(token).imagem;
+    if (imagem == '') return '';
     const idUsuario = this.tokenService.decodeToken(token).id_usuario;
-
     return idUsuario !== ''
       ? 'http://localhost:8080/arquivos/usuario/' + idUsuario
       : '';

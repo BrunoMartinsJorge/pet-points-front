@@ -1,1 +1,30 @@
-<p>chat-selecionado works!</p>
+<section class="chat">
+  @if (!alvo) {
+    <div class="chat__placeholder">Selecione um funcionário para conversar.</div>
+  } @else {
+    <header class="chat__header">{{ alvo.nome }}</header>
+
+    <div class="chat__mensagens">
+      @for (m of mensagens; track m.id) {
+        <div class="msg" [class.msg--minha]="ehMinha(m)">
+          <p class="msg__texto">{{ m.mensagem }}</p>
+          <span class="msg__hora">{{ m.enviadoEm | date: 'HH:mm' }}</span>
+        </div>
+      }
+      @if (mensagens.length === 0) {
+        <p class="chat__vazio">Nenhuma mensagem ainda.</p>
+      }
+    </div>
+
+    <form class="chat__envio" (ngSubmit)="enviar()">
+      <input
+        [(ngModel)]="rascunho"
+        name="rascunho"
+        pInputText
+        autocomplete="off"
+        placeholder="Escreva uma mensagem..."
+      />
+      <p-button type="submit" [disabled]="!rascunho.trim()" pTooltip="Enviar" icon="pi pi-send" severity="primary"/>
+    </form>
+  }
+</section>

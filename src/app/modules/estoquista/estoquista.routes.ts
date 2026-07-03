@@ -5,6 +5,8 @@ import { DashboardEstoquista } from './pages/dashboard-estoquista/dashboard-esto
 import { EstoqueEstoquista } from './pages/estoque-estoquista/estoque-estoquista';
 import { MinhasMovimentacoes } from './pages/minhas-movimentacoes/minhas-movimentacoes';
 import { DetalhesProduto } from './pages/estoque-estoquista/sub-paginas/detalhes-produto/detalhes-produto';
+import { Perfil } from '../../shared/pages/perfil/perfil';
+import { ChatInterno } from '../../shared/pages/chat-interno/chat-interno';
 
 export const ROTAS_ESTOQUISTAS: Routes = [
   {
@@ -71,6 +73,35 @@ export const ROTAS_ESTOQUISTAS: Routes = [
           voltar: true,
           group: '',
           descricao: 'Detalhes do Produto',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'chat-interno',
+        title: 'Chat Interno',
+        component: ChatInterno,
+        data: {
+          RULE: 'ESTOQUISTA',
+          visible: true,
+          nome: 'Chat Interno',
+          icone: 'pi pi-comments',
+          voltar: true,
+          group: '',
+          descricao: 'Chat Interno de Funcionários',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'perfil',
+        title: 'Perfil',
+        component: Perfil,
+        data: {
+          RULE: 'ESTOQUISTA',
+          visible: false,
+          nome: 'Perfil',
+          icone: 'fa fa-user',
+          group: '',
+          descricao: 'Perfil do Estoquista',
         },
         canActivate: [authGuard],
       },

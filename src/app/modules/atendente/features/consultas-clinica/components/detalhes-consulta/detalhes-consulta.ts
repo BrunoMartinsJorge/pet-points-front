@@ -39,6 +39,11 @@ export class DetalhesConsulta implements OnChanges {
   public aprovarComprovante = false;
   public motivoIndeferimento = '';
 
+  /**
+   * 
+   * @description - Metodo executado ao receber novas informacoes
+   * @param - changes - Informacoes recebidas
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['consultaSelecionada']) {
       this.etapa = 0;

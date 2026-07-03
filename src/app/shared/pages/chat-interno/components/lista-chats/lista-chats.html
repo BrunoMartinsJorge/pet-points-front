@@ -1,1 +1,22 @@
-<p>lista-chats works!</p>
+<aside class="lista-chats">
+  <h3 class="lista-chats__titulo">Funcionários</h3>
+
+  @if (funcionarios.length === 0) {
+    <p class="lista-chats__vazio">Nenhum funcionário disponível.</p>
+  }
+
+  <ul class="lista-chats__ul">
+    @for (f of funcionarios; track f.id) {
+      <li>
+        <button
+          class="lista-chats__item"
+          [class.lista-chats__item--ativo]="f.id === selecionadoId"
+          (click)="escolher(f)"
+        >
+          <span class="lista-chats__nome">{{ f.nome }}</span>
+          <span class="lista-chats__tipo">{{ f.tipoUsuario }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+</aside>

@@ -3,6 +3,7 @@ import { Atendente } from './atendente';
 import { authGuard } from '../../core/guards/auth-guard';
 import { DashboardAtendente } from './features/dashboard-atendente/dashboard-atendente';
 import { ConsultasClinica } from './features/consultas-clinica/consultas-clinica';
+import { Perfil } from '../../shared/pages/perfil/perfil';
 
 export const ROTAS_ATENDENETES: Routes = [
   {
@@ -40,6 +41,20 @@ export const ROTAS_ATENDENETES: Routes = [
           icone: 'fa fa-clipboard-list',
           group: '',
           descricao: 'Consultas da Clínica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'perfil',
+        title: 'Perfil',
+        component: Perfil,
+        data: {
+          RULE: 'ATENDENTE',
+          visible: false,
+          nome: 'Perfil',
+          icone: 'fa fa-user',
+          group: '',
+          descricao: 'Perfil do Atendente',
         },
         canActivate: [authGuard],
       },

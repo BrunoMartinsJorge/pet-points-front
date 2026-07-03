@@ -5,7 +5,7 @@ import { ConsultasServices } from './service/consultas-services';
 import type { ConsultasAtendenteDto } from './models/ConsultasAtendenteDto';
 import type { IndeferirConsultaForm } from './forms/IndeferirConsultaForm';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { DetalhesConsulta } from "./components/detalhes-consulta/detalhes-consulta";
+import { DetalhesConsulta } from './components/detalhes-consulta/detalhes-consulta';
 
 @Component({
   selector: 'app-consultas-clinica',
@@ -35,8 +35,26 @@ export class ConsultasClinica implements OnInit {
   public visibilidadeDialogDetalhesConsulta = false;
 
   public ngOnInit(): void {
+    this.verificarRedirecionamento();
     this.buscarConsultas();
     this.buscarSolicitacoes();
+  }
+
+  private verificarRedirecionamento(): void {
+    const idSelecionado = this.service.idConsultaSelecionada;
+    if (idSelecionado == null) return;
+    this.consultaSelecionada = null;
+    this.visibilidadeDialogDetalhesConsulta = false;
+    this.service.buscarConsultaPreSelecionada().subscribe({
+      next: (response: ConsultasAtendenteDto) => {
+        this.consultaSelecionada = response;
+        this.visibilidadeDialogDetalhesConsulta = true;
+        setTimeout(() => {
+          this.service.redirecionado = false;
+          this.service.idConsultaSelecionada = null;
+        });
+      },
+    });
   }
 
   public buscarConsultas(): void {

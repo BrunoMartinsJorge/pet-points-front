@@ -5,7 +5,7 @@ import type { ConsultasAtendenteDto } from '../models/ConsultasAtendenteDto';
 import type { IndeferirConsultaForm } from '../forms/IndeferirConsultaForm';
 import type { InformacoesPagamentoDto } from '../models/InformacoesPagamentoDto';
 import type { AvaliacaoConsultaDto } from '../models/AvaliacaoConsultaDto';
-import { IndeferirPagamentoForm } from '../forms/IndeferirPagamentoForm';
+import type { IndeferirPagamentoForm } from '../forms/IndeferirPagamentoForm';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +14,9 @@ export class ConsultasServices {
   private readonly URL = '/atendente/consultas';
   private readonly http = inject(HttpClient);
 
+  public idConsultaSelecionada: number | null = null;
+  public redirecionado = false;
+
   /**
    *
    * @description - Busca as solicitações de consultas do atendente
@@ -21,6 +24,10 @@ export class ConsultasServices {
    */
   public buscarSolicitacoesConsultas(): Observable<ConsultasAtendenteDto[]> {
     return this.http.get<ConsultasAtendenteDto[]>(`${this.URL}`);
+  }
+
+  public buscarConsultaPreSelecionada(): Observable<ConsultasAtendenteDto> {
+    return this.http.get<ConsultasAtendenteDto>(`${this.URL}/${this.idConsultaSelecionada}`);
   }
 
   /**

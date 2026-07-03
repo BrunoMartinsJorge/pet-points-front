@@ -1,8 +1,4 @@
-<main>
-    <section>
-        <app-lista-chats></app-lista-chats>
-    </section>
-    <section>
-        <app-chat-selecionado></app-chat-selecionado>
-    </section>
-</main>
+<div class="chat-interno">
+  <app-lista-chats (selecionar)="alvo = $event"></app-lista-chats>
+  <app-chat-selecionado [alvo]="alvo"></app-chat-selecionado>
+</div>
