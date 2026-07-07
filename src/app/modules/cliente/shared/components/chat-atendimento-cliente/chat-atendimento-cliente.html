@@ -1,0 +1,114 @@
+<p-toast />
+<p-button
+  icon="fa fa-comments"
+  [rounded]="true"
+  severity="success"
+  id="btnAbrirChat"
+  pTooltip="Atendimento"
+  (click)="visibilidadeDialogChatAtendimento = true"
+/>
+<p-dialog
+  header="Atendimento"
+  [(visible)]="visibilidadeDialogChatAtendimento"
+  [modal]="true"
+  [style]="{
+    width: '35vw',
+    minWidth: '300px',
+    height: '80vh',
+    minHeight: '400px',
+  }"
+  [draggable]="false"
+  [closable]="true"
+  [contentStyleClass]="chatSelecionado !== null ? 'dialog-chat' : ''"
+>
+  @if (chatSelecionado === null) {
+    <p-selectbutton
+      [options]="[
+        { label: 'Meus Atendimentos', value: 'LISTA' },
+        { label: 'Solicitar Atendimento', value: 'SOLICITACAO' },
+      ]"
+      [(ngModel)]="modoAtendimento"
+      optionLabel="label"
+      optionValue="value"
+      fluid
+    />
+    <hr />
+    @if (modoAtendimento === "LISTA") {
+      <p-dataview #dv [value]="atendimentos" [rows]="5" [paginator]="true">
+        <ng-template #list let-atendimentos>
+          <div class="lista-atendimentos">
+            @for (atendimento of atendimentos; track atendimento.id) {
+              <button
+                class="atendimento-card"
+                (click)="selecionarAtendimento(atendimento)"
+              >
+                {{ atendimento.mensagem }}
+              </button>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">
+            <p>Não há atendimentos disponíveis.</p>
+          </span>
+        </ng-template>
+      </p-dataview>
+    } @else {
+      <section class="solicitacao-atendimento">
+        <div class="descricao-solicitacao">
+          <span
+            >Preencha o formulário abaixo para solicitar um atendimento e
+            aguarde para que o mesmo seja respondido.</span
+          >
+        </div>
+        <hr />
+        <div class="formulario">
+          <textarea
+            rows="5"
+            pInputTextarea
+            [(ngModel)]="mensagemSolicitacaoAtendimento"
+          ></textarea>
+          <p-button
+            icon="pi pi-send"
+            severity="primary"
+            label="Enviar"
+            fluid
+            (click)="enviarSolicitacaoAtendimento()"
+          />
+        </div>
+      </section>
+    }
+  } @else {
+    <section class="chat-selecionado">
+      <div class="header-atendimento">
+        <p-button
+          icon="fa fa-arrow-left"
+          [rounded]="true"
+          severity="secondary"
+          pTooltip="Voltar"
+          (click)="chatSelecionado = null"
+        ></p-button>
+        <span>
+          {{ chatSelecionado.solicitadoEm | date: "dd/MM/yyyy HH:mm:ss" }}
+          <i class="fa far fa-calendar-alt"></i>
+        </span>
+      </div>
+      <hr />
+      <div class="lista-mensagens"></div>
+      <hr />
+      <div class="formulario">
+        <input
+          type="text"
+          placeholder="Digite sua mensagem..."
+          pInputText
+          [disabled]="chatSelecionado.status !== 'EM_ANDAMENTO'"
+        />
+        <p-button
+          icon="pi pi-send"
+          severity="primary"
+          [disabled]="chatSelecionado.status !== 'EM_ANDAMENTO'"
+        />
+      </div>
+    </section>
+  }
+</p-dialog>

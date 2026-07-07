@@ -29,9 +29,8 @@ export interface MensagemInterna {
 export interface MensagemAtendimento {
   id: number;
   idChat: number;
-  remetenteId: number;
-  enviadoPor: string;
+  remetenteId?: number;
   mensagem: string;
-  enviadoEm: string;
+  enviadoEm: Date;
   enviadoPorVoce: boolean;
 }

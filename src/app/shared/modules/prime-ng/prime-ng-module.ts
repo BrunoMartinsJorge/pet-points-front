@@ -31,6 +31,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { PasswordModule } from 'primeng/password';
 import { DataViewModule } from 'primeng/dataview';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { titlecasePipe } from '../../pipes/texto-format-pipe';
 
 @NgModule({
   providers: [MessageService, ConfirmationService],
@@ -67,6 +68,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     PasswordModule,
     DataViewModule,
     ConfirmDialogModule,
+    titlecasePipe,
   ],
   exports: [
     CommonModule,
@@ -101,6 +103,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     PasswordModule,
     DataViewModule,
     ConfirmDialogModule,
+    titlecasePipe,
   ],
 })
 export class PrimeNGModule {}

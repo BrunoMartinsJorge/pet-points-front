@@ -4,6 +4,8 @@ import { authGuard } from '../../core/guards/auth-guard';
 import { DashboardAtendente } from './features/dashboard-atendente/dashboard-atendente';
 import { ConsultasClinica } from './features/consultas-clinica/consultas-clinica';
 import { Perfil } from '../../shared/pages/perfil/perfil';
+import { ChatAtendimento } from './features/chat-atendimento/chat-atendimento';
+import { AtendimentoSelecionado } from './features/chat-atendimento/pages/atendimento-selecionado/atendimento-selecionado';
 
 export const ROTAS_ATENDENETES: Routes = [
   {
@@ -41,6 +43,35 @@ export const ROTAS_ATENDENETES: Routes = [
           icone: 'fa fa-clipboard-list',
           group: '',
           descricao: 'Consultas da Clínica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'atendimentos',
+        title: 'Atendimentos',
+        component: ChatAtendimento,
+        data: {
+          RULE: 'ATENDENTE',
+          visible: true,
+          nome: 'Atendimentos',
+          icone: 'fa fa-comments',
+          group: '',
+          descricao: 'Atendimentos do Atendente',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'atendimento-selecionado/:id',
+        title: 'Atendimento Aprovado',
+        component: AtendimentoSelecionado,
+        data: {
+          RULE: 'ATENDENTE',
+          visible: false,
+          nome: 'Atendimentos',
+          icone: 'fa fa-comments',
+          group: '',
+          voltar: true,
+          descricao: 'Atendimento Selecionado',
         },
         canActivate: [authGuard],
       },

@@ -1,0 +1,21 @@
+<main>
+  <section class="chat">
+    <div class="mensagens">
+        @for (mensagem of mensagens; track mensagem.id) {
+          <div [ngClass]="mensagem.enviadoPorVoce ? 'mensagem voce' : 'mensagem'">
+              {{ mensagem.mensagem }}
+              <span class="data">
+                {{ mensagem.enviadoEm | date: "dd/MM/yyyy HH:mm:ss" }}
+              </span>
+          </div>
+        }
+    </div>
+    <hr>
+    <div class="formulario">
+      <input type="text" pInputText placeholder="Digite sua mensagem..." [(ngModel)]="mensagem"  />
+      <p-button icon="fa fa-send" severity="secondary" (click)="enviar()" />
+    </div>
+  </section>
+  <p-fieldset legend="Detalhes do Atendimento" [style]="{ height: '100%' }">
+  </p-fieldset>
+</main>
