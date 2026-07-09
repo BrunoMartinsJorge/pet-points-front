@@ -5,6 +5,8 @@ export interface ChatAtendimentoDto {
   chatId: number;
   mensagem: string;
   solicitadoEm: Date;
+  finalizadoEm: Date;
   status: StatusAtendimentoEnum;
   atendente: string;
+  cliente: string;
 }

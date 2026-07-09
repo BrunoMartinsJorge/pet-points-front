@@ -4,6 +4,7 @@ import type { Observable } from 'rxjs';
 import type { SolicitacoesAtendimentosDto } from '../models/SolicitacoesAtendimentosDto';
 import type { ChatAtendimentoDto } from '../models/ChatAtendimentoDto';
 import type { MensagemAtendimento } from '../../../../../shared/models/ChatModels';
+import type { AvaliacaoDto } from '../../../../../shared/models/AvaliacaoDto';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,10 @@ export class AtendimentosAtendenteeService {
       `${this.URL}/atendente/aceitar-solicitacao-atendimento/${idSolicitacao}`,
       {},
     );
+  }
+
+  public buscarAvaliacao(idChat: number): Observable<AvaliacaoDto> {
+    return this.http.get<AvaliacaoDto>(`${this.URL}/avaliacao/${idChat}`);
   }
 
   public listarMeusAtendimentos(): Observable<ChatAtendimentoDto[]> {
