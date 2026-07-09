@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 import type { ChatAtendimentoDto } from '../models/ChatAtendimentoDto';
 import type { MensagemAtendimento } from '../../../../../../shared/models/ChatModels';
+import type { AvaliacaoForm } from '../../../../../../shared/form/AvaliacaoForm';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,13 @@ export class AtendimentosClienteService {
       {},
       { params: { mensagem } },
     );
+  }
+
+  public finalizarAtendimento(
+    form: AvaliacaoForm,
+    idChat: number,
+  ): Observable<void> {
+    return this.http.post<void>(`${this.URL}/cliente/${idChat}`, form);
   }
 
   public buscarMensagensChatAtendimento(

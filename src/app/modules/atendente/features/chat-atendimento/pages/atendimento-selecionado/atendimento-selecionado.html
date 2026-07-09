@@ -11,11 +11,16 @@
         }
     </div>
     <hr>
+    @if (atendimentoFinalizado) {
+      <p class="atendimento-finalizado-aviso">
+        Este atendimento foi finalizado pelo cliente.
+      </p>
+    }
     <div class="formulario">
-      <input type="text" pInputText placeholder="Digite sua mensagem..." [(ngModel)]="mensagem"  />
-      <p-button icon="fa fa-send" severity="secondary" (click)="enviar()" />
+      <input type="text" pInputText placeholder="Digite sua mensagem..." [(ngModel)]="mensagem" [disabled]="atendimentoFinalizado" />
+      <p-button icon="fa fa-send" severity="secondary" (click)="enviar()" [disabled]="atendimentoFinalizado" />
     </div>
   </section>
-  <p-fieldset legend="Detalhes do Atendimento" [style]="{ height: '100%' }">
+  <p-fieldset legend="Detalhes do Atendimento">
   </p-fieldset>
 </main>

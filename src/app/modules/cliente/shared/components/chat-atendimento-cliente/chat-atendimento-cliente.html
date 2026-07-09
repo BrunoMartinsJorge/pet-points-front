@@ -92,23 +92,86 @@
           {{ chatSelecionado.solicitadoEm | date: "dd/MM/yyyy HH:mm:ss" }}
           <i class="fa far fa-calendar-alt"></i>
         </span>
+        <p-button
+          icon="fa fa-check-circle"
+          size="small"
+          severity="danger"
+          pTooltip="Finalizar Atendimento"
+          (click)="visibilidadeDialogFinalizarAtendimento = true"
+          [disabled]="chatSelecionado.status !== 'EM_ANDAMENTO'"
+        />
       </div>
       <hr />
-      <div class="lista-mensagens"></div>
+      <div class="lista-mensagens">
+        <!-- {{ mensagemChatSelecionado | json }} -->
+        @for (mensagem of mensagemChatSelecionado; track mensagem.id) {
+          <div
+            [ngClass]="mensagem.enviadoPorVoce ? 'mensagem voce' : 'mensagem'"
+          >
+            {{ mensagem.mensagem }}
+            <span class="data">
+              {{ mensagem.enviadoEm | date: "dd/MM/yyyy HH:mm:ss" }}
+            </span>
+          </div>
+        }
+      </div>
       <hr />
       <div class="formulario">
         <input
           type="text"
           placeholder="Digite sua mensagem..."
           pInputText
+          [(ngModel)]="novaMensagem"
           [disabled]="chatSelecionado.status !== 'EM_ANDAMENTO'"
         />
         <p-button
           icon="pi pi-send"
           severity="primary"
           [disabled]="chatSelecionado.status !== 'EM_ANDAMENTO'"
+          (click)="enviar()"
         />
       </div>
     </section>
   }
+</p-dialog>
+
+<p-dialog
+  header="Finalizar Atendimento"
+  [(visible)]="visibilidadeDialogFinalizarAtendimento"
+  [modal]="true"
+  [style]="{
+    width: '25vw',
+    minWidth: '200px',
+  }"
+  [draggable]="false"
+  [closable]="true"
+>
+  <hr />
+  <div class="formulario-finalizacao">
+    <div class="input-group">
+      <label for="pontuacao">Nota do Atendimento</label>
+      <p-rating [(ngModel)]="avaliacaoAtendimento.pontuacao" />
+    </div>
+    <div class="input-group">
+      <label for="observacoes">Observações do Atendimento</label>
+      <textarea
+        name="observacoes"
+        id="observacoes"
+        pTextarea
+        [(ngModel)]="avaliacaoAtendimento.observacoes"
+      ></textarea>
+    </div>
+  </div>
+  <hr />
+  <p-button
+    label="Finalizar Atendimento"
+    icon="fa fa-check-circle"
+    severity="danger"
+    fluid
+    [disabled]="
+      avaliacaoAtendimento.observacoes === '' ||
+      avaliacaoAtendimento.observacoes.trim() === ''
+    "
+    (click)="finalizarAtendimento()"
+  ></p-button>
 </p-dialog>

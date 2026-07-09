@@ -94,7 +94,56 @@ section.chat-selecionado {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    overflow-y: auto;
+
+    .mensagem {
+      max-width: 70%;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.75rem;
+      background: var(--card);
+      align-self: flex-start;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      span.data {
+        font-size: 0.8em;
+        color: var(--color-text);
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0.75rem;
+        left: -0.5rem;
+        width: 0;
+        height: 0;
+        border-top: 0.5rem solid var(--card);
+        border-right: 0.5rem solid transparent;
+        transform: rotate(90deg);
+      }
+
+      &.voce {
+        align-self: flex-end;
+        background: var(--card);
+        text-align: right;
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0.75rem;
+          width: 0;
+          left: 100%;
+          height: 0;
+          border-top: 0.5rem solid var(--card);
+          border-right: 0.5rem solid transparent;
+          transform: rotate(0deg);
+        }
+      }
+    }
   }
 
   .formulario {

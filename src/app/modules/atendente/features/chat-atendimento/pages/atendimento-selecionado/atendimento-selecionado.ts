@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { AtendimentosAtendenteeService } from '../../services/atendimentos-atendentee-service';
 import { PrimeNGModule } from '../../../../../../shared/modules/prime-ng/prime-ng-module';
 import type { ChatAtendimentoDto } from '../../models/ChatAtendimentoDto';
+import { StatusAtendimentoEnum } from '../../../../../../shared/models/enums/StatusAtendimentoEnum';
 import type { MensagemAtendimento } from '../../../../../../shared/models/ChatModels';
 import { ChatAtendimentoWsService } from '../../../../../../shared/services/ws/chat-atendimento-ws-service';
 import { firstValueFrom, type Subscription } from 'rxjs';
@@ -20,6 +21,7 @@ export class AtendimentoSelecionado implements OnInit, OnDestroy {
   private readonly router = inject(ActivatedRoute);
 
   private wsSub?: Subscription;
+  private statusSub?: Subscription;
 
   private idChat: number | null = null;
   public mensagem = '';
@@ -40,6 +42,15 @@ export class AtendimentoSelecionado implements OnInit, OnDestroy {
     await this.buscarAtendimentoSelecionado();
     this.ws.connect();
     this.wsSub = this.ws.mensagens$.subscribe((m) => (this.mensagens = m));
+    this.statusSub = this.ws.status$.subscribe((evento) => {
+      if (!evento || !this.atendimentoSelecionado) return;
+      if (evento.idChat !== this.atendimentoSelecionado.chatId) return;
+      // Cliente finalizou (ou outro atendente assumiu): refletir na tela sem reload.
+      this.atendimentoSelecionado = {
+        ...this.atendimentoSelecionado,
+        status: evento.status as StatusAtendimentoEnum,
+      };
+    });
     this.idChat = this.getIdAtendimento;
     if (!this.idChat) return;
     const historico = await firstValueFrom(
@@ -66,12 +77,17 @@ export class AtendimentoSelecionado implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.wsSub?.unsubscribe();
+    this.statusSub?.unsubscribe();
     this.ws.disconnect();
+  }
+
+  public get atendimentoFinalizado(): boolean {
+    return this.atendimentoSelecionado?.status === StatusAtendimentoEnum.FINALIZADO;
   }
 
   public enviar(): void {
     const texto = this.mensagem.trim();
-    if (!texto || !this.idChat) return;
+    if (!texto || !this.idChat || this.atendimentoFinalizado) return;
 
     this.ws.enviar({
       idChat: this.idChat,

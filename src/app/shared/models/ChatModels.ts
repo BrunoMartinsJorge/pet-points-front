@@ -12,6 +12,7 @@ export interface UsuarioInterno {
   nome: string;
   tipoUsuario: TipoUsuario;
   idChat: number | null;
+  fotoUsuario: string | null;
 }
  
 // mensagem do chat interno (WS e histórico)
@@ -33,4 +34,14 @@ export interface MensagemAtendimento {
   mensagem: string;
   enviadoEm: Date;
   enviadoPorVoce: boolean;
+}
+
+// evento publicado em /topic/chat-atendimento/status/{idChat} sempre que o
+// atendimento muda de status (aceito pelo atendente ou finalizado pelo cliente)
+export interface StatusAtendimentoEvento {
+  idAtendimento: number;
+  idChat: number;
+  status: 'PENDENTE' | 'EM_ANDAMENTO' | 'FINALIZADO';
+  cliente: string | null;
+  atendente: string | null;
 }
