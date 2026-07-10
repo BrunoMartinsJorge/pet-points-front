@@ -24,15 +24,15 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
   private readonly service = inject(AtendimentosClienteService);
   private readonly toast = inject(MessageService);
 
-  public visibilidadeDialogChatAtendimento = true;
-  public visibilidadeDialogFinalizarAtendimento = true;
+  public visibilidadeDialogChatAtendimento = false;
+  public visibilidadeDialogFinalizarAtendimento = false;
   public atendimentos: ChatAtendimentoDto[] = [];
   public chatSelecionado: ChatAtendimentoDto | null = null;
   public modoAtendimento: 'SOLICITACAO' | 'LISTA' = 'LISTA';
   public mensagemChatSelecionado: MensagemAtendimento[] = [];
 
   public mensagemSolicitacaoAtendimento = '';
-  public novaMensagem = "";
+  public novaMensagem = '';
 
   public avaliacaoAtendimento = {
     pontuacao: 0,
@@ -58,6 +58,7 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
     );
 
     this.ws.abrirChat(atendimento.chatId, historico);
+    this.buscarAvaliacao();
   }
 
   public enviarSolicitacaoAtendimento(): void {
@@ -106,14 +107,19 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
       });
   }
 
-  private buscarMensagens(): void {
+  private buscarAvaliacao(): void {
     if (!this.chatSelecionado) return;
-    this.mensagemChatSelecionado = [];
+    this.avaliacaoAtendimento = {
+    pontuacao: 0,
+    observacoes: '',
+  };
+
     this.service
-      .buscarMensagensChatAtendimento(this.chatSelecionado.chatId)
+      .buscarAvaliacao(this.chatSelecionado.chatId)
       .subscribe({
-        next: (response: MensagemAtendimento[]) => {
-          this.mensagemChatSelecionado = response;
+        next: (avaliacao) => {
+          this.avaliacaoAtendimento.observacoes = avaliacao.mensagem;
+          this.avaliacaoAtendimento.pontuacao = avaliacao.pontuacao;
         },
       });
   }
@@ -122,6 +128,7 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
 
   private wsSub?: Subscription;
   private statusSub?: Subscription;
+  private statusUsuarioSub?: Subscription;
 
   public async ngOnInit(): Promise<void> {
     this.ws.connect();
@@ -132,8 +139,6 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
     this.statusSub = this.ws.status$.subscribe((evento) => {
       if (!evento || !this.chatSelecionado) return;
       if (evento.idChat !== this.chatSelecionado.chatId) return;
-      // Atendente acabou de aceitar a solicitação: libera o envio de mensagens
-      // imediatamente, sem precisar reabrir o chat ou recarregar a página.
       this.chatSelecionado = {
         ...this.chatSelecionado,
         status: evento.status as StatusAtendimentoEnum,
@@ -149,27 +154,54 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
           : atendimento,
       );
     });
+
+    this.ws.escutarMeuStatus();
+    this.statusUsuarioSub = this.ws.statusUsuario$.subscribe((evento) => {
+      if (!evento) return;
+      this.atendimentos = this.atendimentos.map((atendimento) =>
+        atendimento.chatId === evento.idChat
+          ? {
+              ...atendimento,
+              status: evento.status as StatusAtendimentoEnum,
+              atendente: evento.atendente ?? atendimento.atendente,
+            }
+          : atendimento,
+      );
+      if (
+        this.chatSelecionado &&
+        this.chatSelecionado.chatId === evento.idChat
+      ) {
+        this.chatSelecionado = {
+          ...this.chatSelecionado,
+          status: evento.status as StatusAtendimentoEnum,
+          atendente: evento.atendente ?? this.chatSelecionado.atendente,
+        };
+      }
+    });
     if (!this.chatSelecionado) return;
     const historico = await firstValueFrom(
       this.service.buscarMensagensChatAtendimento(this.chatSelecionado.chatId),
     );
     if (!this.chatSelecionado) return;
-    this.ws.abrirChat(
-      this.chatSelecionado.chatId,
-      historico
-    );
+    this.ws.abrirChat(this.chatSelecionado.chatId, historico);
   }
 
   public ngOnDestroy(): void {
     this.wsSub?.unsubscribe();
     this.statusSub?.unsubscribe();
+    this.statusUsuarioSub?.unsubscribe();
     this.ws.disconnect();
   }
 
   public voltarParaLista(): void {
-    this.novaMensagem = "";
-    this.modoAtendimento = "LISTA";
+    this.novaMensagem = '';
+    this.mensagemSolicitacaoAtendimento = '';
+    this.modoAtendimento = 'LISTA';
     this.chatSelecionado = null;
+    this.avaliacaoAtendimento = {
+      pontuacao: 0,
+      observacoes: '',
+    };
   }
 
   public abrirDialogFinalizarAtendimento(): void {
@@ -177,7 +209,15 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
     this.avaliacaoAtendimento = {
       pontuacao: 0,
       observacoes: '',
-    }
+    };
+  }
+
+  public get solicitacaoAtendimentoValida(): boolean {
+    return this.mensagemSolicitacaoAtendimento.trim().length > 0;
+  }
+
+  public get mensagemAtendimentoValida(): boolean {
+    return this.novaMensagem.trim().length > 0;
   }
 
   public enviar(): void {

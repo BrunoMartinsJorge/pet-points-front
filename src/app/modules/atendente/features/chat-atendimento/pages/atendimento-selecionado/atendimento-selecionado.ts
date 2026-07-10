@@ -67,7 +67,6 @@ export class AtendimentoSelecionado implements OnInit, OnDestroy, OnChanges {
         ...this.atendimentoSelecionado,
         status: evento.status as StatusAtendimentoEnum,
       };
-      console.log(evento);
       this.buscarAvaliacao();
     });
     this.idChat = this.getIdAtendimento;

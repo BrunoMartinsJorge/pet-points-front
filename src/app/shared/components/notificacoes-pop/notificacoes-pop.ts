@@ -5,7 +5,6 @@ import { NotificacoesService } from '../../services/notificacoes-service';
 import type { NotificacaoDto } from '../../services/ws/notificacoes-ws-service';
 import { NotificacoesWsService } from '../../services/ws/notificacoes-ws-service';
 import type { Popover } from 'primeng/popover';
-import type { CheckboxChangeEvent} from 'primeng/checkbox';
 import type { TiposNotificacoesEnum } from '../../models/enums/TiposNotificacoesEnum';
 import { getIconPorTipo } from '../../models/enums/TiposNotificacoesEnum';
 
@@ -39,13 +38,14 @@ export class NotificacoesPop implements OnInit {
   public foiAbertoNotificiacoes = false;
   public notificacoesParaMarcarComoLidas: number[] = [];
 
-  public marcarSelecionadasComoLidas(todas: boolean): void {
-    if (todas)
-      this.notificacoesParaMarcarComoLidas = this.notificacoes.map((n) => n.id);
-    if (this.notificacoesParaMarcarComoLidas.length == 0) return;
-    this.notificacoesService.marcarNotificacoesComoLidas(
-      this.notificacoesParaMarcarComoLidas,
-    );
+  public marcarComoLida(notificacao: NotificacaoDto): void {
+    this.notificacoesService.marcarNotificacaoComoLida(
+      notificacao.id,
+    ).subscribe({
+      next: () => {
+        this.notificacoes = this.notificacoes.filter((n) => n.id !== notificacao.id);
+      }
+    });
   }
 
   public alterarPopover(): void {
@@ -55,18 +55,6 @@ export class NotificacoesPop implements OnInit {
 
   public getIcone(tipo: TiposNotificacoesEnum): string {
     return getIconPorTipo(tipo);
-  }
-
-  public marcarComoLida(
-    event: CheckboxChangeEvent,
-    idNotificacao: number,
-  ): void {
-    const notificacao = this.notificacoes.find((n) => n.id === idNotificacao);
-    if (!notificacao) return;
-    if (event.checked) this.notificacoesParaMarcarComoLidas.push(idNotificacao);
-    else
-      this.notificacoesParaMarcarComoLidas =
-        this.notificacoesParaMarcarComoLidas.filter((n) => n !== idNotificacao);
   }
 
   public notificacaoMarcadaComoLida(id: number): boolean {

@@ -5,6 +5,67 @@ main {
   padding: 1rem;
   height: 100%;
 
+  section.cards {
+        display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .card-pagamentos {
+      flex: 1 1 calc(33% - 0.5rem);
+      min-width: 200px;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 2rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--card);
+      gap: 1rem;
+
+      .icon {
+        font-size: 2em;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        background-color: var(--color-border);
+
+        &.efetuado {
+          color: var(--aprovado);
+          border: 1px solid var(--aprovado);
+          background-color: var(--aprovado-foreground);
+        }
+
+        &.pendente {
+          color: var(--bag-pendente);
+          border: 1px solid var(--bag-pendente);
+          background-color: var(--bag-pendente-foreground);
+        }
+
+        &.iniciado {
+          color: var(--bag-iniciado);
+          border: 1px solid var(--bag-iniciado);
+          background-color: var(--bag-iniciado-foreground);
+        }
+      }
+      .infos {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        span {
+          color: var(--color-text);
+        }
+        strong {
+          color: var(--color-title);
+        }
+      }
+    }
+  }
+
   section.atendimentos {
     display: flex;
     flex-wrap: wrap;

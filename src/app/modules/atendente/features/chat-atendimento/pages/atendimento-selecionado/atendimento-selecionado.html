@@ -38,7 +38,7 @@
       <p-tabs value="0">
         <p-tablist>
           <p-tab value="0">Base</p-tab>
-          <p-tab value="1">Avaliação</p-tab>
+          <p-tab value="1" [disabled]="atendimentoSelecionado.status !== 'FINALIZADO'">Avaliação</p-tab>
         </p-tablist>
         <p-tabpanels [style]="{ padding: '0.5em 0' }">
           <p-tabpanel value="0">

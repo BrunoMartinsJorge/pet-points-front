@@ -1,4 +1,4 @@
-:host ::ng-deep .dialog-chat .p-dialog {
+:host ::ng-deep .p-dialog:has(.dialog-chat) {
   display: flex;
   flex-direction: column;
 }
@@ -6,7 +6,40 @@
 :host ::ng-deep .dialog-chat.p-dialog-content {
   flex: 1;
   display: flex;
+  flex-direction: column;
   min-height: 0;
+  overflow: hidden;
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+:host ::ng-deep .p-tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+:host ::ng-deep .p-tabpanels {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 1em 0 0 0;
+}
+
+:host ::ng-deep .p-tabpanel {
+  flex: 1;
+  min-height: 0;
+}
+
+:host ::ng-deep .p-tabpanel:not([hidden]) {
+  display: flex;
+  flex-direction: column;
 }
 
 #btnAbrirChat {
@@ -30,12 +63,58 @@
     padding: 0.5rem;
     outline: none;
     background: transparent;
+    justify-content: space-between;
     min-height: 50px;
     align-items: center;
     background-color: var(--card);
+
     &:hover {
       background: var(--color-border);
       transition: 0.2s;
+    }
+
+    .mensagem {
+      font-size: 0.9em;
+      text-align: left;
+      max-width: 80%;
+    }
+
+    .info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+
+      span.data {
+        color: var(--color-text);
+      }
+
+      span.status {
+        color: var(--color-text);
+        font-weight: 600;
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        font-size: 0.8rem;
+        padding: 0.15rem 0.5rem;
+
+        &.finalizado {
+          border-color: var(--color-card-primary);
+          color: var(--color-card-primary);
+          background-color: var(--color-card-primary-foreground);
+        }
+
+        &.em_andamento {
+          border-color: var(--bag-iniciado);
+          color: var(--bag-iniciado);
+          background-color: var(--bag-iniciado-foreground);
+        }
+
+        &.pendente {
+          border-color: var(--bag-pendente);
+          color: var(--bag-pendente);
+          background-color: var(--bag-pendente-foreground);
+        }
+      }
     }
   }
 }
@@ -64,34 +143,46 @@
   }
 }
 
+.avaliacao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+}
+
+.header-atendimento {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9em;
+    color: var(--color-text);
+
+    i {
+      font-size: 1.2em;
+    }
+  }
+}
+
 section.chat-selecionado {
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
 
-  .header-atendimento {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-
-    span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      font-size: 0.9em;
-      color: var(--color-text);
-
-      i {
-        font-size: 1.2em;
-      }
-    }
-  }
-
   .lista-mensagens {
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;

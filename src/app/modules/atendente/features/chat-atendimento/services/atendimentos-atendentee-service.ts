@@ -5,6 +5,7 @@ import type { SolicitacoesAtendimentosDto } from '../models/SolicitacoesAtendime
 import type { ChatAtendimentoDto } from '../models/ChatAtendimentoDto';
 import type { MensagemAtendimento } from '../../../../../shared/models/ChatModels';
 import type { AvaliacaoDto } from '../../../../../shared/models/AvaliacaoDto';
+import type { CardsAtendimentoAtendenteDto } from '../models/CardsAtendimentoAtendenteDto';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,10 @@ export class AtendimentosAtendenteeService {
 
   public buscarAvaliacao(idChat: number): Observable<AvaliacaoDto> {
     return this.http.get<AvaliacaoDto>(`${this.URL}/avaliacao/${idChat}`);
+  }
+
+  public buscarCardsAtendente(): Observable<CardsAtendimentoAtendenteDto> {
+    return this.http.get<CardsAtendimentoAtendenteDto>(`${this.URL}/atendente/cards`);
   }
 
   public listarMeusAtendimentos(): Observable<ChatAtendimentoDto[]> {

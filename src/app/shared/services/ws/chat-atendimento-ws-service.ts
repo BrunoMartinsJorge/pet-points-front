@@ -22,22 +22,25 @@ export class ChatAtendimentoWsService {
   private client?: Client;
   private conectado = false;
   private idChatAtual: number | null = null;
+  private idUsuarioStatus: number | null = null;
   private assinatura?: StompSubscription;
   private assinaturaStatus?: StompSubscription;
+  private assinaturaStatusUsuario?: StompSubscription;
 
-  // Fonte única de verdade das mensagens do chat aberto (como o notificacoes$).
   private mensagensSubject = new BehaviorSubject<MensagemAtendimento[]>([]);
   mensagens$ = this.mensagensSubject.asObservable();
 
-  // Emite sempre que o atendimento aberto muda de status (aceito/finalizado),
-  // permitindo que cliente e atendente reajam em tempo real, sem reload.
   private statusSubject = new BehaviorSubject<StatusAtendimentoEvento | null>(
     null,
   );
   status$ = this.statusSubject.asObservable();
 
+  private statusUsuarioSubject =
+    new BehaviorSubject<StatusAtendimentoEvento | null>(null);
+  statusUsuario$ = this.statusUsuarioSubject.asObservable();
+
   connect(): void {
-    if (this.client) return; // já criado e ativo -> não recria (evita conexões duplicadas)
+    if (this.client) return;
 
     const token = this.tokenService.getToken;
 
@@ -49,11 +52,11 @@ export class ChatAtendimentoWsService {
 
     this.client.onConnect = () => {
       this.conectado = true;
-      // (re)assina o chat atual assim que a conexão estiver pronta
       if (this.idChatAtual != null) this.assinarTopicos(this.idChatAtual);
+      if (this.idUsuarioStatus != null)
+        this.assinarStatusUsuario(this.idUsuarioStatus);
     };
 
-    // Se a inscrição for recusada pelo back, o erro aparece aqui.
     this.client.onStompError = (frame) =>
       console.error(
         'STOMP erro (chat-atendimento):',
@@ -64,7 +67,6 @@ export class ChatAtendimentoWsService {
     this.client.activate();
   }
 
-  /** Abre um chat: semeia o histórico e assina os tópicos de mensagens e de status. */
   abrirChat(
     idChat: number,
     historico: MensagemAtendimento[] = [],
@@ -114,11 +116,6 @@ export class ChatAtendimentoWsService {
     );
   }
 
-  /**
-   * Assina o tópico de status do atendimento: é o que avisa o cliente quando o
-   * atendente aceita (status vira EM_ANDAMENTO) e avisa o atendente quando o
-   * cliente finaliza (status vira FINALIZADO) — tudo em tempo real.
-   */
   private assinarStatus(idChat: number): void {
     this.assinaturaStatus?.unsubscribe();
     this.assinaturaStatus = this.client?.subscribe(
@@ -126,6 +123,24 @@ export class ChatAtendimentoWsService {
       (frame) => {
         const evento = JSON.parse(frame.body) as StatusAtendimentoEvento;
         this.zone.run(() => this.statusSubject.next(evento));
+      },
+    );
+  }
+
+  escutarMeuStatus(): void {
+    const idUsuario = this.tokenService.getTokenPayload?.idUsuario ?? null;
+    if (idUsuario == null) return;
+    this.idUsuarioStatus = idUsuario;
+    if (this.conectado) this.assinarStatusUsuario(idUsuario);
+  }
+
+  private assinarStatusUsuario(idUsuario: number): void {
+    this.assinaturaStatusUsuario?.unsubscribe();
+    this.assinaturaStatusUsuario = this.client?.subscribe(
+      `/topic/chat-atendimento/status-usuario/${idUsuario}`,
+      (frame) => {
+        const evento = JSON.parse(frame.body) as StatusAtendimentoEvento;
+        this.zone.run(() => this.statusUsuarioSubject.next(evento));
       },
     );
   }
@@ -149,12 +164,11 @@ export class ChatAtendimentoWsService {
   disconnect(): void {
     this.assinatura?.unsubscribe();
     this.assinaturaStatus?.unsubscribe();
+    this.assinaturaStatusUsuario?.unsubscribe();
     this.client?.deactivate();
     this.conectado = false;
     this.idChatAtual = null;
-    // Sem isso, connect() nunca recriava o client após um disconnect (guard
-    // "if (this.client) return"), obrigando a recarregar a aplicação para
-    // conseguir enviar mensagens de novo.
+    this.idUsuarioStatus = null;
     this.client = undefined;
   }
 }
