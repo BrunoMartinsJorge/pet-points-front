@@ -29,6 +29,11 @@ import { TipoPagamentoEnum } from '../../models/enums/TipoPagamentoEnum';
 import type { RelatorioFinanceiroClienteDto } from './model/RelatorioFinanceiroClienteDto';
 import type { MinhasAvaliacoesDto } from './model/MinhasAvaliacoesDto';
 import type { AvaliacaoConsultaDto } from '../../../modules/atendente/features/consultas-clinica/models/AvaliacaoConsultaDto';
+import type { LogDto } from '../../../modules/gerente/pages/logs-sistema/models/LogDto';
+import type { MovimentacoesDto } from '../../../modules/gerente/pages/movimentacoes-clinica/model/MovimentacoesDto';
+import { LogsService } from '../../../modules/gerente/pages/logs-sistema/service/logs-service';
+import { MovimentacoesClinicaService } from '../../../modules/gerente/pages/movimentacoes-clinica/service/movimentacoes-clinica-service';
+import { BagLog } from "../../../modules/gerente/pages/logs-sistema/components/bag-log/bag-log";
 
 @Component({
   selector: 'app-perfil',
@@ -38,7 +43,8 @@ import type { AvaliacaoConsultaDto } from '../../../modules/atendente/features/c
     ReactiveFormsModule,
     ConfirmDialog,
     BagTipoMovimentacao,
-  ],
+    BagLog
+],
   providers: [ConfirmationService, MessageService],
   templateUrl: './perfil.html',
   styleUrl: './perfil.scss',
@@ -55,6 +61,8 @@ export class Perfil implements OnInit {
     MinhasMovimentacoesService,
   );
   private readonly clienteService = inject(MeusPagamentosService);
+  private readonly gerenteLogsService = inject(LogsService);
+  private readonly gerenteMovimentacoesService = inject(MovimentacoesClinicaService);
 
   public readonly tiposGeneros = GeneroEnumOpcoesFormulario;
   public informacoesUsuario!: FormGroup;
@@ -80,6 +88,12 @@ export class Perfil implements OnInit {
 
   public movimentacoesEstoquista: MinhasMovimentacoesDto[] = [];
   public carregandoMovimentacoesEstoquista = false;
+
+  public logsSistema: LogDto[] = [];
+  public carregandoLogsSistema = false;
+
+  public movimentacoes: MovimentacoesDto[] = [];
+  public carregandoMovimentacoes = false;
 
   public pagamentosPendentes: RelatorioFinanceiroClienteDto = {
     pagamentosPendentes: 0,
@@ -114,6 +128,8 @@ export class Perfil implements OnInit {
         this.buscarMovimentacoesEstoquista();
         this.buscarPagamentosPendentesAtrasados();
         this.buscarMinhasAvaliacoes();
+        this.buscarLogs();
+        this.buscarMovimentacoes();
       },
     });
   }
@@ -329,6 +345,36 @@ export class Perfil implements OnInit {
 
   private converterStringData(data: string): Date {
     return new Date(data);
+  }
+
+  private buscarLogs(): void {
+    if (this.getTipoUsuario !== 'GERENTE') return;
+    this.logsSistema = [];
+    this.carregandoLogsSistema = true;
+    this.gerenteLogsService.buscarLogs().subscribe({
+      next: (response: LogDto[]) => {
+        this.logsSistema = response;
+        this.carregandoLogsSistema = false;
+      },
+      error: () => {
+        this.carregandoLogsSistema = false;
+      },
+    });
+  }
+
+  private buscarMovimentacoes(): void {
+    if (this.getTipoUsuario !== 'GERENTE') return;
+    this.movimentacoes = [];
+    this.carregandoMovimentacoes = true;
+    this.gerenteMovimentacoesService.listarMovimentacoes().subscribe({
+      next: (response: MovimentacoesDto[]) => {
+        this.movimentacoes = response;
+        this.carregandoMovimentacoes = false;
+      },
+      error: () => {
+        this.carregandoMovimentacoes = false;
+      },
+    });
   }
 
   public enviarAlteracoes(): void {

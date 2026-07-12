@@ -560,8 +560,99 @@
     }
     @case ("GERENTE") {
       <section class="informacoes-gerente">
-        <p-fieldset legend="Logs do Sistema"> </p-fieldset>
-        <p-fieldset legend="Funcionários Registrados"> </p-fieldset>
+        <p-fieldset legend="Logs do Sistema">
+          <p-table
+            [value]="logsSistema"
+            [paginator]="true"
+            [rows]="6"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+            [rowsPerPageOptions]="[6, 12, 24]"
+            [stripedRows]="true"
+            [showGridlines]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Tipo</th>
+                <th pSortableColumn="registradoEm">
+                  Data Hora
+                  <p-sortIcon field="registradoEm" />
+                </th>
+                <th>Lançado Por</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-log>
+              <tr>
+                <td>
+                  <app-bag-log [tipoLog]="log.tipo" />
+                </td>
+                <td>{{ log.registradoEm }}</td>
+                <td>{{ log.lancadoPor || "Não identificado" }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="3" style="text-align: center; overflow: hidden">
+                  @if (!carregandoLogsSistema) {
+                    Nenhum log encontrado
+                  } @else {
+                    <p-progressSpinner></p-progressSpinner>
+                  }
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-fieldset>
+        <p-fieldset legend="Funcionários Registrados">
+          <p-table
+            [value]="movimentacoes"
+            [paginator]="true"
+            [rows]="6"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+            [rowsPerPageOptions]="[6, 12, 24]"
+            [stripedRows]="true"
+            [showGridlines]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Tipo</th>
+                <th>Produto</th>
+                <th pSortableColumn="quantidadeMovimentada">
+                  <p-sortIcon field="quantidadeMovimentada"></p-sortIcon>
+                  Quantidade Movimentada
+                </th>
+                <th>Lançado Por</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-movimentacao>
+              <tr>
+                <td>
+                  <app-bag-tipo-movimentacao
+                    [tipoMovimentacao]="movimentacao.tipoMovimentacao"
+                  ></app-bag-tipo-movimentacao>
+                </td>
+                <td>{{ movimentacao.produto.nome }}</td>
+                <td>
+                  {{ movimentacao.quantidadeMovimentada }} Unidade(s)
+                  Movimentada(s)
+                </td>
+                <td>{{ movimentacao.lancadoPor.nome }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="4" style="text-align: center; overflow: hidden">
+                  @if (carregandoMovimentacoes) {
+                    <p-progressSpinner></p-progressSpinner>
+                  } @else {
+                    <span>Nenhuma movimentação encontrada</span>
+                  }
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-fieldset>
       </section>
     }
   }
