@@ -231,4 +231,9 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
     });
     this.novaMensagem = '';
   }
+
+  public get podeAvaliarAtendimento(): boolean {
+    if (this.avaliacaoAtendimento == null || this.avaliacaoAtendimento.observacoes == null) return false;
+    return this.avaliacaoAtendimento.observacoes.trim().length > 0;
+  }
 }

@@ -4,10 +4,10 @@ import type { Observable } from 'rxjs';
 import type { InformacoesUsuarioDto } from '../model/InformacoesUsuarioDto';
 import type { EditarPerfilForm } from '../form/EditarPerfilForm';
 import type { RankingFuncionarioDto } from '../model/RankingFuncionarioDto';
-import type { AvaliacaoDto } from '../../../models/AvaliacaoDto';
 import type { ConsultasAtendenteVeterinarioDto } from '../model/ConsultasAtendenteVeterinarioDto';
 import type { RelatorioFinanceiroClienteDto } from '../model/RelatorioFinanceiroClienteDto';
 import type { MinhasAvaliacoesDto } from '../model/MinhasAvaliacoesDto';
+import type { AvaliacaoConsultaDto } from '../../../../modules/atendente/features/consultas-clinica/models/AvaliacaoConsultaDto';
 
 @Injectable({
   providedIn: 'root',
@@ -61,8 +61,8 @@ export class PerfilService {
     return this.http.get<RankingFuncionarioDto>(`${this.URL}/ranking`);
   }
 
-  public buscarAvaliacoes(): Observable<AvaliacaoDto[]> {
-    return this.http.get<AvaliacaoDto[]>(`${this.URL}/avaliacoes`);
+  public buscarAvaliacoes(): Observable<AvaliacaoConsultaDto[]> {
+    return this.http.get<AvaliacaoConsultaDto[]>(`${this.URL}/avaliacoes`);
   }
 
   public buscarConsultasAtendenteVeterinario(): Observable<

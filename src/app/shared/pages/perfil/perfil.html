@@ -322,7 +322,7 @@
               #dv
               [value]="consultasAtendenteVeterinario"
               [paginator]="true"
-              [rows]="2"
+              [rows]="4"
             >
               <ng-template #list let-consultas>
                 <div class="lista-consultas">
@@ -391,8 +391,94 @@
         } @else {
           <p-fieldset legend="Minhas Avaliações">
             <div class="pontuacao">
-              @if (rankingAvaliacao?.classificacao !== null) {
-                <h3>{{ rankingAvaliacao?.classificacao }} º</h3>
+              @if (rankingAvaliacao !== null) {
+                <div class="card-avaliacoes">
+                  <span>
+                    <h2>{{ rankingAvaliacao.classificacao }} º</h2>
+                    Lugar no ranking de atendimentos avaliados!
+                  </span>
+                  <hr />
+                  <div class="melhor-pior">
+                    <div
+                      class="melhor"
+                      pTooltip="Melhor Avaliação"
+                      tooltipPosition="top"
+                    >
+                      <div class="header">
+                        <h4>
+                          {{ rankingAvaliacao.melhorAvaliacao.pontuacao }}
+                          Ponto(s)
+                        </h4>
+                        <span>
+                          {{ rankingAvaliacao.melhorAvaliacao.enviadoEm }}
+                        </span>
+                      </div>
+                      <hr />
+                      <div class="mensagem">
+                        <p>
+                          {{ rankingAvaliacao.melhorAvaliacao.observacoes }}
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="pior"
+                      pTooltip="Pior Avaliação"
+                      tooltipPosition="top"
+                    >
+                      <div class="header">
+                        <h4>
+                          {{ rankingAvaliacao.piorAvaliacao.pontuacao }}
+                          Ponto(s)
+                        </h4>
+                        <span>
+                          {{ rankingAvaliacao.piorAvaliacao.enviadoEm }}
+                        </span>
+                      </div>
+                      <hr />
+                      <div class="mensagem">
+                        <p>
+                          {{ rankingAvaliacao.piorAvaliacao.observacoes }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <p-dataview
+                    #dv
+                    [value]="avaliacoes"
+                    [paginator]="true"
+                    [rows]="3"
+                  >
+                    <ng-template #list let-avaliacoes>
+                      <div class="lista-avaliacoes">
+                        @for (avaliacao of avaliacoes; track avaliacao.id) {
+                          <div class="card-avaliacao">
+                            <div class="header">
+                              <h4>
+                                {{ rankingAvaliacao.piorAvaliacao.pontuacao }}
+                                Ponto(s)
+                              </h4>
+                              <span>
+                                {{ rankingAvaliacao.piorAvaliacao.enviadoEm }}
+                              </span>
+                            </div>
+                            <hr />
+                            <div class="mensagem">
+                              <p>
+                                {{ rankingAvaliacao.piorAvaliacao.observacoes }}
+                              </p>
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    </ng-template>
+                    <ng-template #emptymessage>
+                      <span class="sem-resultados"
+                        >Nenhuma avaliação encontrada!</span
+                      >
+                    </ng-template>
+                  </p-dataview>
+                </div>
               } @else {
                 <div class="card-sem-avaliacoes">
                   <i class="fa fas far fa-star"></i>
@@ -474,12 +560,8 @@
     }
     @case ("GERENTE") {
       <section class="informacoes-gerente">
-        <p-fieldset legend="Logs do Sistema">
-
-        </p-fieldset>
-        <p-fieldset legend="Funcionários Registrados">
-          
-        </p-fieldset>
+        <p-fieldset legend="Logs do Sistema"> </p-fieldset>
+        <p-fieldset legend="Funcionários Registrados"> </p-fieldset>
       </section>
     }
   }

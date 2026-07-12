@@ -17,7 +17,6 @@ import type { EditarPerfilForm } from './form/EditarPerfilForm';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import type { RankingFuncionarioDto } from './model/RankingFuncionarioDto';
-import type { AvaliacaoDto } from '../../models/AvaliacaoDto';
 import type { ConsultasAtendenteVeterinarioDto } from './model/ConsultasAtendenteVeterinarioDto';
 import { Router } from '@angular/router';
 import { ConsultasServices } from '../../../modules/atendente/features/consultas-clinica/service/consultas-services';
@@ -29,6 +28,7 @@ import type { PagamentosDto } from '../../../modules/cliente/pages/meus-pagament
 import { TipoPagamentoEnum } from '../../models/enums/TipoPagamentoEnum';
 import type { RelatorioFinanceiroClienteDto } from './model/RelatorioFinanceiroClienteDto';
 import type { MinhasAvaliacoesDto } from './model/MinhasAvaliacoesDto';
+import type { AvaliacaoConsultaDto } from '../../../modules/atendente/features/consultas-clinica/models/AvaliacaoConsultaDto';
 
 @Component({
   selector: 'app-perfil',
@@ -70,7 +70,7 @@ export class Perfil implements OnInit {
   public rankingAvaliacao: RankingFuncionarioDto | null = null;
   public carregandoRankingAvaliacao = false;
 
-  public avaliacoes: AvaliacaoDto[] = [];
+  public avaliacoes: AvaliacaoConsultaDto[] = [];
   public carregandoAvaliacoes = false;
 
   public consultasAtendenteVeterinario: ConsultasAtendenteVeterinarioDto[] = [];
@@ -244,7 +244,7 @@ export class Perfil implements OnInit {
     this.avaliacoes = [];
     this.carregandoAvaliacoes = true;
     this.service.buscarAvaliacoes().subscribe({
-      next: (response: AvaliacaoDto[]) => {
+      next: (response: AvaliacaoConsultaDto[]) => {
         this.avaliacoes = response;
         this.carregandoAvaliacoes = false;
       },

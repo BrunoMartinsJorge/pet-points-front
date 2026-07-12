@@ -61,7 +61,7 @@ main {
             flex-wrap: wrap;
             align-items: center;
             gap: 0.5rem;
-            
+
             &:nth-child(even) {
               border-left: 5px solid var(--color-card-secondary);
             }
@@ -314,6 +314,131 @@ main {
         gap: 0.5rem;
 
         .pontuacao {
+          hr {
+            margin: 0.25rem 0;
+          }
+
+          .card-avaliacoes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            span {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              font-weight: 600;
+
+              h2 {
+                margin: 0;
+              }
+            }
+
+            .melhor-pior {
+              display: flex;
+              gap: 0.5rem;
+
+              .pior,
+              .melhor {
+                border: 1px solid var(--color-border);
+                background: var(--card);
+                border-radius: 4px;
+                padding: 0.25rem 1rem;
+                display: flex;
+                width: 100%;
+                min-width: 100px;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                flex-direction: column;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+
+                &.melhor {
+                  border-left: 5px solid var(--color-card-primary);
+                }
+
+                &.pior {
+                  border-left: 5px solid var(--color-danger);
+                }
+
+                .header {
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: space-between;
+
+                  h4 {
+                    margin: 0.25rem;
+                  }
+
+                  span {
+                    font-size: 0.8em;
+                    font-weight: 400;
+                    color: var(--color-text);
+                  }
+                }
+
+                .mensagem p {
+                  margin: 0;
+                  font-size: 0.8em;
+                  max-height: 100px;
+                  overflow-y: auto;
+                }
+              }
+            }
+
+            .lista-avaliacoes {
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+
+              .card-avaliacao {
+                border: 1px solid var(--color-border);
+                background: var(--card);
+                border-radius: 4px;
+                padding: 0.25rem 1rem;
+                display: flex;
+                width: 100%;
+                min-width: 100px;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                flex-direction: column;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+
+                &.melhor {
+                  border-left: 5px solid var(--color-card-primary);
+                }
+
+                &.pior {
+                  border-left: 5px solid var(--color-danger);
+                }
+
+                .header {
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: space-between;
+
+                  h4 {
+                    margin: 0.25rem;
+                  }
+
+                  span {
+                    font-size: 0.8em;
+                    font-weight: 400;
+                    color: var(--color-text);
+                  }
+                }
+
+                .mensagem p {
+                  margin: 0;
+                  font-size: 0.8em;
+                  max-height: 100px;
+                  overflow-y: auto;
+                }
+              }
+            }
+          }
+
           .card-sem-avaliacoes {
             border: 1px solid var(--color-border);
             background-color: var(--card);

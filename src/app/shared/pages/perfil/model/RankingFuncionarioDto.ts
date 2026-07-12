@@ -1,8 +1,8 @@
-import type { AvaliacaoDto } from '../../../models/AvaliacaoDto';
+import type { AvaliacaoConsultaDto } from '../../../../modules/atendente/features/consultas-clinica/models/AvaliacaoConsultaDto';
 
 export interface RankingFuncionarioDto {
   classificacao: number;
   pontuacao: number;
-  melhorAvaliacao: AvaliacaoDto;
-  piorAvaliacao: AvaliacaoDto;
+  melhorAvaliacao: AvaliacaoConsultaDto;
+  piorAvaliacao: AvaliacaoConsultaDto;
 }

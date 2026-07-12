@@ -161,11 +161,19 @@
           <div class="avaliacao">
             <div class="input-group">
               <label for="pontuacao">Pontuação:</label>
-              <p-rating [ngModel]="avaliacaoAtendimento.pontuacao" [disabled]="true" />
+              <p-rating
+                [ngModel]="avaliacaoAtendimento.pontuacao"
+                [disabled]="true"
+              />
             </div>
             <div class="input-group">
               <label for="observacoes">Obserações:</label>
-              <textarea name="observacoes" pInputTextarea [value]="avaliacaoAtendimento.observacoes" [disabled]="true"></textarea>
+              <textarea
+                name="observacoes"
+                pInputTextarea
+                [value]="avaliacaoAtendimento.observacoes"
+                [disabled]="true"
+              ></textarea>
             </div>
           </div>
         </p-tabpanel>
@@ -208,8 +216,7 @@
     severity="danger"
     fluid
     [disabled]="
-      avaliacaoAtendimento.observacoes === '' ||
-      avaliacaoAtendimento.observacoes.trim() === ''
+      !podeAvaliarAtendimento
     "
     (click)="finalizarAtendimento()"
   ></p-button>
