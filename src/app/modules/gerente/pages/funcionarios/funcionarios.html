@@ -79,7 +79,7 @@
         [paginator]="true"
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords}"
-        [rowsPerPageOptions]="[10, 20, 30]"
+        [rowsPerPageOptions]="[5, 10, 20]"
       >
         <ng-template #list let-items>
           <section class="lista-funcionarios">
@@ -110,7 +110,7 @@
                     <span>Registrado em {{ funcionario.dataCadastro }}</span>
                   </div>
                 </div>
-                <button pButton [severity]="'info'" icon="fa fa-send">Enviar Mensagem</button>
+                <button pButton [severity]="'info'" icon="fa fa-send" [disabled]="funcionario.statusPerfil === 'DESATIVADO'" (click)="acessarChatInterno(funcionario.id)">Enviar Mensagem</button>
                 <button pButton [severity]="'secondary'" icon="fa fa-user" (click)="acessarDetalhesFuncionario(funcionario.id)">Acessar Perfil</button>
               </div>
             }

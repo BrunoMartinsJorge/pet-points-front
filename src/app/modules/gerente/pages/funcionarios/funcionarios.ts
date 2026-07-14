@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import type { FiltroFuncionariosForm } from './form/FiltroFuncionariosForm';
 import { ConverterCpfPipe } from '../../../../shared/pipes/converter-cpf-pipe';
 import { GeneroBag } from '../../../../shared/components/genero-bag/genero-bag';
+import { ChatApiService } from '../../../../shared/services/chat-api-service';
 
 @Component({
   selector: 'app-funcionarios',
@@ -17,6 +18,7 @@ import { GeneroBag } from '../../../../shared/components/genero-bag/genero-bag';
 })
 export class Funcionarios implements OnInit {
   private readonly service = inject(FuncionarioServices);
+  private readonly chatService = inject(ChatApiService);
   private readonly router = inject(Router);
 
   public readonly tiposFuncionarios = FuncionariosOpcoes;
@@ -119,6 +121,12 @@ export class Funcionarios implements OnInit {
         this.carregandoRelatorio = false;
       },
     });
+  }
+
+  public acessarChatInterno(id: number): void {
+    this.chatService.idFuncionarioSelecionado = id;
+    this.chatService.redirecionado = true;
+    this.router.navigate(['gerente/chat-interno']);
   }
 
   public getImagemFuncionario(funcionario: FuncionarioDto): string {

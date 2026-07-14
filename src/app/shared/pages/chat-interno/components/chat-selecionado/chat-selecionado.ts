@@ -37,7 +37,6 @@ export class ChatSelecionado implements OnInit, OnChanges, OnDestroy {
  
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (!changes['alvo'] || !this.alvo) return;
- 
     // resolve o chat (usa o existente ou cria via get-or-create no back)
     this.idChat = this.alvo.idChat ?? (await firstValueFrom(this.api.abrirChatInterno(this.alvo.id)));
  

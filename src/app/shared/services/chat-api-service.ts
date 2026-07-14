@@ -8,6 +8,8 @@ import type { MensagemAtendimento, MensagemInterna, UsuarioInterno } from '../mo
 })
 export class ChatApiService {
   private http = inject(HttpClient);
+  public idFuncionarioSelecionado: number | null = null;
+  public redirecionado = false;
  
   // ----- chat interno -----
   listarFuncionarios(): Observable<UsuarioInterno[]> {
