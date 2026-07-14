@@ -3,6 +3,7 @@ import { Veterinario } from './veterinario';
 import { authGuard } from '../../core/guards/auth-guard';
 import { DashboardVeterinario } from './pages/dashboard-veterinario/dashboard-veterinario';
 import { Perfil } from '../../shared/pages/perfil/perfil';
+import { MinhasConsultas } from './pages/minhas-consultas/minhas-consultas';
 
 export const ROTAS_VETERINARIOS: Routes = [
   {
@@ -24,6 +25,20 @@ export const ROTAS_VETERINARIOS: Routes = [
           visible: true,
           nome: 'Dashboard',
           icone: 'pi pi-home',
+          group: '',
+          descricao: 'Dashboard do Veterinário',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'consultas-veterinario',
+        title: 'Consultas',
+        component: MinhasConsultas,
+        data: {
+          RULE: 'VETERINARIO',
+          visible: true,
+          nome: 'Minhas Consultas',
+          icone: 'pi pi-clipboard',
           group: '',
           descricao: 'Dashboard do Veterinário',
         },

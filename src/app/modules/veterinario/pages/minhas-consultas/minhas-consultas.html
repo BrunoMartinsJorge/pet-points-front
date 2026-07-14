@@ -1,0 +1,167 @@
+<p-confirmdialog
+  [modal]="true"
+  [draggable]="false"
+  [closable]="false"
+  [style]="{ minWidth: '300px' }"
+>
+  <p>
+    Por favor, insira a baixo como foi o decorrer da consulta, para ser mantido um registro.
+  </p>
+</p-confirmdialog>
+<main>
+  <section>
+    <p-fieldset legend="Consultas do Dia">
+      <p-dataview #dv [value]="consultasDoDia" [paginator]="true" [rows]="3">
+        <ng-template #list let-consultas>
+          <div class="lista-consultas">
+            @for (consulta of consultas; track consulta.id) {
+              <div [ngClass]="'card-consulta ' + consulta.status.toLowerCase()">
+                <div class="badges">
+                  <app-bag-status-consulta
+                    [status]="consulta.status"
+                  ></app-bag-status-consulta>
+                  <span class="tipo-consulta">
+                    {{ consulta.tipo }}
+                  </span>
+                </div>
+                <div class="informacoes">
+                  <div>
+                    <span class="info">
+                      <i class="fa fas fa-user"></i>
+                      {{ consulta.cliente }}
+                    </span>
+                    <span class="info">
+                      <i class="fa fas fa-paw"></i>
+                      {{ consulta.pet }}
+                    </span>
+                    <span class="data-consulta">
+                      <i class="fa fas fa-calendar"></i>
+                      {{ consulta.data | date: "dd/MM/yyyy - HH:mm" }}
+                    </span>
+                  </div>
+                  <p-button icon="fa fa-eye" severity="secondary" />
+                  <!-- (click)="selecionarConsulta(consulta)" -->
+                </div>
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+    <p-fieldset legend="Consulta Atual">
+      @if (consultaAtual === null) {
+        <span class="sem-resultados"> Nenhuma Consulta Iniciada </span>
+      } @else {
+        <div class="consulta-atual">
+          <div class="badges">
+            <app-bag-status-consulta
+              [status]="consultaAtual.status"
+            ></app-bag-status-consulta>
+            <span class="consulta-atual">
+              {{ consultaAtual.tipo }}
+            </span>
+          </div>
+          <div class="hoarios">
+            <span
+              >Iniciado Em:
+              {{ consultaAtual.iniciadoEm | date: "dd/MM/yyyy - HH:mm" }}</span
+            >
+          </div>
+          <hr />
+          <div class="info pet">
+            <h4>Pet</h4>
+            <ul>
+              <li><strong>Nome: </strong>{{ consultaAtual.pet.nome }}</li>
+              <li>
+                <strong>Gênero: </strong
+                ><app-genero-bag
+                  [genero]="consultaAtual.pet.genero"
+                ></app-genero-bag>
+              </li>
+              <li>
+                <i class="fa fa-info-circle"></i><strong> Raça: </strong
+                >{{ consultaAtual.pet.raca }}
+              </li>
+              <li>
+                <i class="fa fa-paw"></i><strong> Tipo: </strong
+                >{{ consultaAtual.pet.tipo }}
+              </li>
+              <li>
+                <i class="fa fa-birthday-cake"></i><strong> Idade: </strong
+                >{{ consultaAtual.pet.idade }}
+              </li>
+              <li>
+                <i class="fa fa-user"></i><strong> Tutor: </strong
+                >{{ consultaAtual.pet.nomeTutor }}
+              </li>
+            </ul>
+          </div>
+          <hr />
+          <div class="info adicionais">
+            {{ consultaAtual.observacoes }}
+          </div>
+          <div class="info acoes">
+            <p-button
+              label="Finalizar Consulta"
+              icon="fa fa-check-circle"
+              severity="danger"
+              fluid
+              size="small"
+              (click)="finalizarConsulta()"
+            />
+          </div>
+        </div>
+      }
+    </p-fieldset>
+  </section>
+  <section>
+    <p-fieldset legend="Histórico de Consultas">
+      <p-dataview #dv [value]="consultasDoDia" [paginator]="true" [rows]="4">
+        <ng-template #list let-consultas>
+          <div class="lista-consultas">
+            @for (consulta of consultas; track consulta.id) {
+              <div [ngClass]="'card-consulta ' + consulta.status.toLowerCase()">
+                <div class="badges">
+                  <app-bag-status-consulta
+                    [status]="consulta.status"
+                  ></app-bag-status-consulta>
+                  <span class="tipo-consulta">
+                    {{ consulta.tipo }}
+                  </span>
+                </div>
+                <div class="informacoes">
+                  <div>
+                    <span class="info">
+                      <i class="fa fas fa-user"></i>
+                      {{ consulta.cliente }}
+                    </span>
+                    <span class="info">
+                      <i class="fa fas fa-paw"></i>
+                      {{ consulta.pet }}
+                    </span>
+                    <span class="data-consulta">
+                      <i class="fa fas fa-calendar"></i>
+                      {{ consulta.data | date: "dd/MM/yyyy - HH:mm" }}
+                    </span>
+                  </div>
+                  <p-button icon="fa fa-eye" severity="secondary" />
+                  <!-- (click)="selecionarConsulta(consulta)" -->
+                </div>
+                <hr />
+                <p>
+                  {{ consulta.observacoes }}
+                </p>
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  </section>
+</main>
