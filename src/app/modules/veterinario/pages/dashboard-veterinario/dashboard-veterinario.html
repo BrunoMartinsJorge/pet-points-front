@@ -1,1 +1,171 @@
-<p>dashboard-veterinario works!</p>
+<main>
+  <section class="cards">
+    <div class="card">
+      <div class="icon efetuado">
+        <i class="fas fa-list-check"></i>
+      </div>
+      <div class="infos">
+        <span id="titulo">Total de Consultas Finalizadas</span>
+        <span>
+          <strong id="descricao"> {{ cards.consultasFinalizadas }} </strong>
+          Consultas Finalizadas
+        </span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="icon pendente">
+        <i class="fas fa-list"></i>
+      </div>
+      <div class="infos">
+        <span id="titulo">Total de Consultas</span>
+        <span>
+          <strong id="descricao"> {{ cards.totalConsultas }} </strong>
+          Consultas Totalizadas
+        </span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="icon informativo">
+        <i class="fas fa-ranking-star"></i>
+      </div>
+      <div class="infos">
+        <span id="titulo">Ranking de Avaliação</span>
+        <span>
+          <strong id="descricao"> {{ cards.ranking }}º </strong>
+          Melhor Avaliado
+        </span>
+      </div>
+    </div>
+  </section>
+  <hr />
+  <section class="informacoes-adicionais">
+    <p-fieldset legend="Consultas do Dia">
+      <p-dataview
+        [value]="consultas"
+        [paginator]="true"
+        [rows]="4"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords}"
+        [rowsPerPageOptions]="[4, 8, 12]"
+      >
+        <ng-template let-consultas #list>
+          <div class="lista-consultas">
+            @for (consulta of consultas; track consulta.id) {
+              <div class="consulta">
+                <div class="infos">
+                  <div class="participantes">
+                    <span pTooltip="Pet da Consulta">
+                      <i class="fas fas fas fa-paw"></i>
+                      {{ consulta.pet }}
+                    </span>
+                    <span pTooltip="Cliente da Consulta">
+                      <i class="fas fas fas fa-user"></i>
+                      {{ consulta.cliente }}
+                    </span>
+                  </div>
+                  <div class="badges">
+                    <app-bag-status-consulta
+                      [status]="consulta.status"
+                    ></app-bag-status-consulta>
+                    <span class="tipo">
+                      {{ consulta.tipo }}
+                    </span>
+                  </div>
+                </div>
+                <hr />
+                <div class="infos desc-data">
+                  <p>
+                    <i class="fas fas fas fa-info-circle"></i> Observações:
+                    {{ consulta.observacoes }}
+                  </p>
+                  <span>
+                    <i class="fas fas fas fa-calendar"></i> Data da consulta:
+                    {{ consulta.data | date: "dd/MM/yyyy - HH:mm" }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          @if (carregandoConsultas) {
+            <p-skeleton
+              height="125px"
+              [style]="{ margin: '1rem 0' }"
+            ></p-skeleton>
+            <p-skeleton
+              height="125px"
+              [style]="{ margin: '1rem 0' }"
+            ></p-skeleton>
+            <p-skeleton
+              height="125px"
+              [style]="{ margin: '1rem 0' }"
+            ></p-skeleton>
+            <p-skeleton
+              height="125px"
+              [style]="{ margin: '1rem 0' }"
+            ></p-skeleton>
+          } @else {
+            <span class="sem-resultados">Nenhuma consulta para hoje!</span>
+          }
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+    <p-fieldset legend="Minhas Avaliações">
+      <p-dataview
+        [value]="avaliacoes"
+        [paginator]="true"
+        [rows]="4"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords}"
+        [rowsPerPageOptions]="[4, 8, 12]"
+      >
+        <ng-template let-avaliacoes #list>
+          <div class="lista-avaliacoes">
+            @for (avaliacao of avaliacoes; track avaliacao.id) {
+              <div class="avaliacao">
+                <div class="nota">
+                  <h3>{{ avaliacao.pontuacao }}</h3>
+                  <span class="data">
+                    {{ avaliacao.avaliadoEm | date: "dd/MM/yyyy - HH:mm" }}
+                  </span>
+                </div>
+                <div class="informacoes">
+                  <span class="usuario">
+                    <i class="fas fas fas fa-user"></i>
+                    {{ avaliacao.cliente }}
+                  </span>
+                  <p>
+                    {{ avaliacao.observacoes }}
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          @if (carregandoAvaliacoes) {
+            <p-skeleton
+              height="125px"
+              [style]="{ margin: '1rem 0' }"
+            ></p-skeleton>
+            <p-skeleton
+              height="125px"
+              [style]="{ margin: '1rem 0' }"
+            ></p-skeleton>
+            <p-skeleton
+              height="125px"
+              [style]="{ margin: '1rem 0' }"
+            ></p-skeleton>
+            <p-skeleton
+              height="125px"
+              [style]="{ margin: '1rem 0' }"
+            ></p-skeleton>
+          } @else {
+            <span class="sem-resultados">Nenhuma consulta para hoje!</span>
+          }
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  </section>
+</main>
