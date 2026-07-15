@@ -69,7 +69,7 @@
       </p-dataview>
     </p-fieldset>
     <p-fieldset legend="Consulta Atual">
-      @if (consultaAtual === null) {
+      @if (consultaAtual === null || consultaAtual.id === null) {
         <span class="sem-resultados"> Nenhuma Consulta Iniciada </span>
       } @else {
         <div class="consulta-atual">

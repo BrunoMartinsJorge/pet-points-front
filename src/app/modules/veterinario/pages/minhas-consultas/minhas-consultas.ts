@@ -8,6 +8,9 @@ import { GeneroEnum } from '../../../../shared/models/enums/GeneroEnum';
 import { TipoAnimalEnum } from '../../../../shared/models/enums/TipoAnimalEnum';
 import { GeneroBag } from '../../../../shared/components/genero-bag/genero-bag';
 import { ConfirmationService } from 'primeng/api';
+import type { ConsultaVeterinarioDto } from './model/ConsultaVeterinarioDto';
+import type { ConsultaAtualDto } from './model/ConsultaAtualDto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-minhas-consultas',
@@ -18,10 +21,11 @@ import { ConfirmationService } from 'primeng/api';
 export class MinhasConsultas implements OnInit {
   private readonly service = inject(MinhasConsultasService);
   private readonly confirmService = inject(ConfirmationService);
+  private readonly router = inject(Router);
 
-  public resumoConsulta = "";
+  public resumoConsulta = '';
 
-  public consultasDoDia = [
+  public consultasDoDia: ConsultaVeterinarioDto[] = [
     {
       id: 0,
       pet: 'Bob',
@@ -43,8 +47,9 @@ export class MinhasConsultas implements OnInit {
       tipo: 'Cirurgia',
     },
   ];
+  public carregandoConsultasDia = false;
 
-  public consultaAtual: any = {
+  public consultaAtual: ConsultaAtualDto | null = {
     id: 0,
     pet: {
       nome: 'Bob',
@@ -62,8 +67,9 @@ export class MinhasConsultas implements OnInit {
     iniciadoEm: new Date(),
     finalizadoEm: null,
   };
+  public carregandoConsultaAtual = false;
 
-  public historicoConsultas = [
+  public historicoConsultas: ConsultaVeterinarioDto[] = [
     {
       id: 0,
       pet: 'Bob',
@@ -105,16 +111,59 @@ export class MinhasConsultas implements OnInit {
       tipo: 'Checkup Geral',
     },
   ];
+  public carregandoHistoricoConsultas = false;
 
   public ngOnInit(): void {
-    // this.incializarVariaveis();
+    this.buscarConsultasDeHoje();
+    this.buscarHistoricoConsultas();
+    this.buscarConsultaAtual();
+  }
+
+  private buscarConsultasDeHoje(): void {
+    this.consultasDoDia = [];
+    this.carregandoConsultasDia = true;
+    this.service.buscarConsultasDoDia().subscribe({
+      next: (response: ConsultaVeterinarioDto[]) => {
+        this.consultasDoDia = response;
+        this.carregandoConsultasDia = false;
+      },
+      error: () => (this.carregandoConsultasDia = false),
+    });
+  }
+
+  private buscarHistoricoConsultas(): void {
+    this.historicoConsultas = [];
+    this.carregandoHistoricoConsultas = true;
+    this.service.buscarHistoricoConsultas().subscribe({
+      next: (response: ConsultaVeterinarioDto[]) => {
+        this.consultasDoDia = response;
+        this.carregandoHistoricoConsultas = false;
+      },
+      error: () => (this.carregandoHistoricoConsultas = false),
+    });
+  }
+
+  private buscarConsultaAtual(): void {
+    this.consultaAtual = null;
+    this.carregandoConsultaAtual = true;
+    this.service.buscarConsultaAtual().subscribe({
+      next: (response: ConsultaAtualDto) => {
+        this.consultaAtual = response;
+        this.carregandoConsultaAtual = false;
+      },
+      error: () => (this.carregandoConsultaAtual = false),
+    });
+  }
+
+  public selecionarConsulta(consulta: ConsultaVeterinarioDto): void {
+    this.router.navigate(['/detalhes-consulta', consulta.id])
   }
 
   public finalizarConsulta(): void {
     this.confirmService.confirm({
       header: 'Finalizar Consulta',
       acceptVisible: false,
-      rejectVisible: false
+      rejectVisible: false,
     });
   }
 

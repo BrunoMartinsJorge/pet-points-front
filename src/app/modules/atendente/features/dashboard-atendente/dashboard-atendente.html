@@ -1,1 +1,73 @@
-<p>dashboard-atendente works!</p>
+<main>
+  <section class="cards">
+    <div class="card">
+      <span class="icon efetuado">
+        <i class="fa fa-comment"></i>
+      </span>
+      <div class="infos">
+        <span>Atendimentos Finalizados</span>
+        <span>
+          <strong> 1 </strong>
+          Atendimento(s)
+        </span>
+      </div>
+    </div>
+    <div class="card">
+      <span class="icon pendente">
+        <i class="fa fa-clipboard"></i>
+      </span>
+      <div class="infos">
+        <span>Consultas Participadas</span>
+        <span>
+          <strong> 1 </strong>
+          Atendimento(s)
+        </span>
+      </div>
+    </div>
+    <div class="card">
+      <span class="icon iniciado">
+        <i class="fas fa-ranking-star"></i>
+      </span>
+      <div class="infos">
+        <span>Ranking de Atendimento</span>
+        <span>
+          <strong> 1 </strong>
+          º Lugar
+        </span>
+      </div>
+    </div>
+  </section>
+  <hr />
+  <section class="informacoes">
+    <p-fieldset legend="Consultas do Dia">
+      <p-dataview [paginator]="true">
+        <ng-template #list let-atendimentos>
+          <div class="lista-atendimentos">
+            <!-- @for (atendimento of atendimentos; track atendimento.id) {} -->
+            </div
+        ></ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhuma consulta para hoje!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+    <p-fieldset legend="Solicitações de Atendimentos">
+      <p-dataview [paginator]="true">
+        <ng-template #emptymessage>
+          <span class="sem-resultados"
+            >Nenhuma solicitação de atendimento registrada!</span
+          >
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+    <p-fieldset legend="Solicitações de Consultas">
+      <p-dataview [paginator]="true">
+        <ng-template #emptymessage>
+          <span class="sem-resultados"
+            >Nenhuma solicitação de consulta registrada!
+          </span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  </section>
+</main>

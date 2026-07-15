@@ -47,7 +47,7 @@ export const ROTAS_VETERINARIOS: Routes = [
         canActivate: [authGuard],
       },
       {
-        path: 'route/:id',
+        path: 'detalhes-consulta/:id',
         title: 'Detalhes da Consultas',
         component: DetalhesConsulta,
         data: {

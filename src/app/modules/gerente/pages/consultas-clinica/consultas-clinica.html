@@ -125,8 +125,15 @@
               <p-progressSpinner></p-progressSpinner>
             } @else {
               <span class="sem-resultados"
-                >Nenhuma tipo de consulta encontrado!</span
+                >Nenhuma especialização encontrada!</span
               >
+              <p-button
+                label="Adicionar Nova Especialização"
+                severity="info"
+                icon="fa fa-plus"
+                (click)="alterarVisibilidadeAdicionarEspecializacao()"
+                [style]="{ width: '100%' }"
+              />
             }
           } @else {
             <p-button
@@ -161,8 +168,15 @@
               <p-progressSpinner></p-progressSpinner>
             } @else {
               <span class="sem-resultados"
-                >Nenhuma tipo de consulta encontrado!</span
+                >Nenhum tipo de consulta encontrado!</span
               >
+              <p-button
+                label="Adicionar Novo Tipo de Consulta"
+                severity="info"
+                icon="fa fa-plus"
+                (click)="alterarNovoTipoConsulta()"
+                [style]="{ width: '100%' }"
+              />
             }
           } @else {
             <p-button
