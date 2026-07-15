@@ -6,6 +6,7 @@ import { ConsultasClinica } from './features/consultas-clinica/consultas-clinica
 import { Perfil } from '../../shared/pages/perfil/perfil';
 import { ChatAtendimento } from './features/chat-atendimento/chat-atendimento';
 import { AtendimentoSelecionado } from './features/chat-atendimento/pages/atendimento-selecionado/atendimento-selecionado';
+import { ChatInterno } from '../../shared/pages/chat-interno/chat-interno';
 
 export const ROTAS_ATENDENETES: Routes = [
   {
@@ -72,6 +73,20 @@ export const ROTAS_ATENDENETES: Routes = [
           group: '',
           voltar: true,
           descricao: 'Atendimento Selecionado',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'chat-interno',
+        title: 'Chat Interno',
+        component: ChatInterno,
+        data: {
+          RULE: 'ATENDENTE',
+          visible: true,
+          nome: 'Chat Interno',
+          icone: 'fa-solid fa-message',
+          group: 'INTERNO',
+          descricao: 'Chat Interno de Funcionários da Clinica',
         },
         canActivate: [authGuard],
       },

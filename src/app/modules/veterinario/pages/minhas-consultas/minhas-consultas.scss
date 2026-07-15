@@ -205,3 +205,25 @@ main {
     }
   }
 }
+
+.finalizar-consulta {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .finalizar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    p {
+      color: var(--color-text);
+      text-align: center;
+    }
+
+    textarea {
+      height: 150px;
+      resize: none;
+    }
+  }
+}

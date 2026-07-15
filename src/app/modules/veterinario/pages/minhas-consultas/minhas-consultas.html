@@ -1,12 +1,29 @@
 <p-confirmdialog
   [modal]="true"
-  [draggable]="false"
   [closable]="false"
+  [draggable]="false"
   [style]="{ minWidth: '300px' }"
 >
-  <p>
-    Por favor, insira a baixo como foi o decorrer da consulta, para ser mantido um registro.
-  </p>
+  <ng-template pTemplate="message">
+    <div class="finalizar-consulta">
+      <div class="finalizar">
+        <p>
+          Por favor, insira a baixo como foi o decorrer da consulta, para ser
+          mantido um registro.
+        </p>
+        <textarea name="observacoes" id="observacoes" pTextarea [(ngModel)]="resumoConsulta"></textarea>
+      </div>
+      <p-button
+        label="Finalizar Consulta"
+        fluid
+        icon="pi pi-check-circle"
+        severity="danger"
+        size="small"
+        (click)="enviarFinalizarConsulta()"
+        [disabled]="resumoConsulta.trim().length === 0"
+      />
+    </div>
+  </ng-template>
 </p-confirmdialog>
 <main>
   <section>
@@ -117,6 +134,7 @@
       }
     </p-fieldset>
   </section>
+  <hr />
   <section>
     <p-fieldset legend="Histórico de Consultas">
       <p-dataview #dv [value]="consultasDoDia" [paginator]="true" [rows]="4">

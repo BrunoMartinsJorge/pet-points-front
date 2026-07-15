@@ -19,6 +19,8 @@ export class MinhasConsultas implements OnInit {
   private readonly service = inject(MinhasConsultasService);
   private readonly confirmService = inject(ConfirmationService);
 
+  public resumoConsulta = "";
+
   public consultasDoDia = [
     {
       id: 0,
@@ -42,8 +44,7 @@ export class MinhasConsultas implements OnInit {
     },
   ];
 
-  // public consultaAtual = null;
-  public consultaAtual = {
+  public consultaAtual: any = {
     id: 0,
     pet: {
       nome: 'Bob',
@@ -106,25 +107,19 @@ export class MinhasConsultas implements OnInit {
   ];
 
   public ngOnInit(): void {
-    // t
+    // this.incializarVariaveis();
   }
 
   public finalizarConsulta(): void {
     this.confirmService.confirm({
       header: 'Finalizar Consulta',
-      rejectButtonProps: {
-        label: 'Manter',
-        icon: 'pi pi-times',
-        variant: 'outlined',
-        severity: 'info',
-        size: 'small',
-      },
-      acceptButtonProps: {
-        label: 'Finalizar',
-        icon: 'pi pi-check',
-        severity: 'danger',
-        size: 'small',
-      },
+      acceptVisible: false,
+      rejectVisible: false
     });
+  }
+
+  public enviarFinalizarConsulta(): void {
+    if (this.resumoConsulta.trim().length == 0) return;
+    this.confirmService.close();
   }
 }
