@@ -1,3 +1,4 @@
+<p-dialog></p-dialog>
 <main>
   <section>
     <p-fieldset legend="Informações do Pet">
@@ -163,19 +164,23 @@
               </div>
               <hr />
               <div class="avaliacao">
-                <span>
-                  <p-rating
-                    [(ngModel)]="informacoesConsulta.avaliacao.pontuacao"
+                @if (informacoesConsulta.avaliacao !== null) {
+                  <span>
+                    <p-rating
+                      [(ngModel)]="informacoesConsulta.avaliacao.pontuacao"
+                      disabled
+                    />
+                  </span>
+                  <textarea
                     disabled
-                  />
-                </span>
-                <textarea
-                  disabled
-                  [value]="informacoesConsulta.avaliacao.observacoes"
-                  pTextarea
-                  rows="3"
-                  style="resize: none; overflow-y: auto; width: 100%"
-                ></textarea>
+                    [value]="informacoesConsulta.avaliacao.observacoes"
+                    pTextarea
+                    rows="3"
+                    style="resize: none; overflow-y: auto; width: 100%"
+                  ></textarea>
+                } @else {
+                  <span class="sem-resultados">Não Avaliado Ainda!</span>
+                }
               </div>
             </div>
           </div>
@@ -320,7 +325,7 @@
     </p-fieldset>
     <p-button
       [label]="getTextoBtn"
-      severity="success"
+      [severity]="getTipoBtn"
       fluid
       [icon]="
         carregandoInformacoesConsulta
@@ -328,7 +333,8 @@
           : 'pi pi-check-circle'
       "
       rounded="true"
-      [disabled]="carregandoInformacoesConsulta"
+      [disabled]="carregandoInformacoesConsulta || !habilitarBotao"
+      (click)="iniciarOuFinalizarConsulta()"
     />
   </section>
 </main>
