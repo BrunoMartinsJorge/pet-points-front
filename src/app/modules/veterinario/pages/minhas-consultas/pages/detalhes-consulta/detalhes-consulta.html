@@ -1,1 +1,334 @@
-<p>detalhes-consulta works!</p>
+<main>
+  <section>
+    <p-fieldset legend="Informações do Pet">
+      @if (carregandoInformacoesConsulta) {
+        <div class="card-info pet">
+          <div class="badges">
+            <p-skeleton width="100px" height="25px"></p-skeleton>
+            <p-skeleton width="100px" height="25px"></p-skeleton>
+          </div>
+          <div class="foto-base">
+            <p-skeleton width="180px" height="180px"></p-skeleton>
+            <div class="infos">
+              <h3>
+                <p-skeleton width="100%" height="25px"></p-skeleton> -
+                <p-skeleton width="100%" height="25px"></p-skeleton>
+              </h3>
+              <span>
+                <p-skeleton width="100%" height="25px"></p-skeleton>
+              </span>
+              <span>
+                <p-skeleton width="100%" height="25px"></p-skeleton>
+              </span>
+            </div>
+          </div>
+          <hr />
+          <div class="saude">
+            <p-skeleton width="25%" height="25px"></p-skeleton>
+            <p-skeleton width="100%" height="75px"></p-skeleton>
+          </div>
+        </div>
+      } @else {
+        @if (informacoesConsulta === null) {
+        } @else {
+          <div class="card-info pet">
+            <div class="badges">
+              <app-tipo-pet-bag
+                [tipo]="informacoesConsulta.pet.tipo"
+              ></app-tipo-pet-bag>
+              <app-genero-bag
+                [genero]="informacoesConsulta.pet.genero"
+              ></app-genero-bag>
+            </div>
+            <div class="foto-base">
+              {{ getImagemPet }}
+              <app-imagem
+                [urlImagem]="getImagemPet"
+                [imagemRedonda]="false"
+                [height]="'180px'"
+                [width]="'180px'"
+                [tamanhoTotal]="true"
+                [preview]="true"
+              ></app-imagem>
+              <div class="infos">
+                <h3>
+                  <span>
+                    {{ informacoesConsulta.pet.nome }} -
+                    {{ informacoesConsulta.pet.raca }}
+                  </span>
+                </h3>
+                <ul>
+                  <li>
+                    <i class="fa fas fa-birthday-cake"></i>Nascido Em:
+                    {{
+                      informacoesConsulta.pet.dataNascimento
+                        | date: "dd/MM/yyyy"
+                    }}
+                  </li>
+                  <li>
+                    <i class="fa fa-calendar"></i> Registrado Em:
+                    {{
+                      informacoesConsulta.pet.registradoEm
+                        | date: "dd/MM/yyyy - HH:mm"
+                    }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <hr />
+            <div class="saude">
+              <strong>Observações do Pet:</strong>
+              <textarea
+                disabled
+                [value]="informacoesConsulta.pet.problemasSaude"
+                pTextarea
+                rows="3"
+                style="resize: none; overflow-y: auto"
+              ></textarea>
+            </div>
+          </div>
+        }
+      }
+    </p-fieldset>
+    <p-fieldset legend="Informações do Cliente">
+      @if (carregandoInformacoesConsulta) {
+        <div class="card-info cliente">
+          <div class="badges">
+            <p-skeleton width="100px" height="25px"></p-skeleton>
+          </div>
+          <div class="foto-base">
+            <p-skeleton width="180px" height="180px"></p-skeleton>
+            <div class="infos">
+              <h3>
+                <p-skeleton width="100%" height="25px"></p-skeleton>
+              </h3>
+              <span>
+                <p-skeleton width="100%" height="25px"></p-skeleton>
+              </span>
+              <span>
+                <p-skeleton width="100%" height="25px"></p-skeleton>
+              </span>
+            </div>
+          </div>
+          <hr />
+          <div class="avaliacao">
+            <span>
+              <p-skeleton width="12px" height="12px"></p-skeleton>
+              <p-skeleton width="12px" height="12px"></p-skeleton>
+              <p-skeleton width="12px" height="12px"></p-skeleton>
+              <p-skeleton width="12px" height="12px"></p-skeleton>
+              <p-skeleton width="12px" height="12px"></p-skeleton>
+            </span>
+            <span>
+              <p-skeleton width="100%" height="50px"></p-skeleton>
+            </span>
+          </div>
+        </div>
+      } @else {
+        @if (informacoesConsulta === null) {
+        } @else {
+          <div class="card-info cliente">
+            <div class="badges">
+              <app-genero-bag
+                [genero]="informacoesConsulta.cliente.genero"
+              ></app-genero-bag>
+            </div>
+            <div class="foto-base">
+              <app-imagem
+                [urlImagem]="getImagemCliente"
+                [imagemRedonda]="false"
+                [height]="'180px'"
+                [width]="'180px'"
+                [tamanhoTotal]="true"
+                [preview]="true"
+              ></app-imagem>
+              <div class="infos">
+                <h3>
+                  <span>
+                    {{ informacoesConsulta.cliente.nome }}
+                  </span>
+                </h3>
+                <ul>
+                  <li>
+                    <i class="fa fas fa-mail-bulk"></i>
+                    {{ informacoesConsulta.cliente.email }} -
+                    <i class="fa fas fa-phone"></i>
+                    {{ informacoesConsulta.cliente.telefone }}
+                  </li>
+                  <li>
+                    <i class="fa fas fas fa-id-card"></i>
+                    {{ informacoesConsulta.cliente.cpf }}
+                  </li>
+                </ul>
+              </div>
+              <hr />
+              <div class="avaliacao">
+                <span>
+                  <p-rating
+                    [(ngModel)]="informacoesConsulta.avaliacao.pontuacao"
+                    disabled
+                  />
+                </span>
+                <textarea
+                  disabled
+                  [value]="informacoesConsulta.avaliacao.observacoes"
+                  pTextarea
+                  rows="3"
+                  style="resize: none; overflow-y: auto; width: 100%"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </p-fieldset>
+  </section>
+  <section>
+    <p-fieldset legend="Informações da Consulta">
+      @if (carregandoInformacoesConsulta) {
+        <div class="card-info consulta">
+          <div class="status">
+            <p-skeleton width="20%" height="25px"></p-skeleton>
+          </div>
+          <div class="input-group">
+            <p-skeleton width="25%" height="25px"></p-skeleton>
+            <p-skeleton width="100%" height="50px"></p-skeleton>
+          </div>
+          <div class="datas">
+            <div class="input-group">
+              <p-skeleton width="25%" height="25px"></p-skeleton>
+              <p-skeleton width="100%" height="50px"></p-skeleton>
+            </div>
+            <div class="input-group">
+              <p-skeleton width="25%" height="25px"></p-skeleton>
+              <p-skeleton width="100%" height="50px"></p-skeleton>
+            </div>
+            <div class="input-group">
+              <p-skeleton width="25%" height="25px"></p-skeleton>
+              <p-skeleton width="100%" height="50px"></p-skeleton>
+            </div>
+            <div class="input-group">
+              <p-skeleton width="25%" height="25px"></p-skeleton>
+              <p-skeleton width="100%" height="50px"></p-skeleton>
+            </div>
+          </div>
+          <div class="observacoes">
+            <p-skeleton width="25%" height="25px"></p-skeleton>
+            <p-skeleton width="100%" height="150px"></p-skeleton>
+          </div>
+          <hr />
+          <div class="atendente">
+            <p-skeleton width="25%" height="25px"></p-skeleton>
+            <p-skeleton width="100%" height="50px"></p-skeleton>
+          </div>
+        </div>
+      } @else {
+        @if (informacoesConsulta === null) {
+        } @else {
+          <div class="card-info consulta">
+            <div class="status">
+              <app-bag-status-consulta
+                [status]="informacoesConsulta.status"
+              ></app-bag-status-consulta>
+            </div>
+            <div class="input-group">
+              <label for="tipo">Tipo de Consulta:</label>
+              <input
+                type="text"
+                disabled
+                [value]="informacoesConsulta.tipo"
+                pInputText
+              />
+            </div>
+            <div class="datas">
+              <div class="input-group">
+                <label for="data">Solicitado Em:</label>
+                <input
+                  type="text"
+                  disabled
+                  [value]="
+                    informacoesConsulta.dataSolicitacao
+                      | date: 'dd/MM/yyyy - HH:mm'
+                  "
+                  pInputText
+                />
+              </div>
+              <div class="input-group">
+                <label for="data">Aprovado/Reprovado Em:</label>
+                <input
+                  type="text"
+                  disabled
+                  [value]="
+                    informacoesConsulta.dataDeferimento
+                      | date: 'dd/MM/yyyy - HH:mm'
+                  "
+                  pInputText
+                />
+              </div>
+              <div class="input-group">
+                <label for="data">Data da Consulta:</label>
+                <input
+                  type="text"
+                  disabled
+                  [value]="
+                    informacoesConsulta.dataConsulta
+                      | date: 'dd/MM/yyyy - HH:mm'
+                  "
+                  pInputText
+                />
+              </div>
+              <div class="input-group">
+                <label for="data">Finalizado Em:</label>
+                <input
+                  type="text"
+                  disabled
+                  [value]="
+                    informacoesConsulta.dataFinalizacao !== null
+                      ? (informacoesConsulta.dataFinalizacao
+                        | date: 'dd/MM/yyyy - HH:mm')
+                      : 'Não Finalizado Ainda!'
+                  "
+                  pInputText
+                />
+              </div>
+            </div>
+            <div class="observacoes">
+              <label for="observacoes">Observações da Consulta:</label>
+              <textarea
+                disabled
+                [value]="informacoesConsulta.observacoes"
+                pTextarea
+                rows="3"
+                style="resize: none; overflow-y: auto"
+              ></textarea>
+            </div>
+            <hr />
+            <div class="atendente">
+              <label for="atendente"
+                >Solicitação Deferida/Indeferida Por:</label
+              >
+              <input
+                type="text"
+                disabled
+                [value]="informacoesConsulta.atendente"
+                pInputText
+              />
+            </div>
+          </div>
+        }
+      }
+    </p-fieldset>
+    <p-button
+      [label]="getTextoBtn"
+      severity="success"
+      fluid
+      [icon]="
+        carregandoInformacoesConsulta
+          ? 'pi pi-spin pi-spinner'
+          : 'pi pi-check-circle'
+      "
+      rounded="true"
+      [disabled]="carregandoInformacoesConsulta"
+    />
+  </section>
+</main>

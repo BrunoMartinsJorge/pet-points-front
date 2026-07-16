@@ -11,7 +11,12 @@
           Por favor, insira a baixo como foi o decorrer da consulta, para ser
           mantido um registro.
         </p>
-        <textarea name="observacoes" id="observacoes" pTextarea [(ngModel)]="resumoConsulta"></textarea>
+        <textarea
+          name="observacoes"
+          id="observacoes"
+          pTextarea
+          [(ngModel)]="resumoConsulta"
+        ></textarea>
       </div>
       <p-button
         label="Finalizar Consulta"
@@ -56,8 +61,11 @@
                       {{ consulta.data | date: "dd/MM/yyyy - HH:mm" }}
                     </span>
                   </div>
-                  <p-button icon="fa fa-eye" severity="secondary" />
-                  <!-- (click)="selecionarConsulta(consulta)" -->
+                  <p-button
+                    icon="fa fa-eye"
+                    severity="secondary"
+                    (click)="selecionarConsulta(consulta)"
+                  />
                 </div>
               </div>
             }
@@ -165,8 +173,11 @@
                       {{ consulta.data | date: "dd/MM/yyyy - HH:mm" }}
                     </span>
                   </div>
-                  <p-button icon="fa fa-eye" severity="secondary" />
-                  <!-- (click)="selecionarConsulta(consulta)" -->
+                  <p-button
+                    icon="fa fa-eye"
+                    severity="secondary"
+                    (click)="selecionarConsulta(consulta)"
+                  />
                 </div>
                 <hr />
                 <p>

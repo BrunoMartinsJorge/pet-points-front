@@ -55,6 +55,7 @@ export const ROTAS_VETERINARIOS: Routes = [
           visible: false,
           nome: 'Detalhes da Consulta',
           icone: 'pi pi-clipboard',
+          voltar: true,
           group: '',
           descricao: 'Detalhes da Consulta Selecionada',
         },
