@@ -145,7 +145,7 @@
   <hr />
   <section>
     <p-fieldset legend="Histórico de Consultas">
-      <p-dataview #dv [value]="consultasDoDia" [paginator]="true" [rows]="4">
+      <p-dataview #dv [value]="historicoConsultas" [paginator]="true" [rows]="4">
         <ng-template #list let-consultas>
           <div class="lista-consultas">
             @for (consulta of consultas; track consulta.id) {

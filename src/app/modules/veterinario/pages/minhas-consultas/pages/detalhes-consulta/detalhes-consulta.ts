@@ -87,7 +87,7 @@ export class DetalhesConsulta implements OnInit {
     if (this.informacoesConsulta == null) return '';
     const imagem = this.informacoesConsulta.pet.imagem;
     return imagem !== '' && imagem !== null
-      ? 'http://localhost:8080/arquivos/usuario/' + imagem
+      ? 'http://localhost:8080/arquivos/' + imagem
       : '';
   }
 
@@ -95,7 +95,7 @@ export class DetalhesConsulta implements OnInit {
     if (this.informacoesConsulta == null) return '';
     const imagem = this.informacoesConsulta.cliente.imagem;
     return imagem !== '' && imagem !== null
-      ? 'http://localhost:8080/arquivos/usuario/' + imagem
+      ? 'http://localhost:8080/arquivos/' + imagem
       : '';
   }
 

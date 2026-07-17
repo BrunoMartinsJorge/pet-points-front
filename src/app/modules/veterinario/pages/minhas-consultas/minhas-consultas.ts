@@ -57,7 +57,7 @@ export class MinhasConsultas implements OnInit {
     this.carregandoHistoricoConsultas = true;
     this.service.buscarHistoricoConsultas().subscribe({
       next: (response: ConsultaVeterinarioDto[]) => {
-        this.consultasDoDia = response;
+        this.historicoConsultas = response;
         this.carregandoHistoricoConsultas = false;
       },
       error: () => (this.carregandoHistoricoConsultas = false),
