@@ -9,6 +9,7 @@ import { PrimeNGModule } from '../../modules/prime-ng/prime-ng-module';
 import { ThemeService } from '../../../core/services/theme-service';
 import { RotasService } from '../../../core/services/rotas-service';
 import type { ListOfRoutes, RoutesModel } from '../../models/RoutesModel';
+import { NotificacoesWsService } from '../../services/ws/notificacoes-ws-service';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -27,6 +28,7 @@ export class Sidebar {
   private readonly router = inject(Router);
   private readonly themeService = inject(ThemeService);
   private readonly rotasService = inject(RotasService);
+  private readonly notificacoesWs = inject(NotificacoesWsService);
 
   constructor() {
     this.carregarRotasPermitidas();
@@ -137,6 +139,7 @@ export class Sidebar {
    */
   public sairPerfil(): void {
     this.tokenService.removeToken();
+    this.notificacoesWs.disconnect();
   }
 
   /**

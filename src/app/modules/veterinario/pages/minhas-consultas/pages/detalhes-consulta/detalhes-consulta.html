@@ -337,3 +337,33 @@
     />
   </section>
 </main>
+<p-dialog
+  [(visible)]="visibilidadeFinalizarConsulta"
+  header="Finalizar Consulta 1"
+  [modal]="true"
+  [draggable]="false"
+  [closable]="false"
+  [style]="{ minWidth: '300px', maxWidth: '600px', width: '100%' }"
+>
+  <p style="text-align: center; color: var(--color-text); margin: 2rem">
+    Por favor, insira a baixo como foi o decorrer da consulta, para ser mantido
+    um registro.
+  </p>
+  <hr />
+  <textarea
+    name="observacoes"
+    id="observacoes"
+    pTextarea
+    [(ngModel)]="resumoConsulta"
+    fluid
+  ></textarea>
+  <p-button
+    label="Finalizar Consulta"
+    fluid
+    icon="pi pi-check-circle"
+    severity="danger"
+    size="small"
+    (click)="enviarFinalizarConsulta()"
+    [disabled]="resumoConsulta.trim().length === 0"
+  ></p-button>
+</p-dialog>

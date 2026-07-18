@@ -89,7 +89,18 @@ export class MinhasConsultas implements OnInit {
   }
 
   public enviarFinalizarConsulta(): void {
-    if (this.resumoConsulta.trim().length == 0) return;
-    this.confirmService.close();
+    if (!this.consultaAtual || this.resumoConsulta.trim().length == 0) return;
+    this.service.finalizarConsulta(this.consultaAtual.id, this.resumoConsulta).subscribe({
+      next: () => {
+        this.confirmService.close();
+        this.resumoConsulta = "";
+        this.buscarConsultasDeHoje();
+        this.buscarConsultaAtual();
+        this.buscarHistoricoConsultas();
+      },
+      error: () => {
+        this.confirmService.close();
+      }
+    });
   }
 }

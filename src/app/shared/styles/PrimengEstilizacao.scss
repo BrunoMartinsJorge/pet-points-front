@@ -12,3 +12,8 @@ p-paginator {
   margin-top: 1rem;
   border-radius: 0 !important;
 }
+
+textarea {
+  resize: vertical;
+  overflow-y: auto;
+}

@@ -36,6 +36,8 @@ export class DetalhesConsulta implements OnInit {
   public carregandoInformacoesConsulta = true;
 
   public habilitarBotao = true;
+  public visibilidadeFinalizarConsulta = false;
+  public resumoConsulta = "";
 
   public ngOnInit(): void {
     this.pegarIdConsulta();
@@ -60,11 +62,22 @@ export class DetalhesConsulta implements OnInit {
           this.informacoesConsulta = response;
           this.carregandoInformacoesConsulta = false;
           this.habilitarBotao =
-            response.status != StatusConsultaEnum.APROVADA &&
-            response.status != StatusConsultaEnum.FINALIZADO;
+            (response.status == StatusConsultaEnum.APROVADA ||
+            response.status == StatusConsultaEnum.INICIADO);
         },
         error: () => (this.carregandoInformacoesConsulta = false),
       });
+  }
+
+  private mesmaData(data: Date | string): boolean {
+    const dataConsulta = new Date(data);
+    const dataAtual = new Date();
+
+    return (
+      dataConsulta.getDate() === dataAtual.getDate() &&
+      dataConsulta.getMonth() === dataAtual.getMonth() &&
+      dataConsulta.getFullYear() === dataAtual.getFullYear()
+    );
   }
 
   public get getTextoBtn(): string {
@@ -104,16 +117,33 @@ export class DetalhesConsulta implements OnInit {
     if (this.informacoesConsulta.status == StatusConsultaEnum.APROVADA) {
       this.service.iniciarConsulta(this.idConsultaSelecionada).subscribe({
         next: () => {
-          this.toast.add({ severity: 'success', summary: 'Iniciada', detail: 'A consulta foi iniciada!' })
+          this.toast.add({
+            severity: 'success',
+            summary: 'Iniciada',
+            detail: 'A consulta foi iniciada!',
+          });
           this.buscarInformacoesConsultaSelecionada();
         },
       });
     } else {
-      this.service.iniciarConsulta(this.idConsultaSelecionada).subscribe({
+      this.visibilidadeFinalizarConsulta = true;
+      this.resumoConsulta = "";
+    }
+  }
+
+  public enviarFinalizarConsulta(): void {
+    if (!this.idConsultaSelecionada || this.resumoConsulta.trim().length == 0) return;
+    this.service
+      .finalizarConsulta(this.idConsultaSelecionada, this.resumoConsulta)
+      .subscribe({
         next: () => {
+          this.toast.add({
+            severity: 'success',
+            summary: 'Finalizada',
+            detail: 'A consulta foi finalizada!',
+          });
           this.buscarInformacoesConsultaSelecionada();
         },
       });
-    }
   }
 }

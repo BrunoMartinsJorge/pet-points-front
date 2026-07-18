@@ -1,5 +1,5 @@
 <p-toast></p-toast>
-<main>
+<!-- <main>
   <section class="minhas-consultas">
     <p-fieldset legend="Consultas Agendadas" [toggleable]="false">
       @if (consultasPendentesConfirmadas.length > 0) {
@@ -740,4 +740,65 @@
       </p-step-panel>
     </p-step-panels>
   </p-stepper>
-</p-dialog>
+</p-dialog> -->
+<main>
+  <section class="proxima-consulta-atual">
+    @if (!proximaConsulta) {
+      <div class="proxima">
+        <div class="header-badge">
+          <span>
+            <p-skeleton width="125px" height="20px"></p-skeleton>
+            <p-skeleton width="250px" height="30px"></p-skeleton>
+          </span>
+          <p-skeleton width="50px" height="50px"></p-skeleton>
+        </div>
+        <p>
+          <p-skeleton width="70%" height="25px"></p-skeleton>
+        </p>
+        <div class="footer-card">
+          <span>
+            <p-skeleton width="100px" height="25px"></p-skeleton>
+            <p-skeleton width="100px" height="25px"></p-skeleton>
+            <p-skeleton width="100px" height="25px"></p-skeleton>
+          </span>
+          <p-skeleton width="100px" height="25px"></p-skeleton>
+        </div>
+      </div>
+    } @else {
+      <app-proxima-consulta-cliente></app-proxima-consulta-cliente>
+    }
+    @if (!consultaAtual) {
+      <div class="atual">
+        <div class="header-badge">
+          <span>
+            <p-skeleton width="125px" height="20px"></p-skeleton>
+            <p-skeleton width="250px" height="30px"></p-skeleton>
+          </span>
+          <p-skeleton width="50px" height="50px"></p-skeleton>
+        </div>
+        <p>
+          <p-skeleton width="30%" height="25px"></p-skeleton>
+        </p>
+        <div class="footer-card">
+          <p-skeleton width="100%" height="25px"></p-skeleton>
+        </div>
+      </div>
+    } @else {}
+  </section>
+  <hr>
+  <div class="cards">
+    @if (carregandoInformacoesCards) {
+      <span style="display: flex; gap: 1rem; width: 100%">
+        <p-skeleton height="140px" />
+        <p-skeleton height="140px" />
+        <p-skeleton height="140px" />
+      </span>
+    }
+  </div>
+  <hr>
+  <section>
+    <div class="header-section">
+      <p-skeleton></p-skeleton>
+    </div>
+  </section>
+</main>

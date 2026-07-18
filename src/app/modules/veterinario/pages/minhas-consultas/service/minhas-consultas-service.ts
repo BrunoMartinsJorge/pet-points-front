@@ -35,4 +35,8 @@ export class MinhasConsultasService {
   public iniciarConsulta(idConsulta: number): Observable<void> {
     return this.http.put<void>(`${this.URL}/iniciar/${idConsulta}`, {});
   }
+
+  public finalizarConsulta(idConsulta: number, resumo: string): Observable<void> {
+    return this.http.put<void>(`${this.URL}/finalizar/${idConsulta}`, resumo);
+  }
 }

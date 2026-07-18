@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { RotasService } from './rotas-service';
 import { jwtDecode } from 'jwt-decode';
 import type { TokenModel } from '../model/TokenModel';
+import { ThemeService } from './theme-service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,7 @@ export class TokenService {
   constructor(
     private router: Router,
     private rotasService: RotasService,
+    private themeService: ThemeService
   ) {}
 
   /**

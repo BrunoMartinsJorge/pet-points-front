@@ -16,7 +16,7 @@ export class ThemeService {
   /**
    * @description Carrega o tema inicial do sistema
    */
-  private loadInitialTheme(): void {
+  public loadInitialTheme(): void {
     const savedTheme = localStorage.getItem('theme') as Theme | null;
 
     if (savedTheme) {

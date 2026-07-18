@@ -22,10 +22,17 @@ import { RatingModule } from 'primeng/rating';
 import type { AvaliacaoConsultaDto } from './models/AvaliacaoConsultaDto';
 import type { AvaliacaoConsultaForm } from './form/AvaliacaoConsultaForm';
 import { StatusConsultaEnum } from '../../../../shared/models/enums/StatusConsultaEnum';
+import { ProximaConsultaCliente } from './components/proxima-consulta-cliente/proxima-consulta-cliente';
 
 @Component({
   selector: 'app-minhas-consultas',
-  imports: [PrimeNGModule, StepperModule, BagStatusConsulta, RatingModule],
+  imports: [
+    PrimeNGModule,
+    StepperModule,
+    BagStatusConsulta,
+    RatingModule,
+    ProximaConsultaCliente,
+  ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './minhas-consultas.html',
   styleUrl: './minhas-consultas.scss',
@@ -37,12 +44,15 @@ export class MinhasConsultas implements OnInit {
   public consultasPendentesConfirmadas: MinhasConsultasDto[] = [];
   public historicoConsultas: MinhasConsultasDto[] = [];
   public consultasPendentes: MinhasConsultasDto[] = [];
+  public proximaConsulta: MinhasConsultasDto | null = null;
+  public consultaAtual: MinhasConsultasDto | null = null;
 
   public motivoCancelamento = '';
 
   public visibilidadeDialogAgendamento = false;
   public visibilidadeDialogDetalhesConsulta = false;
   public cancelandoConsulta = false;
+  public carregandoInformacoesCards = true;
 
   public tiposConsulta: TiposConsultaDto[] = [];
   public tipoConsultaSelecionado: TiposConsultaDto | null = null;
