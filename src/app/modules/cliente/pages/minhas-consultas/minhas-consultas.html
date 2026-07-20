@@ -1,749 +1,7 @@
 <p-toast></p-toast>
-<!-- <main>
-  <section class="minhas-consultas">
-    <p-fieldset legend="Consultas Agendadas" [toggleable]="false">
-      @if (consultasPendentesConfirmadas.length > 0) {
-        <p-dataview
-          [value]="consultasPendentesConfirmadas"
-          [rows]="4"
-          [paginator]="true"
-        >
-          <ng-template #list let-consultas>
-            <div class="consultas">
-              @for (consulta of consultas; track consulta.id) {
-                <div class="consulta-card">
-                  <div
-                    style="
-                      min-width: 200px;
-                      flex: 1;
-                      display: flex;
-                      flex-direction: column;
-                      gap: 0.5rem;
-                    "
-                  >
-                    <div class="body-card">
-                      <app-bag-status-consulta
-                        [status]="consulta.statusConsulta"
-                      ></app-bag-status-consulta>
-                      <strong
-                        >Veterinário: {{ consulta.veterinarioConsulta }}</strong
-                      >
-                      <span class="tipo-consulta">{{
-                        consulta.tipoConsulta
-                      }}</span>
-                    </div>
-                    <hr />
-                    <div>
-                      <span class="solicitado-em"
-                        >Data e Hora da Consulta:
-                        {{
-                          consulta.dataHoraConsulta | date: "dd/MM/yyyy - HH:mm"
-                        }}</span
-                      >
-                    </div>
-                  </div>
-                  <p-button
-                    label="Ver"
-                    icon="fa fa-eye"
-                    severity="secondary"
-                    (click)="selecionarConsulta(consulta)"
-                  />
-                </div>
-              }
-            </div>
-          </ng-template>
-        </p-dataview>
-      } @else {
-        <span class="sem-resultados"
-          >Nenhuma consulta agendada no momento.</span
-        >
-      }
-    </p-fieldset>
-    <p-fieldset legend="Histórico de Consultas" [toggleable]="false">
-      @if (historicoConsultas.length > 0) {
-        <p-dataview [value]="historicoConsultas" [rows]="4" [paginator]="true">
-          <ng-template #list let-consultas>
-            <div class="consultas">
-              @for (consulta of consultas; track consulta.id) {
-                <div class="consulta-card">
-                  <div
-                    style="
-                      min-width: 200px;
-                      flex: 1;
-                      display: flex;
-                      flex-direction: column;
-                      gap: 0.5rem;
-                    "
-                  >
-                    <div class="body-card">
-                      <app-bag-status-consulta
-                        [status]="consulta.statusConsulta"
-                      ></app-bag-status-consulta>
-                      <strong
-                        >Veterinário: {{ consulta.veterinarioConsulta }}</strong
-                      >
-                      <span class="tipo-consulta">{{
-                        consulta.tipoConsulta
-                      }}</span>
-                    </div>
-                    <hr />
-                    <div>
-                      <span class="solicitado-em"
-                        >Data e Hora da Consulta:
-                        {{
-                          consulta.dataHoraConsulta | date: "dd/MM/yyyy - HH:mm"
-                        }}</span
-                      >
-                    </div>
-                  </div>
-                  <p-button
-                    label="Ver"
-                    icon="fa fa-eye"
-                    severity="secondary"
-                    (click)="selecionarConsulta(consulta)"
-                  />
-                </div>
-              }
-            </div>
-          </ng-template>
-        </p-dataview>
-      } @else {
-        <span class="sem-resultados"
-          >Nenhuma consulta no histórico no momento.</span
-        >
-      }
-    </p-fieldset>
-  </section>
-  <section class="solicitacoes">
-    <p-fieldset legend="Consultas Pendentes" [toggleable]="false">
-      @if (consultasPendentes.length > 0) {
-        <p-dataview [value]="consultasPendentes" [rows]="4" [paginator]="true">
-          <ng-template #list let-consultas>
-            <div class="consultas">
-              @for (consulta of consultas; track consulta.id) {
-                <div class="consulta-card">
-                  <div
-                    style="
-                      min-width: 200px;
-                      flex: 1;
-                      display: flex;
-                      flex-direction: column;
-                      justify-content: center;
-                      gap: 0.5rem;
-                    "
-                  >
-                    <div class="body-card">
-                      <app-bag-status-consulta
-                        [status]="consulta.statusConsulta"
-                      ></app-bag-status-consulta>
-                      <span class="tipo-consulta">{{
-                        consulta.tipoConsulta
-                      }}</span>
-                    </div>
-                    <hr />
-                    <div>
-                      <span class="solicitado-em"
-                        >Data e Hora da Consulta:
-                        {{
-                          consulta.dataHoraConsulta | date: "dd/MM/yyyy - HH:mm"
-                        }}</span
-                      >
-                    </div>
-                  </div>
-                  <p-button
-                    label="Ver"
-                    icon="fa fa-eye"
-                    severity="secondary"
-                    (click)="selecionarConsulta(consulta)"
-                  />
-                </div>
-              }
-            </div>
-          </ng-template>
-        </p-dataview>
-      } @else {
-        <span class="sem-resultados"
-          >Nenhuma consulta pendente no momento.</span
-        >
-      }
-    </p-fieldset>
-    <p-button
-      label="Agendar Consulta"
-      icon="pi pi-plus"
-      [style]="{ width: '100%' }"
-      severity="success"
-      (click)="visibilidadeDialogAgendamento = true"
-    />
-  </section>
-</main>
-<p-dialog
-  [header]="!cancelandoConsulta ? 'Detalhes Consulta' : 'Cancelar Consulta'"
-  [(visible)]="visibilidadeDialogDetalhesConsulta"
-  [modal]="true"
-  [draggable]="false"
-  [style]="{ width: '50vw' }"
-  (onHide)="fecharDialogDetalhesConsulta()"
->
-  @if (!cancelandoConsulta) {
-    <p-tabs value="0">
-      <p-tablist>
-        <p-tab value="0">Informações</p-tab>
-        <p-tab value="1">Participantes</p-tab>
-        <p-tab value="2">Pagamento</p-tab>
-        <p-tab value="3" [disabled]="!consultaPodeSerAvaliada">Avaliação</p-tab>
-      </p-tablist>
-      <p-tabpanels>
-        <p-tabpanel value="0">
-          <div class="informacoes">
-            <div class="bags">
-              <app-bag-status-consulta
-                [status]="consultaSelecionada?.statusConsulta"
-              ></app-bag-status-consulta>
-              <span class="tipo-consulta">{{
-                consultaSelecionada?.tipoConsulta
-              }}</span>
-            </div>
-            @if (possuiMotivosCancelamentoIndeferimento) {
-              <hr />
-              <p-fieldset
-                [legend]="
-                  consultaSelecionada !== null
-                    ? consultaSelecionada.statusConsulta.toString() ===
-                      'CANCELADO'
-                      ? 'Motivo Cancelamento'
-                      : 'Motivo Indeferimento'
-                    : 'Consulta Não Selecionada'
-                "
-                [toggleable]="true"
-              >
-                <div class="input-group">
-                  <textarea
-                    disabled
-                    [value]="
-                    consultaSelecionada !== null ?
-                      consultaSelecionada.statusConsulta.toString() ===
-                      'CANCELADO'
-                        ? detalhesConsultaSelecionada?.motivoCancelamento
-                        : detalhesConsultaSelecionada?.motivoIndeferimento
-                      : 'Consulta Não Selecionada'
-                    "
-                    pInputTextarea
-                    rows="5"
-                  ></textarea>
-                </div>
-              </p-fieldset>
-            }
-            <hr />
-            <div class="inputs">
-              <div class="input-group">
-                <label for="tipoConsulta">Tipo da Consulta</label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="consultaSelecionada?.tipoConsulta"
-                  pInputText
-                />
-              </div>
-              <div class="input-group">
-                <label for="dataHoraConsulta">Data e Hora da Consulta</label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="
-                    consultaSelecionada?.dataHoraConsulta
-                      | date: 'dd/MM/yyyy - HH:mm'
-                  "
-                  pInputText
-                />
-              </div>
-              <div class="input-group">
-                <label for="iniciadoEm">Iniciado em</label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="detalhesConsultaSelecionada?.iniciadoEm"
-                  pInputText
-                />
-              </div>
-              <div class="input-group">
-                <label for="finalizadoEm">Finalizado em</label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="detalhesConsultaSelecionada?.finalizadoEm"
-                  pInputText
-                />
-              </div>
-              <div class="input-group">
-                <label for="dataCancelamento">Data de Cancelamento</label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="detalhesConsultaSelecionada?.dataCancelamento"
-                  pInputText
-                />
-              </div>
-              <div class="input-group">
-                <label for="dataDeferimento">Data de Deferimento</label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="detalhesConsultaSelecionada?.dataDeferimento"
-                  pInputText
-                />
-              </div>
-              <div class="input-group">
-                <label for="observacoes">Observações</label>
-                <textarea
-                  id="observacoes"
-                  disabled
-                  [value]="
-                    detalhesConsultaSelecionada?.observacoes ||
-                    'Nenhuma observação registrada.'
-                  "
-                  pInputTextarea
-                  rows="5"
-                ></textarea>
-              </div>
-            </div>
-          </div>
-        </p-tabpanel>
-        <p-tabpanel value="1">
-          <p-fieldset legend="Veterinario" [toggleable]="true">
-            <div class="participante">
-              <div class="foto"></div>
-              <h4>{{ consultaSelecionada?.veterinarioConsulta }}</h4>
-            </div>
-          </p-fieldset>
-          <hr />
-          <p-fieldset legend="Atendente" [toggleable]="true">
-            <div class="participante">
-              <div class="foto"></div>
-              <h4>{{ detalhesConsultaSelecionada?.atendente }}</h4>
-            </div>
-          </p-fieldset>
-          <hr />
-          <p-fieldset legend="Pet" [toggleable]="true">
-            <div class="participante">
-              <div class="foto"></div>
-              <h4>{{ consultaSelecionada?.petConsulta }}</h4>
-            </div>
-          </p-fieldset>
-        </p-tabpanel>
-        <p-tabpanel value="2">
-          @if (!pagamento) {
-          } @else {
-            @if (pagamento.atrasado) {
-              <div class="pagamento-atrasado">
-                <div class="atrasado">
-                  <i class="pi pi-exclamation-triangle"></i>
-                  <span>Pagamento Atrasado!</span>
-                </div>
-              </div>
-            }
-            <div class="forma-pagamento-status">
-              <div class="input-group">
-                <label for="formaPagamento">Forma de Pagamento</label>
-                <p-select
-                  [options]="formasPagamento"
-                  [(ngModel)]="pagamento.forma"
-                  optionLabel="label"
-                  optionValue="value"
-                  placeholder="Forma de Pagamento"
-                  appendTo="body"
-                  [disabled]="!podeAlterarFormaPagamento"
-                />
-              </div>
-              <span [ngClass]="pagamento.status.toLowerCase()">
-                {{ pagamento.status.toString() | titlecase }}
-              </span>
-            </div>
-            <div class="informacoes-pagamento">
-              <div class="input-group">
-                <label for="dataPagamento">Data de Pagamento</label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="pagamento.dataPagamento"
-                  pInputText
-                />
-              </div>
-              <div class="input-group">
-                <label for="dataLimitePagamento"
-                  >Data Limite de Pagamento</label
-                >
-                <input
-                  type="text"
-                  disabled
-                  [value]="pagamento.dataLimite"
-                  pInputText
-                />
-              </div>
-              <div class="input-group">
-                <label for="dataPagamento">Data Pagamento></label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="pagamento.dataPagamento"
-                  pInputText
-                />
-              </div>
-              <div class="input-group">
-                <label for="valor">Valor da Consulta></label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="pagamento.valor"
-                  pInputText
-                />
-              </div>
-            </div>
-            <p-fieldset
-              legend="Comprovante"
-              [toggleable]="pagamento.comprovante.length > 0"
-            >
-              @if (pagamento.comprovante.length === 0) {
-                @if (pagamento.forma === "PIX") {
-                  <span class="sem-resultados"
-                    >Nenhum comprovante enviado!</span
-                  >
-                } @else {
-                  <span class="sem-resultados"
-                    >Esse modo de pagamento ainda nao possui comprovante!</span
-                  >
-                }
-                <br />
-              }
-              @if (
-                pagamento.status !== "APROVADO" && pagamento.forma === "PIX"
-              ) {
-                <div class="comprovante">
-                  <p-button
-                    pTooltip="Enviar Comprovante"
-                    severity="success"
-                    icon="pi pi-send"
-                    [disabled]="novoComprovante === null"
-                    (click)="registrarNovoComprovante()"
-                  />
-                  <p-button
-                    pTooltip="Baixar Comprovante"
-                    severity="info"
-                    icon="pi pi-download"
-                    [disabled]="pagamento.comprovante.length === 0"
-                    (click)="baixarComprovante()"
-                  />
-                  <p-fileupload
-                    #fu
-                    mode="basic"
-                    chooseLabel="Selecionar Arquivo/Foto"
-                    chooseIcon="pi pi-upload"
-                    [multiple]="false"
-                    [fileLimit]="1"
-                    accept="image/*, application/pdf"
-                    maxFileSize="1000000"
-                    (onSelect)="carregarArquivo($event)"
-                    [auto]="true"
-                  >
-                    <ng-template pTemplate="empty"></ng-template>
-                  </p-fileupload>
-                </div>
-              }
-            </p-fieldset>
-            @if (
-              getFormaPagamentoAtual !== null &&
-              getFormaPagamentoAtual !== pagamento.forma
-            ) {
-              <br />
-              <p-button
-                label="Alterar Forma de Pagamento"
-                severity="info"
-                icon="fa fa-edit"
-                [style]="{ width: '100%' }"
-                (click)="alterarFormaPagamento()"
-              />
-            }
-            @if (pagamento.status === "REPROVADO") {
-              <div class="input-group">
-                <label for="motivoIndeferimento">Motivo Indeferimento</label>
-                <input
-                  type="text"
-                  disabled
-                  [value]="pagamento.motivoIndeferimento"
-                  pInputText
-                />
-              </div>
-            }
-          }
-        </p-tabpanel>
-        <p-tabpanel value="3">
-          <p class="legenda">
-            Gostaria de avaliar o profissional que realizou a consulta?
-          </p>
-          <div class="formulario-avaliacao-consulta">
-            <div class="input-group">
-              <label for="pontuacao">Pontuação</label>
-              <p-rating
-                stars="5"
-                [(ngModel)]="avaliacao.pontuacao"
-                [disabled]="jaAvaliado"
-              />
-            </div>
-            <hr />
-            <div class="input-group">
-              <label for="observacoes">Observações</label>
-              <textarea
-                name="observacoes"
-                id="observacoes"
-                [(ngModel)]="avaliacao.observacoes"
-                pInputTextarea
-                rows="5"
-                style="max-height: 250px; resize: none"
-                placeholder="Digite aqui suas observações caso tenha..."
-                [disabled]="jaAvaliado"
-              ></textarea>
-            </div>
-          </div>
-          <p-button
-            label="Enviar Avaliação"
-            icon="fa fa-send"
-            severity="success"
-            [style]="{ width: '100%' }"
-            [disabled]="!avaliacao.pontuacao || jaAvaliado"
-            (click)="avaliarConsulta()"
-          />
-        </p-tabpanel>
-      </p-tabpanels>
-    </p-tabs>
-  } @else {
-    <textarea
-      name="motivoCancelamento"
-      id="motivoCancelamento"
-      pInputTextarea
-      rows="5"
-      placeholder="Digite o motivo do cancelamento..."
-      [(ngModel)]="motivoCancelamento"
-      style="max-height: 250px"
-    ></textarea>
-  }
-  <hr />
-  <p-button
-    [label]="
-      !consultaPodeSerCancelada
-        ? 'Consulta não pode ser cancelada'
-        : cancelandoConsulta
-          ? 'Não Cancelar Consulta'
-          : 'Cancelar Consulta'
-    "
-    [severity]="cancelandoConsulta ? 'info' : 'danger'"
-    icon="pi pi-times"
-    (click)="cancelarConsulta()"
-    [disabled]="!consultaPodeSerCancelada"
-  />
-  @if (cancelandoConsulta) {
-    <p-button
-      [disabled]="!motivoCancelamento"
-      icon="pi pi-check"
-      [style]="{ marginLeft: '0.5rem' }"
-      label="Confirmar Cancelamento"
-      severity="danger"
-      (click)="confirmarCancelamento()"
-    />
-  }
-</p-dialog>
-<p-dialog
-  header="Agendar Consulta"
-  [(visible)]="visibilidadeDialogAgendamento"
-  [modal]="true"
-  [draggable]="false"
-  [style]="{ width: '50vw' }"
->
-  <p-stepper [value]="1" [linear]="true">
-    <p-step-list>
-      <p-step [value]="1">Detalhes Consulta</p-step>
-      <p-step [value]="2">Veterinário</p-step>
-      <p-step [value]="3">Solicitar Agendamento</p-step>
-    </p-step-list>
-    <p-step-panels>
-      <p-step-panel [value]="1">
-        <ng-template #content let-activateCallback="activateCallback">
-          <div class="tipo-consulta">
-            <p-select
-              [options]="tiposConsulta"
-              appendTo="body"
-              optionLabel="nome"
-              placeholder="Selecione o tipo de consulta"
-              (onChange)="selecionarTipoConsulta($event.value)"
-              [(ngModel)]="tipoConsultaSelecionado"
-            />
-            @if (tipoConsultaSelecionado) {
-              <hr />
-              <p-fieldset
-                legend="Informações do Tipo da Consulta"
-                [toggleable]="false"
-              >
-                <div class="informacos-tipo-consulta">
-                  <span>
-                    {{ tipoConsultaSelecionado.nome }}
-                  </span>
-                  <span>
-                    {{ tipoConsultaSelecionado.descricao }}
-                  </span>
-                  <span>
-                    {{ tipoConsultaSelecionado.valor | currency: "BRL" }}
-                  </span>
-                </div>
-              </p-fieldset>
-            }
-          </div>
-          <div style="display: flex; justify-content: flex-end; gap: 1rem">
-            <p-button
-              label="Avançar"
-              icon="pi pi-arrow-right"
-              iconPos="right"
-              (onClick)="activateCallback(2); listarVeterinariosTipoConsulta()"
-              [disabled]="!tipoConsultaSelecionado"
-            />
-          </div>
-        </ng-template>
-      </p-step-panel>
-
-      <p-step-panel [value]="2">
-        <ng-template #content let-activateCallback="activateCallback">
-          <div class="veterinario-consulta">
-            <p-select
-              [options]="veterinarios"
-              appendTo="body"
-              optionLabel="nome"
-              placeholder="Selecione um veterinário"
-              [(ngModel)]="veterinarioSelecionado"
-              (onChange)="selecionarVeterinario($event.value)"
-            />
-            @if (veterinarioSelecionado) {
-              <p-fieldset legend="Veterinário Selecionado" [toggleable]="false">
-                <div class="informacoes-veterinario">
-                  <span>
-                    {{ veterinarioSelecionado.nome }}
-                  </span>
-                  <span id="avaliacao">
-                    <i class="fa-solid fa-star"></i
-                    >{{
-                      typeof veterinarioSelecionado.avaliacao === "number"
-                        ? veterinarioSelecionado.avaliacao
-                        : "Sem Avaliação"
-                    }}
-                  </span>
-                  <span>
-                    {{ veterinarioSelecionado.especializacoes }}
-                  </span>
-                </div>
-              </p-fieldset>
-              <hr />
-              <p-fieldset legend="Data e Hora da Consulta" [toggleable]="false">
-                <div class="data-hora">
-                  <p-datepicker
-                    [style]="{ width: '100%' }"
-                    appendTo="body"
-                    placeholder="Selecione a data da consulta"
-                    dateFormat="dd/mm/yy"
-                    [minDate]="dataMinima"
-                    [(ngModel)]="dataConsulta"
-                    (ngModelChange)="selecionarData($event)"
-                  />
-
-                  <p-select
-                    [options]="horariosDisponiveis"
-                    [(ngModel)]="horarioConsulta"
-                    placeholder="Selecione o horário"
-                    appendTo="body"
-                    [disabled]="
-                      !dataConsulta || horariosDisponiveis.length === 0
-                    "
-                  />
-                </div>
-              </p-fieldset>
-            }
-          </div>
-          <div style="display: flex; justify-content: flex-end; gap: 1rem">
-            <p-button
-              label="Voltar"
-              icon="pi pi-arrow-left"
-              iconPos="right"
-              (onClick)="activateCallback(1)"
-              [severity]="'secondary'"
-            />
-            <p-button
-              label="Avançar"
-              icon="pi pi-arrow-right"
-              iconPos="right"
-              (onClick)="activateCallback(3)"
-              [disabled]="
-                !veterinarioSelecionado || !horarioConsulta || !dataConsulta
-              "
-            />
-          </div>
-        </ng-template>
-      </p-step-panel>
-      <p-step-panel [value]="3">
-        <ng-template #content let-activateCallback="activateCallback">
-          <div style="gap: 1rem; display: flex; flex-direction: column">
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap">
-              <p-select
-                [options]="pets"
-                appendTo="body"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Selecione um pet"
-                [(ngModel)]="idPetSelecionado"
-              />
-              <p-select
-                [options]="formasPagamento"
-                appendTo="body"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Forma de Pagamento"
-                [(ngModel)]="formaPagamento"
-              />
-            </div>
-            <textarea
-              name="observacoes"
-              id="observacoes"
-              placeholder="Observações sobre a consulta..."
-              [(ngModel)]="observacoes"
-              pTextarea
-            ></textarea>
-          </div>
-          <hr />
-          <div style="display: flex; justify-content: space-between; gap: 1rem">
-            <p-button
-              label="Voltar"
-              icon="pi pi-arrow-left"
-              iconPos="right"
-              (onClick)="activateCallback(2)"
-              [severity]="'secondary'"
-            />
-            <p-button
-              label="Confirmar Agendamento"
-              icon="pi pi-check"
-              iconPos="right"
-              [severity]="'success'"
-              (onClick)="agendarConsulta()"
-              [disabled]="
-                !veterinarioSelecionado ||
-                !horarioConsulta ||
-                !dataConsulta ||
-                !idPetSelecionado ||
-                !formaPagamento
-              "
-            />
-          </div>
-        </ng-template>
-      </p-step-panel>
-    </p-step-panels>
-  </p-stepper>
-</p-dialog> -->
 <main>
   <section class="proxima-consulta-atual">
-    @if (!proximaConsulta) {
+    @if (carregandoProximaConsulta) {
       <div class="proxima">
         <div class="header-badge">
           <span>
@@ -752,9 +10,7 @@
           </span>
           <p-skeleton width="50px" height="50px"></p-skeleton>
         </div>
-        <p>
-          <p-skeleton width="70%" height="25px"></p-skeleton>
-        </p>
+        <p><p-skeleton width="70%" height="25px"></p-skeleton></p>
         <div class="footer-card">
           <span>
             <p-skeleton width="100px" height="25px"></p-skeleton>
@@ -765,9 +21,24 @@
         </div>
       </div>
     } @else {
-      <app-proxima-consulta-cliente></app-proxima-consulta-cliente>
+      @if (consultaAtual) {
+        <app-proxima-consulta-cliente
+          pTooltip="Próxima Consulta"
+          tooltipPosition="top"
+          [style]="{ width: '100%' }"
+          [proximaConsulta]="consultaAtual"
+          (verDetalhes)="selecionarConsulta(consultaAtual)"
+        ></app-proxima-consulta-cliente>
+      } @else {
+        <div class="proxima">
+          <span class="sem-resultados"
+            >Você não possui outra consulta agendada!</span
+          >
+        </div>
+      }
     }
-    @if (!consultaAtual) {
+
+    @if (carregandoConsultaAtual) {
       <div class="atual">
         <div class="header-badge">
           <span>
@@ -776,29 +47,61 @@
           </span>
           <p-skeleton width="50px" height="50px"></p-skeleton>
         </div>
-        <p>
-          <p-skeleton width="30%" height="25px"></p-skeleton>
-        </p>
+        <p><p-skeleton width="30%" height="25px"></p-skeleton></p>
         <div class="footer-card">
           <p-skeleton width="100%" height="25px"></p-skeleton>
         </div>
       </div>
-    } @else {}
-  </section>
-  <hr>
-  <div class="cards">
-    @if (carregandoInformacoesCards) {
-      <span style="display: flex; gap: 1rem; width: 100%">
-        <p-skeleton height="140px" />
-        <p-skeleton height="140px" />
-        <p-skeleton height="140px" />
-      </span>
+    } @else {
+      @if (consultaAtual) {
+        <div class="atual">
+          <app-consulta-atual-cliente
+            pTooltip="Consulta Atual"
+            tooltipPosition="top"
+            [consultaAtual]="consultaAtual"
+            [style]="{ width: '100%' }"
+            (verDetalhes)="selecionarConsulta(consultaAtual)"
+          ></app-consulta-atual-cliente>
+        </div>
+      } @else {
+        <div class="atual">
+          <span class="sem-resultados">Você não possui nenhuma iniciada!</span>
+        </div>
+      }
     }
-  </div>
-  <hr>
-  <section>
-    <div class="header-section">
-      <p-skeleton></p-skeleton>
-    </div>
   </section>
+
+  <hr />
+
+  <app-cards-resumo-consultas
+    [cards]="cards"
+    [carregando]="carregandoInformacoesCards"
+  ></app-cards-resumo-consultas>
+
+  <hr />
+
+  <app-historico-consultas
+    [consultas]="historicoConsultas"
+    [carregando]="carregandoHistoricoConsultas"
+    (selecionar)="selecionarConsulta($event)"
+    (cancelar)="abrirCancelamento($event)"
+    (solicitar)="abrirAgendamento()"
+  ></app-historico-consultas>
 </main>
+
+<app-dialog-detalhes-consulta
+  [(visible)]="visibilidadeDetalhes"
+  [consulta]="consultaSelecionada"
+  (atualizado)="aoAtualizarConsultas()"
+></app-dialog-detalhes-consulta>
+
+<app-dialog-agendar-consulta
+  [(visible)]="visibilidadeAgendamento"
+  (agendado)="aoAtualizarConsultas()"
+></app-dialog-agendar-consulta>
+
+<app-dialog-cancelar-consulta
+  [(visible)]="visibilidadeCancelamento"
+  [consulta]="consultaSelecionada"
+  (cancelado)="aoAtualizarConsultas()"
+></app-dialog-cancelar-consulta>

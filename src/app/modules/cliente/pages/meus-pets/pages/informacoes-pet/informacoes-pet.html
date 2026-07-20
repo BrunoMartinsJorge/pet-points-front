@@ -410,13 +410,21 @@
   [(visible)]="visibilidadeDialogCarteirinha"
 >
   <hr />
-  <div [innerHTML]="htmlCarteirinha"></div>
-  <hr />
+  @if (informacoesCarteirinha) {
+    <div #pdfcarteirinha>
+      <app-carteirinha-pet
+    [pet]="informacoesCarteirinha"
+    [imagemBaseUrl]="'http://localhost:8080/arquivos/'"
+  ></app-carteirinha-pet>
+    </div>
+}
+<hr />
   <p-button
     label="Baixar"
     severity="success"
-    icon="fa fa-download"
+    [icon]="gerandoPdf ? 'pi spin pi-spinner' : 'fa fa-download'"
     [style]="{ width: '100%' }"
+    [disabled]="gerandoPdf"
     (click)="baixarCarteirinha()"
   />
 </p-dialog>

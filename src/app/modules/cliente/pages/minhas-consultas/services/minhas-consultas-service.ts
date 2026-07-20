@@ -13,6 +13,7 @@ import type { PagamentoDto } from '../models/PagamentoDto';
 import type { TipoPagamentoEnum } from '../../../../../shared/models/enums/TipoPagamentoEnum';
 import type { AvaliacaoConsultaForm } from '../form/AvaliacaoConsultaForm';
 import type { AvaliacaoConsultaDto } from '../models/AvaliacaoConsultaDto';
+import type { InformacoesCardsConsultasClienteDto } from '../models/InformacoesCardsConsultasClienteDto';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +25,25 @@ export class MinhasConsultasService {
   public idConsultaSelecionada: number | null = null;
   public acessoPorPetSelecionado = false;
 
+  public buscarInformacoesCards(): Observable<InformacoesCardsConsultasClienteDto> {
+    return this.http.get<InformacoesCardsConsultasClienteDto>(`${this.URL}/cards`);
+  }
+
   public buscarConsultaPorId(): Observable<MinhasConsultasDto> {
     return this.http.get<MinhasConsultasDto>(
       `${this.URL}/${this.idConsultaSelecionada}`,
+    );
+  }
+  
+  public buscarProximaConsulta(): Observable<MinhasConsultasDto> {
+    return this.http.get<MinhasConsultasDto>(
+      `${this.URL}/proxima-consulta`,
+    );
+  }
+  
+  public buscarConsultaAtual(): Observable<MinhasConsultasDto> {
+    return this.http.get<MinhasConsultasDto>(
+      `${this.URL}/consulta-atual`,
     );
   }
 

@@ -1,5 +1,5 @@
-import type { OnInit } from '@angular/core';
-import { Component, inject } from '@angular/core';
+import type { ElementRef, OnInit } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { PrimeNGModule } from '../../../../../../shared/modules/prime-ng/prime-ng-module';
 import type { PetDetalhesDto, PetSemelhantesDto } from './model/PetDetalhesDto';
 import { MeusPetsService } from '../../services/meus-pets-service';
@@ -16,6 +16,9 @@ import type { FileSelectEvent } from 'primeng/fileupload';
 import type { EditarPetForm } from '../../models/form/EditarPetForm';
 import type { PetPodeSerDeletadoDto } from '../../models/PetPodeSerDeletadoDto';
 import { MessageService } from 'primeng/api';
+import type { CarteirinhaPetDto } from '../../../../../../shared/components/carteirinha-pet/dto/CarteirinhaPetDto';
+import { CarteirinhaPet } from "../../../../../../shared/components/carteirinha-pet/carteirinha-pet";
+import { CarteirinhaPdfService } from '../../../../../../shared/components/carteirinha-pet/service/carteirinha-pdf-service';
 
 @Component({
   selector: 'app-informacoes-pet',
@@ -25,23 +28,27 @@ import { MessageService } from 'primeng/api';
     GeneroBag,
     DialogModule,
     BagStatusConsulta,
-  ],
+    CarteirinhaPet
+],
   providers: [MessageService],
   templateUrl: './informacoes-pet.html',
   styleUrl: './informacoes-pet.scss',
 })
 export class InformacoesPet implements OnInit {
+  @ViewChild('pdfcarteirinha') carteirinhaElemento!: ElementRef<HTMLElement>;
   public petSelecionado: PetDetalhesDto | undefined = undefined;
   public petsRelacionados: PetSemelhantesDto[] = [];
   public consultasPet: MinhasConsultasDto[] = [];
   public htmlCarteirinha = '';
   private idPetSelecionado = 0;
+  public informacoesCarteirinha: CarteirinhaPetDto | null = null;
 
   public petDesativar: PetPodeSerDeletadoDto | undefined = undefined;
 
   public visibilidadeDialogEditarPet = false;
   public visibilidadeDialogDesativarPet = false;
   public visibilidadeDialogCarteirinha = false;
+  public gerandoPdf = false;
 
   public formularioEdicao!: FormGroup;
 
@@ -50,6 +57,7 @@ export class InformacoesPet implements OnInit {
   private readonly consultasService = inject(MinhasConsultasService);
   private readonly router = inject(Router);
   private readonly toast = inject(MessageService);
+  private readonly carteirinhaPdf = inject(CarteirinhaPdfService);
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -125,23 +133,24 @@ export class InformacoesPet implements OnInit {
   }
 
   public buscarCarteirinha(): void {
-    this.htmlCarteirinha = '';
+    this.informacoesCarteirinha = null;
     this.service
       .verCarteirinha(this.idPetSelecionado)
-      .subscribe((res: string) => {
-        this.htmlCarteirinha = res;
+      .subscribe((res: CarteirinhaPetDto) => {
+        this.informacoesCarteirinha = res;
         this.visibilidadeDialogCarteirinha = true;
       });
   }
 
-  public baixarCarteirinha(): void {
-    this.service.baixarCarteirinha(this.idPetSelecionado).subscribe({
-      next: (response: Blob) => {
-        const file = new Blob([response], { type: 'application/pdf' });
-        const fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
-      },
-    });
+  public async baixarCarteirinha(): Promise<void> {
+    if (!this.petSelecionado) return;
+    try {
+      this.gerandoPdf = true;
+      const nome = (this.petSelecionado.nome ?? 'pet').trim().replace(/\s+/g, '-').toLowerCase();
+      await this.carteirinhaPdf.gerarPdf(this.carteirinhaElemento.nativeElement, `carteirinha-${nome}.pdf`);
+    } finally {
+      this.gerandoPdf = false;
+    }
   }
 
   private buscarConsultasPet(): void {

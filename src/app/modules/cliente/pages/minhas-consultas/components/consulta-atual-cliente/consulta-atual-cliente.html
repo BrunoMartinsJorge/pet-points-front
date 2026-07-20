@@ -1,0 +1,30 @@
+@if (consultaAtual) {
+  <section class="atual">
+    <div class="header-badge">
+      <div class="informacoes">
+        <span><i class="fa fa-paw"></i>{{ consultaAtual.petConsulta }}</span>
+        <h4>{{ consultaAtual.tipoConsulta }}</h4>
+      </div>
+      <span class="badge icon">
+        <i class="fa fas fas fas fa-stethoscope"></i>
+      </span>
+    </div>
+    <p>Consulta iniciada pelo(a) {{ consultaAtual.veterinarioConsulta }}</p>
+    <div class="footer-card">
+      <div class="infos">
+        <span>
+          <i class="fa fa-calendar"></i>
+          {{ consultaAtual.dataHoraConsulta | date: "dd/MM/yyyy" }}
+        </span>
+        <span>
+          <i class="fa fa-clock"></i>
+          {{ consultaAtual.dataHoraConsulta | date: "HH:mm" }}
+        </span>
+      </div>
+      <button>
+        Acessar consulta
+        <i class="fa fas fa-angle-right"></i>
+      </button>
+    </div>
+  </section>
+}

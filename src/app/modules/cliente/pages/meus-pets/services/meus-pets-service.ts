@@ -8,15 +8,14 @@ import type { PetDetalhesDto } from '../pages/informacoes-pet/model/PetDetalhesD
 import type { MinhasConsultasDto } from '../../minhas-consultas/models/MinhasConsultasDto';
 import type { EditarPetForm } from '../models/form/EditarPetForm';
 import type { PetPodeSerDeletadoDto } from '../models/PetPodeSerDeletadoDto';
+import type { CarteirinhaPetDto } from '../../../../../shared/components/carteirinha-pet/dto/CarteirinhaPetDto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeusPetsService {
-  // URL baso do controller de meus pets, utilizada para fazer as requisições HTTP para o backend
   private readonly URL = '/cliente/meus-pets';
 
-  // Injeção do serviço HttpClient para fazer as requisições HTTP para o backend
   private http = inject(HttpClient);
 
   public buscarMeusPets(): Observable<MeuPetDto[]> {
@@ -71,10 +70,8 @@ export class MeusPetsService {
     return this.http.get<PetDetalhesDto>(`${this.URL}/${id}`);
   }
 
-  public verCarteirinha(id: number): Observable<string> {
-    return this.http.get(`${this.URL}/carteirinha/${id}`, {
-      responseType: 'text',
-    });
+  public verCarteirinha(id: number): Observable<CarteirinhaPetDto> {
+    return this.http.get<CarteirinhaPetDto>(`${this.URL}/carteirinha/${id}`);
   }
 
   public baixarCarteirinha(idPet: number): Observable<Blob> {

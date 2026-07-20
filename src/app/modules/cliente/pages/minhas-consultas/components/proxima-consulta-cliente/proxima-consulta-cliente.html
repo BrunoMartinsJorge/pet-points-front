@@ -1,1 +1,33 @@
-<p>proxima-consulta-cliente works!</p>
+<section
+  [ngClass]="!proximaConsulta ? 'proxima-consulta vazia' : 'proxima-consulta'"
+>
+  @if (proximaConsulta) {
+    <div class="header-badge">
+      <h3>{{ proximaConsulta.tipoConsulta }}</h3>
+      <span class="badge icon">
+        <i class="fa fas fas fas fa-stethoscope"></i>
+      </span>
+    </div>
+    <p>Sua consulta foi aprovada e preparada!</p>
+    <div class="footer-card">
+      <div class="infos">
+        <span>
+          <i class="fa fa-calendar"></i>
+          <p>{{ proximaConsulta.dataHoraConsulta | date: "dd/MM/yyyy" }}</p>
+        </span>
+        <span>
+          <i class="fa fa-clock"></i>
+          <p>{{ proximaConsulta.dataHoraConsulta | date: "HH:mm" }}</p>
+        </span>
+        <span>
+          <i class="fa fas fa-stethoscope"></i>
+          <p>{{ proximaConsulta.veterinarioConsulta }}</p>
+        </span>
+      </div>
+      <button (click)="selecionarConsulta()">
+          Acessar consulta
+          <i class="fa fas fa-angle-right"></i>
+      </button>
+    </div>
+  }
+</section>

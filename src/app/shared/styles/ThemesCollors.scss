@@ -18,6 +18,7 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+  --color-inverted: #fff;
 
   /* Compatibilidade com o sistema atual */
   --color-border: #ccc;
@@ -27,9 +28,12 @@
   --color-icon: #1e293b;
   --color-hover: #e2f3f0;
   --color-secondary: #fff;
+  --card: #cccccc61;
+  --card-hover: #cccccc43;
+
 
   /* Cards */
-  --color-card-primary: rgb(33, 128, 33);
+  --color-card-primary: #00A870;
   --color-card-secondary: rgb(223, 89, 12);
 
   /* Status */
@@ -56,7 +60,7 @@ html[data-theme="dark"] {
   --background: #0A0A0A;
   --foreground: oklch(0.985 0 0);
   --card: #121212;
-  --card-hover: oklch(16.842% 0.00002 271.152);
+  --card-hover: oklch(16.842% 0.00002 271.152 / 0.871);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
@@ -72,6 +76,7 @@ html[data-theme="dark"] {
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+  --color-inverted: #000;
 
   /* Compatibilidade com o sistema atual */
   --color-border: rgb(63, 63, 70);
@@ -79,7 +84,7 @@ html[data-theme="dark"] {
   --color-text: #ccc;
   --color-sub-text: #a0aec0;
   --color-icon: #ccc;
-  --color-hover: #ffffff29;
+  --color-hover: #4d4c4c29;
   --color-secondary: #121212;
 
   /* Cards */
