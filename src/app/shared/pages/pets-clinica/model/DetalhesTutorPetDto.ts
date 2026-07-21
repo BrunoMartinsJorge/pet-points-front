@@ -1,4 +1,4 @@
-import type { GeneroEnum } from "../../../../../shared/models/enums/GeneroEnum";
+import type { GeneroEnum } from "../../../models/enums/GeneroEnum";
 
 export interface DetalhesTutorPetDto {
     id: number;

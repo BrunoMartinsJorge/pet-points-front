@@ -4,26 +4,45 @@ main {
   padding: 2rem 3rem;
   color: var(--color-text);
   grid-gap: 1em;
+  width: 100%;
+  max-width: 420px;
 
   .logo {
     display: flex;
-    gap: 0.5em;
+    gap: 0.6em;
     align-items: center;
 
     .img-logo {
-      width: 3em;
-      height: 3em;
-      background: url("../../../../../../../public/logo.png") center center
-        no-repeat;
-      background-size: contain;
+      width: 2.75em;
+      height: 2.75em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 1rem;
+      background: linear-gradient(145deg, #00d492, #00a870);
+      box-shadow: 0 6px 18px rgba(0, 188, 125, 0.35);
+
+      i {
+        font-size: 1.3em;
+      }
+    }
+
+    h3 {
+      margin: 0;
+      color: var(--color-title);
     }
   }
 
   h2 {
-    font-size: 1.5em;
+    font-size: 1.8em;
+    margin: 0.5rem 0 0;
+    color: var(--color-title);
+    line-height: 1.25;
+
     span {
-      font-size: 1em;
-      color: #dec123;
+      color: #00bc7d;
     }
   }
 
@@ -40,27 +59,31 @@ main {
 
       i#alterar-senha {
         font-size: 14px;
-        color: rgb(59, 144, 177);
+        color: #00bc7d;
         cursor: pointer;
         align-self: flex-end;
-        text-decoration: underline;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
 
-    .divider {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-
-      i {
-        flex: 1;
-        height: 1px;
-        background-color: var(--color-text);
-      }
+    .registrar {
+      margin: 0.5rem 0 0;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--color-sub-text);
 
       span {
-        font-size: 14px;
-        color: var(--color-text);
+        color: #00bc7d;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }

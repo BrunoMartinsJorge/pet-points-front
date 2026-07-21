@@ -2,11 +2,11 @@ import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PetsClinicaService } from '../../service/pets-clinica-service';
-import { PrimeNGModule } from '../../../../../../shared/modules/prime-ng/prime-ng-module';
+import { PrimeNGModule } from '../../../../modules/prime-ng/prime-ng-module';
 import type { DetalhesPetDto } from '../../model/DetalhesPetDto';
 import type { DetalhesTutorPetDto } from '../../model/DetalhesTutorPetDto';
 import type { HistoricoConsultasPetDto } from '../../model/HistoricoConsultasPetDto';
-import { BagStatusConsulta } from "../../../../../../shared/components/bag-status-consulta/bag-status-consulta";
+import { BagStatusConsulta } from "../../../../components/bag-status-consulta/bag-status-consulta";
 
 @Component({
   selector: 'app-detalhes-pet',

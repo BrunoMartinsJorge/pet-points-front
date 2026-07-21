@@ -3,12 +3,12 @@ import { Component, inject } from '@angular/core';
 import { ClientesClinicaService } from '../../service/clientes-clinica-service';
 import { ActivatedRoute } from '@angular/router';
 import type { ClientesDetalhesDto } from './model/ClientesDetalhesDto';
-import { PrimeNGModule } from '../../../../../../shared/modules/prime-ng/prime-ng-module';
+import { PrimeNGModule } from '../../../../modules/prime-ng/prime-ng-module';
 import type { PetsClienteDto } from './model/PetsClienteDto';
 import type { HistoricoConsultasClienteDto } from './model/HistoricoConsultasClienteDto';
-import { GeneroBag } from '../../../../../../shared/components/genero-bag/genero-bag';
-import { TipoPetBag } from '../../../../../../shared/components/tipo-pet-bag/tipo-pet-bag';
-import { BagStatusConsulta } from '../../../../../../shared/components/bag-status-consulta/bag-status-consulta';
+import { GeneroBag } from '../../../../components/genero-bag/genero-bag';
+import { TipoPetBag } from '../../../../components/tipo-pet-bag/tipo-pet-bag';
+import { BagStatusConsulta } from '../../../../components/bag-status-consulta/bag-status-consulta';
 
 @Component({
   selector: 'app-detalhes-clientes',

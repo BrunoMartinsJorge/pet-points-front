@@ -36,11 +36,13 @@ export class TokenService {
   public get getTokenPayload(): TokenModel | null {
     const token = this.decodeToken(this.getToken || '');
     if (!token) return null;
+    console.log(token);
+    
     return {
       email: token.sub,
       nomeUsuario: token.nomeUsuario,
       idUsuario: token.id_usuario,
-      permissoes: token.permissoes,
+      permissoes: token.permissao,
       imagem: token.imagem
     };
   }

@@ -7,6 +7,9 @@ import { Perfil } from '../../shared/pages/perfil/perfil';
 import { ChatAtendimento } from './features/chat-atendimento/chat-atendimento';
 import { AtendimentoSelecionado } from './features/chat-atendimento/pages/atendimento-selecionado/atendimento-selecionado';
 import { ChatInterno } from '../../shared/pages/chat-interno/chat-interno';
+import { PetsClinica } from '../../shared/pages/pets-clinica/pets-clinica';
+import { ClientesClinica } from '../../shared/pages/clientes-clinica/clientes-clinica';
+import { DetalhesClientes } from '../../shared/pages/clientes-clinica/pages/detalhes-clientes/detalhes-clientes';
 
 export const ROTAS_ATENDENETES: Routes = [
   {
@@ -56,7 +59,7 @@ export const ROTAS_ATENDENETES: Routes = [
           visible: true,
           nome: 'Atendimentos',
           icone: 'fa fa-comments',
-          group: '',
+          group: 'COMUNICAÇÕES',
           descricao: 'Atendimentos do Atendente',
         },
         canActivate: [authGuard],
@@ -85,8 +88,51 @@ export const ROTAS_ATENDENETES: Routes = [
           visible: true,
           nome: 'Chat Interno',
           icone: 'fa-solid fa-message',
-          group: 'INTERNO',
+          group: 'COMUNICAÇÕES',
           descricao: 'Chat Interno de Funcionários da Clinica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'clientes-clinica',
+        title: 'Clientes',
+        component: ClientesClinica,
+        data: {
+          RULE: 'ATENDENTE',
+          visible: true,
+          nome: 'Clientes da Clínica',
+          icone: 'fa-solid fa-users',
+          group: 'CLIENTES E PETS',
+          descricao: 'Clientes Registrados na Clínica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'detalhes-clientes/:id',
+        title: 'Detalhes Cliente da Clinica',
+        component: DetalhesClientes,
+        data: {
+          RULE: 'ATENDENTE',
+          visible: false,
+          nome: 'Clientes',
+          icone: 'fa fa-users',
+          voltar: true,
+          group: 'CLÍNICA',
+          descricao: 'Clientes Registrados da Clinica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'pets-clinica',
+        title: 'Pets',
+        component: PetsClinica,
+        data: {
+          RULE: 'ATENDENTE',
+          visible: true,
+          nome: 'Pets da Clínica',
+          icone: 'fa-solid fa-paw',
+          group: 'CLIENTES E PETS',
+          descricao: 'Pets Registrados na Clínica',
         },
         canActivate: [authGuard],
       },

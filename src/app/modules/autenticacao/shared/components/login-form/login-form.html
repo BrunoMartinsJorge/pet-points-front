@@ -1,11 +1,13 @@
 <main>
   <div class="logo">
-    <div class="img-logo"></div>
+    <span class="img-logo">
+      <i class="fa fa-paw"></i>
+    </span>
     <h3>Pet Points</h3>
   </div>
   <h2>
-    Olá, seja bem-vindo ao <span>Pet Points!</span> Faça login para acessar sua
-    conta!
+    Bem-vindo de volta.<br />
+    Acesse sua <span>clínica</span>.
   </h2>
   <form [formGroup]="loginForm">
     <div class="input-group">
@@ -48,20 +50,16 @@
       (click)="logarUsuario()"
       [style]="{ width: '100%' }"
     />
-    <div class="divider">
-      <i></i>
-      <span>Ou</span>
-      <i></i>
-    </div>
-    <p-button
-      [disabled]="carregandoLogin"
-      icon="pi pi-user-plus"
-      label="Registrar-se"
-      iconPos="right"
-      severity="contrast"
-      (click)="toogleModeForm.emit()"
-      [style]="{ width: '100%' }"
-    />
+    <p class="registrar">
+      Novo por aqui?
+      <span
+        aria-hidden="true"
+        (click)="!carregandoLogin && toogleModeForm.emit()"
+        (keyup)="!carregandoLogin && toogleModeForm.emit()"
+      >
+        Criar conta
+      </span>
+    </p>
   </form>
 </main>
 <p-dialog

@@ -7,11 +7,11 @@ import { RegistrarFuncionario } from './pages/funcionarios/pages/registrar-funci
 import { LogsSistema } from './pages/logs-sistema/logs-sistema';
 import { ProdutosEstoque } from './pages/produtos-estoque/produtos-estoque';
 import { MovimentacoesClinica } from './pages/movimentacoes-clinica/movimentacoes-clinica';
-import { ClientesClinica } from './pages/clientes-clinica/clientes-clinica';
-import { PetsClinica } from './pages/pets-clinica/pets-clinica';
+import { ClientesClinica } from '../../shared/pages/clientes-clinica/clientes-clinica';
+import { PetsClinica } from '../../shared/pages/pets-clinica/pets-clinica';
 import { ConsultasClinica } from './pages/consultas-clinica/consultas-clinica';
-import { DetalhesClientes } from './pages/clientes-clinica/pages/detalhes-clientes/detalhes-clientes';
-import { DetalhesPet } from './pages/pets-clinica/pages/detalhes-pet/detalhes-pet';
+import { DetalhesClientes } from '../../shared/pages/clientes-clinica/pages/detalhes-clientes/detalhes-clientes';
+import { DetalhesPet } from '../../shared/pages/pets-clinica/pages/detalhes-pet/detalhes-pet';
 import { ChatInterno } from '../../shared/pages/chat-interno/chat-interno';
 import { DetalhesConsulta } from './pages/consultas-clinica/pages/detalhes-consulta/detalhes-consulta';
 import { DetalhesFuncionario } from './pages/funcionarios/pages/detalhes-funcionario/detalhes-funcionario';

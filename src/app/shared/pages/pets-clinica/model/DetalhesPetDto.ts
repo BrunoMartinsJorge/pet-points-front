@@ -1,5 +1,5 @@
-import type { GeneroEnum } from '../../../../../shared/models/enums/GeneroEnum';
-import type { TipoAnimalEnum } from '../../../../../shared/models/enums/TipoAnimalEnum';
+import type { GeneroEnum } from '../../../models/enums/GeneroEnum';
+import type { TipoAnimalEnum } from '../../../models/enums/TipoAnimalEnum';
 
 export interface DetalhesPetDto {
   id: number;

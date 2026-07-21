@@ -1,4 +1,4 @@
-import type { StatusConsultaEnum } from "../../../../../shared/models/enums/StatusConsultaEnum";
+import type { StatusConsultaEnum } from "../../../models/enums/StatusConsultaEnum";
 
 export interface HistoricoConsultasPetDto {
     id: number;

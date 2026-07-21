@@ -3,71 +3,186 @@ main {
   flex-direction: column;
   padding: 2rem 3rem;
   color: var(--color-text);
-  grid-gap: 1em;
+  width: 100%;
+  max-width: 420px;
+  gap: 1.5rem;
 
   .logo {
     display: flex;
-    gap: 0.5em;
+    gap: 0.6em;
     align-items: center;
 
     .img-logo {
-      width: 3em;
-      height: 3em;
-      background: url("../../../../../../../public/logo.png") center center
-        no-repeat;
-      background-size: contain;
+      width: 2.75em;
+      height: 2.75em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 1rem;
+      background: linear-gradient(145deg, #00d492, #00a870);
+      box-shadow: 0 6px 18px rgba(0, 188, 125, 0.35);
+
+      i {
+        font-size: 1.3em;
+      }
+    }
+
+    h3 {
+      margin: 0;
+      color: var(--color-title);
     }
   }
 
   h2 {
-    font-size: 1.5em;
+    font-size: 1.8em;
+    margin: 0;
+    color: var(--color-title);
+    line-height: 1.25;
+
     span {
-      font-size: 1em;
-      color: #dec123;
+      color: #00bc7d;
     }
   }
 
-  form {
-    margin-top: 1.5rem;
+  /* ---------- Indicadores de Step ---------- */
+  .step-indicators {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.5rem 0;
 
-    .input-group {
+    .step-indicator {
       display: flex;
       flex-direction: column;
-      grid-gap: 0.5em;
+      align-items: center;
+      gap: 0.4rem;
+
+      .step-number {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1.5px solid var(--color-sub-text);
+        color: var(--color-sub-text);
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+
+      .step-label {
+        font-size: 0.75rem;
+        color: var(--color-sub-text);
+        text-align: center;
+      }
+
+      &.active {
+        .step-number {
+          border-color: #00bc7d;
+          color: #fff;
+          background-color: #00bc7d;
+        }
+
+        .step-label {
+          color: #00bc7d;
+        }
+      }
     }
-  }
 
-  .divider {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin: 1em 0;
-
-    i {
+    .step-line {
       flex: 1;
       height: 1px;
-      background-color: var(--color-text);
+      background-color: var(--color-sub-text);
+      opacity: 0.5;
+      transition: all 0.3s ease;
+
+      &.active {
+        background-color: #00bc7d;
+        opacity: 1;
+      }
     }
+  }
+
+  /* ---------- Formulário ---------- */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .form-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      animation: slideIn 0.3s ease-out;
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+
+        label {
+          font-size: 0.9rem;
+          color: var(--color-text);
+        }
+      }
+
+      .arquivo-selecionado,
+      .arquivo-vazio {
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+      }
+
+      .arquivo-selecionado {
+        color: #00bc7d;
+      }
+
+      .arquivo-vazio {
+        color: var(--color-sub-text);
+        font-style: italic;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+
+      p-button {
+        flex: 1;
+        min-width: 120px;
+      }
+    }
+  }
+
+  /* ---------- Link para Login ---------- */
+  .login-link {
+    margin: 0.5rem 0 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--color-sub-text);
 
     span {
-      font-size: 14px;
-      color: var(--color-text);
+      color: #00bc7d;
+      font-weight: 600;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
-  }
-
-  .arquivo {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .botoes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    justify-content: space-between;
   }
 }

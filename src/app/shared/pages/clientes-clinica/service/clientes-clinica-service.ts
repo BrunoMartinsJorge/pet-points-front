@@ -10,7 +10,7 @@ import type { HistoricoConsultasClienteDto } from '../pages/detalhes-clientes/mo
   providedIn: 'root',
 })
 export class ClientesClinicaService {
-  private readonly URL = '/gerente/clientes-clinica';
+  private readonly URL = '/gerente-atendente/clientes-clinica';
   private readonly http = inject(HttpClient);
 
   public listarClientes(): Observable<ClienteDto[]> {

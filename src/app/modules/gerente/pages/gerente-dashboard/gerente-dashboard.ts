@@ -6,6 +6,7 @@ import { ChartModule } from 'primeng/chart';
 import type { MovimentacoesGerenteDto } from './model/MovimentacoesGerenteDto';
 import type { ConsultasGerenteDto } from './model/ConsultasGerenteDto';
 import { BagTipoMovimentacao } from '../../../../shared/components/bag-tipo-movimentacao/bag-tipo-movimentacao';
+import { TipoMovimentacaoEnum } from '../../../../shared/models/enums/TipoMovimentacaoEnum';
 
 @Component({
   selector: 'app-gerente-dashboard',
@@ -26,8 +27,67 @@ export class GerenteDashboard implements OnInit {
   public opcoesGrafico = {};
   public movimentacoes: MovimentacoesGerenteDto[] = [];
   public consultas: ConsultasGerenteDto[] = [];
+  public dataAtualizacao: Date = new Date();
+
+  /**
+   * @description Quantidade de consultas do dia
+   */
+  public get qtdConsultas(): number {
+    return this.consultas.length;
+  }
+
+  /**
+   * @description Quantidade total de movimentações do mês
+   */
+  public get qtdMovimentacoes(): number {
+    return this.movimentacoes.length;
+  }
+
+  /**
+   * @description Quantidade de movimentações de entrada
+   */
+  public get qtdEntradas(): number {
+    return this.movimentacoes.filter(
+      (m) => m.tipo === TipoMovimentacaoEnum.ENTRADA,
+    ).length;
+  }
+
+  /**
+   * @description Quantidade de movimentações de saída
+   */
+  public get qtdSaidas(): number {
+    return this.movimentacoes.filter(
+      (m) => m.tipo === TipoMovimentacaoEnum.SAIDA,
+    ).length;
+  }
+
+  /**
+   * @description Total de acessos no período
+   */
+  public get totalAcessos(): number {
+    return this.acessosMes.reduce(
+      (total, mes) => total + (Number(mes.quantidade) || 0),
+      0,
+    );
+  }
+
+  /**
+   * @description Média de acessos por registro do período
+   */
+  public get mediaAcessos(): number {
+    if (!this.acessosMes.length) return 0;
+    return Math.round(this.totalAcessos / this.acessosMes.length);
+  }
 
   ngOnInit(): void {
+    this.recarregar();
+  }
+
+  /**
+   * @description Recarrega todos os blocos do dashboard e atualiza o horário
+   */
+  public recarregar(): void {
+    this.dataAtualizacao = new Date();
     this.buscarAcessos();
     this.buscarMovimentacoes();
     this.buscarConsultas();
@@ -66,13 +126,15 @@ export class GerenteDashboard implements OnInit {
   private gerarGrafico(): void {
     const documentStyle = getComputedStyle(document.documentElement);
 
-    const textColor = documentStyle.getPropertyValue('--p-text-color');
     const textColorSecondary = documentStyle.getPropertyValue(
       '--p-text-muted-color',
     );
     const surfaceBorder = documentStyle.getPropertyValue(
       '--p-content-border-color',
     );
+    const corPrimaria =
+      documentStyle.getPropertyValue('--color-card-primary').trim() ||
+      '#00BC7D';
 
     this.grafico = {
       labels: this.acessosMes.map((mes) => mes.data ?? '---'),
@@ -81,8 +143,14 @@ export class GerenteDashboard implements OnInit {
         {
           label: 'Acessos',
           data: this.acessosMes.map((mes) => Number(mes.quantidade) || 0),
-          borderColor: 'rgb(54, 162, 235)',
-          borderWidth: 1,
+          borderColor: corPrimaria,
+          backgroundColor: 'rgba(0, 188, 125, 0.12)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointBackgroundColor: corPrimaria,
         },
       ],
     };
@@ -93,9 +161,7 @@ export class GerenteDashboard implements OnInit {
 
       plugins: {
         legend: {
-          labels: {
-            color: textColor,
-          },
+          display: false,
         },
 
         tooltip: {
@@ -115,7 +181,7 @@ export class GerenteDashboard implements OnInit {
           },
 
           grid: {
-            color: surfaceBorder,
+            display: false,
           },
         },
 

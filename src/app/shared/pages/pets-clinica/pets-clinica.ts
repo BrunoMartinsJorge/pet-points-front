@@ -1,13 +1,13 @@
 import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
-import { PrimeNGModule } from '../../../../shared/modules/prime-ng/prime-ng-module';
+import { PrimeNGModule } from '../../modules/prime-ng/prime-ng-module';
 import { PetsClinicaService } from './service/pets-clinica-service';
 import type { PetsDto } from './model/PetsDto';
-import { GeneroBag } from '../../../../shared/components/genero-bag/genero-bag';
-import { TipoPetBag } from '../../../../shared/components/tipo-pet-bag/tipo-pet-bag';
+import { GeneroBag } from '../../components/genero-bag/genero-bag';
+import { TipoPetBag } from '../../components/tipo-pet-bag/tipo-pet-bag';
 import type { TutorDto } from './model/TutorDto';
-import { GeneroEnumOpcoes } from '../../../../shared/models/enums/GeneroEnum';
-import { PetOpcoes } from '../../../../shared/models/PetOpcoes';
+import { GeneroEnumOpcoes } from '../../models/enums/GeneroEnum';
+import { PetOpcoes } from '../../models/PetOpcoes';
 import { Router } from '@angular/router';
 import type { RelatorioPetsClinicaForm } from './form/RelatorioPetsClinicaForm';
 

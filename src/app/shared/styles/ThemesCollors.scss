@@ -34,7 +34,9 @@
 
   /* Cards */
   --color-card-primary: #00A870;
+  --color-card-primary-foreground: #00a87012;
   --color-card-secondary: rgb(223, 89, 12);
+  --color-card-secondary-foreground: #df590c14;
 
   /* Status */
   --color-success: #28a745;
@@ -47,9 +49,14 @@
   /* Outros */
   --dourado: #d4af37;
   --bag-pendente: #ffc107;
+  --bag-pendente-foreground: #ffc10714;
   --enviado: #19554a;
   --aprovado: #28a745;
+  --aprovado-foreground: #28a74514;
   --bag-reprovado: #dc3545;
+  --bag-reprovado-foreground: #dc354514;
+  --bag-iniciado: #1b68d4;
+  --bag-iniciado-foreground: #1b68d414;
 
   /* Radius */
   --radius: 0.625rem;
