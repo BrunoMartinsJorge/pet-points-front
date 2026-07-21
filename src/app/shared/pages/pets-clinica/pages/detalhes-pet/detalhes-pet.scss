@@ -33,6 +33,11 @@ main {
       height: 120px;
       resize: none;
     }
+
+    .acoes-pet {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 
   section#informacoes-adicionais {
@@ -52,8 +57,20 @@ main {
           gap: 0.5rem;
 
           .imagem-tutor {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             min-height: 120px;
-            background-color: gray;
+            border-radius: 12px;
+            color: var(--color-sub-text);
+            background-color: var(--color-border);
+
+            &::before {
+              content: "\f007";
+              font-family: "Font Awesome 6 Free", "FontAwesome";
+              font-weight: 900;
+              font-size: 2.5rem;
+            }
           }
 
           .informacoes-tutor {
@@ -119,5 +136,16 @@ main {
         }
       }
     }
+  }
+}
+
+:host ::ng-deep .p-fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background-color: var(--card);
+
+  .p-fieldset-legend {
+    color: var(--color-title);
+    font-weight: 600;
   }
 }

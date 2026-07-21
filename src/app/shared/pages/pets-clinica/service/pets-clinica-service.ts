@@ -7,13 +7,18 @@ import type { DetalhesPetDto } from '../model/DetalhesPetDto';
 import type { DetalhesTutorPetDto } from '../model/DetalhesTutorPetDto';
 import type { HistoricoConsultasPetDto } from '../model/HistoricoConsultasPetDto';
 import type { RelatorioPetsClinicaForm } from '../form/RelatorioPetsClinicaForm';
+import type { CarteirinhaPetDto } from '../../../components/carteirinha-pet/dto/CarteirinhaPetDto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PetsClinicaService {
-  private readonly URL = '/gerente/pets-clinica';
+  private readonly URL = '/gerente-atendente/pets-clinica';
   private readonly http = inject(HttpClient);
+
+  public verCarteirinha(idPet: number): Observable<CarteirinhaPetDto> {
+    return this.http.get<CarteirinhaPetDto>(`${this.URL}/carteirinha/${idPet}`);
+  }
 
   public listarPets(): Observable<PetsDto[]> {
     return this.http.get<PetsDto[]>(this.URL);

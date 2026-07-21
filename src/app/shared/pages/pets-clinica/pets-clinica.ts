@@ -10,6 +10,7 @@ import { GeneroEnumOpcoes } from '../../models/enums/GeneroEnum';
 import { PetOpcoes } from '../../models/PetOpcoes';
 import { Router } from '@angular/router';
 import type { RelatorioPetsClinicaForm } from './form/RelatorioPetsClinicaForm';
+import { TokenService } from '../../../core/services/token-service';
 
 @Component({
   selector: 'app-pets-clinica',
@@ -20,6 +21,9 @@ import type { RelatorioPetsClinicaForm } from './form/RelatorioPetsClinicaForm';
 export class PetsClinica implements OnInit {
   private readonly service = inject(PetsClinicaService);
   private readonly router = inject(Router);
+  private readonly tokenService = inject(TokenService);
+
+  public tipoUsuario = '';
 
   private pets: PetsDto[] = [];
   public petsFiltrados: PetsDto[] = [];
@@ -41,6 +45,9 @@ export class PetsClinica implements OnInit {
 
   ngOnInit(): void {
     this.buscarPets();
+    const token = this.tokenService.getTokenPayload;
+    if (!token) return;
+    this.tipoUsuario = token.permissoes[0] == 'A' ? 'ATENDENTE' : 'GERENTE';
   }
 
   private buscarPets(): void {
@@ -108,7 +115,8 @@ export class PetsClinica implements OnInit {
   }
 
   public verDetalhesPet(idPet: number): void {
-    this.router.navigate(['gerente/detalhes-pet', idPet]);
+    const base = (this.tipoUsuario || 'GERENTE').toLocaleLowerCase();
+    this.router.navigate([`${base}/detalhes-pet`, idPet]);
   }
 
   public gerarRelatorio(): void {

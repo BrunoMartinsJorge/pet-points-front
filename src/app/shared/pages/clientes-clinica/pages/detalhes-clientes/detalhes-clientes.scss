@@ -149,3 +149,14 @@ main {
     }
   }
 }
+
+:host ::ng-deep .p-fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background-color: var(--card);
+
+  .p-fieldset-legend {
+    color: var(--color-title);
+    font-weight: 600;
+  }
+}

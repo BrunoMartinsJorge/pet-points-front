@@ -77,6 +77,14 @@
               pTextarea
             ></textarea>
           </div>
+          <div class="acoes-pet">
+            <p-button
+              label="Acessar Carteirinha Digital"
+              icon="fa fa-id-card"
+              severity="secondary"
+              (click)="buscarCarteirinha()"
+            />
+          </div>
         </section>
       }
     </p-fieldset>
@@ -171,3 +179,30 @@
     }
   </section>
 </main>
+
+<p-dialog
+  header="Carteirinha do Pet"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [(visible)]="visibilidadeDialogCarteirinha"
+>
+  <hr />
+  @if (informacoesCarteirinha) {
+    <div #pdfcarteirinha>
+      <app-carteirinha-pet
+        [pet]="informacoesCarteirinha"
+        [imagemBaseUrl]="'http://localhost:8080/arquivos/'"
+      ></app-carteirinha-pet>
+    </div>
+  }
+  <hr />
+  <p-button
+    label="Baixar"
+    severity="success"
+    [icon]="gerandoPdf ? 'pi spin pi-spinner' : 'fa fa-download'"
+    [style]="{ width: '100%' }"
+    [disabled]="gerandoPdf"
+    (click)="baixarCarteirinha()"
+  />
+</p-dialog>

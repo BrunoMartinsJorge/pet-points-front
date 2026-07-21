@@ -10,6 +10,7 @@ import { ChatInterno } from '../../shared/pages/chat-interno/chat-interno';
 import { PetsClinica } from '../../shared/pages/pets-clinica/pets-clinica';
 import { ClientesClinica } from '../../shared/pages/clientes-clinica/clientes-clinica';
 import { DetalhesClientes } from '../../shared/pages/clientes-clinica/pages/detalhes-clientes/detalhes-clientes';
+import { DetalhesPet } from '../../shared/pages/pets-clinica/pages/detalhes-pet/detalhes-pet';
 
 export const ROTAS_ATENDENETES: Routes = [
   {
@@ -133,6 +134,21 @@ export const ROTAS_ATENDENETES: Routes = [
           icone: 'fa-solid fa-paw',
           group: 'CLIENTES E PETS',
           descricao: 'Pets Registrados na Clínica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'detalhes-pet/:id',
+        title: 'Detalhes de Pet',
+        component: DetalhesPet,
+        data: {
+          RULE: 'ATENDENTE',
+          visible: false,
+          nome: 'Pets',
+          voltar: true,
+          icone: '',
+          group: 'CLIENTES E PETS',
+          descricao: 'Detalhes do Pet Selecionado',
         },
         canActivate: [authGuard],
       },
