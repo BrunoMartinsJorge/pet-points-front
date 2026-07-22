@@ -37,36 +37,34 @@
         <ng-template #list let-consultas>
           <div class="lista-consultas">
             @for (consulta of consultas; track consulta.id) {
-              <div [ngClass]="'card-consulta ' + consulta.status.toLowerCase()">
-                <div class="badges">
-                  <app-bag-status-consulta
-                    [status]="consulta.status"
-                  ></app-bag-status-consulta>
-                  <span class="tipo-consulta">
-                    {{ consulta.tipo }}
-                  </span>
-                </div>
-                <div class="informacoes">
-                  <div>
-                    <span class="info">
-                      <i class="fa fas fa-user"></i>
-                      {{ consulta.cliente }}
-                    </span>
-                    <span class="info">
-                      <i class="fa fas fa-paw"></i>
+              <div [ngClass]="'consulta-card ' + consulta.status.toLowerCase()">
+                <div class="avatar">{{ inicial(consulta.pet) }}</div>
+                <div class="conteudo">
+                  <div class="linha-topo">
+                    <strong>{{ consulta.cliente }}</strong>
+                    <span class="tipo">{{ consulta.tipo }}</span>
+                    <app-bag-status-consulta
+                      [status]="consulta.status"
+                    ></app-bag-status-consulta>
+                  </div>
+                  <div class="meta">
+                    <span>
+                      <i class="fa fa-paw"></i>
                       {{ consulta.pet }}
                     </span>
-                    <span class="data-consulta">
-                      <i class="fa fas fa-calendar"></i>
-                      {{ consulta.data | date: "dd/MM/yyyy - HH:mm" }}
+                    <span>
+                      <i class="fa far fa-calendar"></i>
+                      {{ consulta.data | date: "dd/MM/yyyy – HH:mm" }}
                     </span>
                   </div>
-                  <p-button
-                    icon="fa fa-eye"
-                    severity="secondary"
-                    (click)="selecionarConsulta(consulta)"
-                  />
                 </div>
+                <p-button
+                  label="Acessar"
+                  icon="fa fa-chevron-right"
+                  iconPos="right"
+                  severity="secondary"
+                  (click)="selecionarConsulta(consulta)"
+                />
               </div>
             }
           </div>
@@ -149,40 +147,38 @@
         <ng-template #list let-consultas>
           <div class="lista-consultas">
             @for (consulta of consultas; track consulta.id) {
-              <div [ngClass]="'card-consulta ' + consulta.status.toLowerCase()">
-                <div class="badges">
-                  <app-bag-status-consulta
-                    [status]="consulta.status"
-                  ></app-bag-status-consulta>
-                  <span class="tipo-consulta">
-                    {{ consulta.tipo }}
-                  </span>
-                </div>
-                <div class="informacoes">
-                  <div>
-                    <span class="info">
-                      <i class="fa fas fa-user"></i>
-                      {{ consulta.cliente }}
-                    </span>
-                    <span class="info">
-                      <i class="fa fas fa-paw"></i>
+              <div [ngClass]="'consulta-card ' + consulta.status.toLowerCase()">
+                <div class="avatar">{{ inicial(consulta.pet) }}</div>
+                <div class="conteudo">
+                  <div class="linha-topo">
+                    <strong>{{ consulta.cliente }}</strong>
+                    <span class="tipo">{{ consulta.tipo }}</span>
+                    <app-bag-status-consulta
+                      [status]="consulta.status"
+                    ></app-bag-status-consulta>
+                  </div>
+                  <div class="meta">
+                    <span>
+                      <i class="fa fa-paw"></i>
                       {{ consulta.pet }}
                     </span>
-                    <span class="data-consulta">
-                      <i class="fa fas fa-calendar"></i>
-                      {{ consulta.data | date: "dd/MM/yyyy - HH:mm" }}
+                    <span>
+                      <i class="fa fa-info-circle"></i>
+                      Observações: {{ consulta.observacoes || "Não possui" }}
+                    </span>
+                    <span>
+                      <i class="fa far fa-calendar"></i>
+                      {{ consulta.data | date: "dd/MM/yyyy – HH:mm" }}
                     </span>
                   </div>
-                  <p-button
-                    icon="fa fa-eye"
-                    severity="secondary"
-                    (click)="selecionarConsulta(consulta)"
-                  />
                 </div>
-                <hr />
-                <p>
-                  {{ consulta.observacoes }}
-                </p>
+                <p-button
+                  label="Acessar"
+                  icon="fa fa-chevron-right"
+                  iconPos="right"
+                  severity="secondary"
+                  (click)="selecionarConsulta(consulta)"
+                />
               </div>
             }
           </div>

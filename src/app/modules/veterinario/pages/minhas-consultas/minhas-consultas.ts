@@ -80,6 +80,13 @@ export class MinhasConsultas implements OnInit {
     this.router.navigate(['/veterinario/detalhes-consulta', consulta.id])
   }
 
+  /**
+   * @description Inicial do nome do pet para o avatar (fallback "?")
+   */
+  public inicial(nome: string): string {
+    return nome?.trim().charAt(0).toUpperCase() || '?';
+  }
+
   public finalizarConsulta(): void {
     this.confirmService.confirm({
       header: 'Finalizar Consulta',

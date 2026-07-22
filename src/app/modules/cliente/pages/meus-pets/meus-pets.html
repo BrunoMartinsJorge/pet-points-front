@@ -1,21 +1,64 @@
 <main>
-  <section>
+  <section class="painel-pets">
     <p-fieldset legend="Meus Pets">
-      @if (pets.length === 0) {
+      <div class="barra-busca">
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            type="text"
+            pInputText
+            [(ngModel)]="termoBusca"
+            (ngModelChange)="aplicarFiltros()"
+            fluid="true"
+            placeholder="Buscar pet..."
+          />
+        </p-iconfield>
+      </div>
+
+      <div class="cards-resumo">
+        <div class="card-resumo">
+          <strong>{{ total }}</strong>
+          <span>TOTAL</span>
+        </div>
+        <div class="card-resumo ativos">
+          <strong>{{ qtdAtivos }}</strong>
+          <span>ATIVOS</span>
+        </div>
+        <div class="card-resumo desativados">
+          <strong>{{ qtdDesativados }}</strong>
+          <span>DESATIVADO</span>
+        </div>
+      </div>
+
+      <div class="abas-filtro">
+        @for (filtro of filtros; track filtro.valor) {
+          <button
+            type="button"
+            [class.ativo]="filtroSelecionado === filtro.valor"
+            (click)="selecionarFiltro(filtro.valor)"
+          >
+            {{ filtro.label }}
+          </button>
+        }
+      </div>
+
+      @if (petsFiltrados.length === 0) {
         <span class="sem-resultados">Nenhum pet encontrado!</span>
       } @else {
-        <p-dataview [value]="pets" [rows]="4" [paginator]="true">
+        <p-dataview [value]="petsFiltrados" [rows]="4" [paginator]="true">
           <ng-template #list let-petsLista>
             <div class="lista-pets">
               @for (pet of petsLista; track pet.id) {
                 <app-pet-card [pet]="pet"></app-pet-card>
               }
-            </div> </ng-template
-        ></p-dataview>
+            </div>
+          </ng-template>
+        </p-dataview>
       }
     </p-fieldset>
   </section>
-  <section>
+
+  <section class="painel-consultas">
     <p-fieldset legend="Meus Pets com Consultas">
       @if (consultas.length === 0) {
         <span class="sem-resultados">Nenhuma consulta encontrada!</span>
@@ -28,8 +71,9 @@
                   [consulta]="consulta"
                 ></app-consulta-pet-card>
               }
-            </div> </ng-template
-        ></p-dataview>
+            </div>
+          </ng-template>
+        </p-dataview>
       }
     </p-fieldset>
     <p-button

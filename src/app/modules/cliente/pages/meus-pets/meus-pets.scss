@@ -1,42 +1,124 @@
+$gap: 1rem;
+$radius: 10px;
+$padding-card: 0.85rem 1rem;
+$borda: 1px solid var(--color-border);
+$fonte-label: 0.75rem;
+$fonte-texto: 0.9rem;
+
 main {
   display: flex;
   width: 100%;
   flex: 1;
   height: 100%;
-  grid-gap: 1rem;
+  gap: $gap;
   flex-wrap: wrap;
-  padding: 1em;
+  padding: $gap;
 
   section {
     min-width: 400px;
     min-height: 400px;
+    overflow: hidden;
   }
 
-  p-fieldset {
-    height: 100%;
-    overflow-y: auto;
-  }
-
-  section:nth-child(1) {
+  .painel-pets {
     flex: 2;
-    overflow: hidden;
-    p-fieldset {
-      .lista-pets {
-        display: flex;
-        flex-direction: column;
-        grid-gap: 1em;
-      }
-    }
   }
 
-  section:nth-child(2) {
+  .painel-consultas {
     flex: 1;
-    overflow: hidden;
+  }
+}
 
-    .lista-consultas {
-      display: flex;
-      flex-direction: column;
-      grid-gap: 1em;
+:host ::ng-deep .p-fieldset {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.barra-busca {
+  display: flex;
+  margin-bottom: $gap;
+
+  p-iconfield {
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+  }
+}
+
+.cards-resumo {
+  display: flex;
+  gap: $gap;
+  flex-wrap: wrap;
+  margin-bottom: $gap;
+
+  .card-resumo {
+    flex: 1 1 0;
+    min-width: 110px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: $padding-card;
+    border: $borda;
+    border-radius: $radius;
+    background-color: var(--card);
+
+    strong {
+      font-size: 1.5rem;
+      color: var(--color-title);
+      line-height: 1;
+    }
+
+    span {
+      font-size: $fonte-label;
+      letter-spacing: 0.04em;
+      color: var(--color-sub-text);
+    }
+
+    &.ativos strong {
+      color: var(--color-success);
+    }
+
+    &.desativados strong {
+      color: var(--color-danger);
     }
   }
+}
+
+.abas-filtro {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: $gap;
+
+  button {
+    padding: 0.35rem 0.9rem;
+    font-size: $fonte-texto;
+    font-family: inherit;
+    color: var(--color-text);
+    background-color: transparent;
+    border: $borda;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: var(--card-hover);
+    }
+
+    &.ativo {
+      color: var(--color-card-primary);
+      border-color: var(--color-card-primary);
+      background-color: var(--color-card-primary-foreground);
+      font-weight: 600;
+    }
+  }
+}
+
+.lista-pets,
+.lista-consultas {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
 }

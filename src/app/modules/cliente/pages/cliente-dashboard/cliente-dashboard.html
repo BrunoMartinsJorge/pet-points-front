@@ -2,19 +2,21 @@
   @if (carregandoConsultasAgendadas) {
     <p-skeleton width="100%" height="42.5vh"></p-skeleton>
   } @else {
-    <p-fieldset legend="Consultas Agendadas" [toggleable]="false">
-      <p-dataview
-        #dv
-        [value]="consultasAgendadas"
-        [paginator]="true"
-        [rows]="3"
-      >
+    <p-fieldset
+      legend="Consultas Agendadas"
+      [toggleable]="false"
+      class="panel-consultas"
+    >
+      <p-dataview #dv [value]="consultasAgendadas" [paginator]="true" [rows]="3">
         <ng-template #list let-consultas>
           <div class="lista-consultas">
             @for (consulta of consultas; track consulta.id) {
               <div class="consulta-card">
+                <div class="avatar-pet" aria-hidden="true">
+                  {{ inicialPet(consulta.pet) }}
+                </div>
                 <div class="informacoes-card">
-                  <div>
+                  <div class="titulo-linha">
                     <strong class="tipo-consulta">
                       {{ consulta.tipoConsulta }}
                     </strong>
@@ -28,8 +30,7 @@
                   </div>
                   <div class="veterinario-pet">
                     <span class="veterinario">
-                      <i class="fa fa-user-doctor"></i
-                      >{{ consulta.veterinario }}
+                      <i class="fa fa-user-doctor"></i>{{ consulta.veterinario }}
                     </span>
                     <span class="pet">
                       <i class="fa fa-paw"></i> {{ consulta.pet }}
@@ -37,14 +38,13 @@
                   </div>
                   <div class="datas">
                     <span>
+                      <i class="fa far fa-calendar-check"></i>
                       Data da Consulta:
-                      {{ consulta.dataConsulta }}
+                      <strong>{{ consulta.dataConsulta }}</strong>
                     </span>
-                    <span>
-                      Solicitada em:
-                      {{
-                        consulta.dataSolicitacao
-                      }}
+                    <span class="data-solicitacao">
+                      <i class="fa far fa-clock"></i>
+                      Solicitada em: {{ consulta.dataSolicitacao }}
                     </span>
                   </div>
                 </div>
@@ -64,16 +64,16 @@
       </p-dataview>
     </p-fieldset>
   }
+
   @if (carregandoPagamentosPendentes) {
     <p-skeleton width="calc(50% - 0.5rem)" height="42.5vh"></p-skeleton>
   } @else {
-    <p-fieldset legend="Pagamentos Pendentes/Atrasados" [toggleable]="false">
-      <p-dataview
-        #dv
-        [value]="pagamentosPendentes"
-        [paginator]="true"
-        [rows]="5"
-      >
+    <p-fieldset
+      legend="Pagamentos Pendentes/Atrasados"
+      [toggleable]="false"
+      class="panel-pagamentos"
+    >
+      <p-dataview #dv [value]="pagamentosPendentes" [paginator]="true" [rows]="5">
         <ng-template #list let-pagamentos>
           <div class="lista-pagamentos">
             @for (pagamento of pagamentos; track pagamento.id) {
@@ -81,7 +81,7 @@
                 [ngClass]="
                   'card-pagamento ' +
                   (pagamento.atrasado
-                    ? ' atrasado'
+                    ? 'atrasado'
                     : pagamento.statusPagamento.toLowerCase())
                 "
               >
@@ -106,13 +106,11 @@
                 </div>
                 <div class="forma-pagamento">
                   <i [class]="iconePagamento(pagamento.tipoPagamento)"></i>
-                  <span>
-                    {{ pagamento.tipoPagamento | titlecase }}
-                  </span>
+                  <span>{{ pagamento.tipoPagamento | titlecase }}</span>
                 </div>
                 <span class="data-limite-pagamento">
-                  <i class="fa far fa-calendar-alt"></i> Limite:
-                  {{ pagamento.dataLimitePagamento }}
+                  <i class="fa far fa-calendar-alt"></i>
+                  Limite: {{ pagamento.dataLimitePagamento }}
                 </span>
                 <p-button
                   label="Acessar Pagamento"
@@ -126,17 +124,22 @@
           </div>
         </ng-template>
         <ng-template #emptymessage>
-          <span class="sem-resultados"
-            >Nenhum pagamento pendente ou atrasado!</span
-          >
+          <span class="sem-resultados">
+            Nenhum pagamento pendente ou atrasado!
+          </span>
         </ng-template>
       </p-dataview>
     </p-fieldset>
   }
+
   @if (carregandoAtendimentosPendentes) {
     <p-skeleton width="calc(50% - 0.5rem)" height="42.5vh"></p-skeleton>
   } @else {
-    <p-fieldset legend="Atendimentos Pendentes" [toggleable]="false">
+    <p-fieldset
+      legend="Atendimentos Pendentes"
+      [toggleable]="false"
+      class="panel-atendimentos"
+    >
       <p-dataview
         #dv
         [value]="atendimentosPendentes"
@@ -149,22 +152,18 @@
               <div class="card-atendimento">
                 <div class="informacoes">
                   <div class="icon">
-                    <i class="fa fas fas fa-headset"></i>
+                    <i class="fa fas fa-headset"></i>
                   </div>
-                  <div>
+                  <div class="conteudo">
                     <div class="informacoes-status">
-                      <p>
-                        {{ atendimento.mensagem }}
-                      </p>
+                      <p>{{ atendimento.mensagem }}</p>
                       <span class="status">
                         {{ atendimento.status | titlecase }}
                       </span>
                     </div>
                     <span class="data-solicitacao">
-                      <i class="fa far fa-clock"></i>Solicitado em:
-                      {{
-                        atendimento.dataSolicitacao
-                      }}
+                      <i class="fa far fa-clock"></i>
+                      Solicitado em: {{ atendimento.dataSolicitacao }}
                     </span>
                   </div>
                 </div>

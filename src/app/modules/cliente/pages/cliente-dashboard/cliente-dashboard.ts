@@ -107,6 +107,14 @@ export class ClienteDashboard implements OnInit {
     this.router.navigate([`/cliente/meus-pagamentos`]);
   }
 
+  /**
+   *
+   * @description Retorna a inicial do nome do pet para exibir no avatar do card
+   */
+  public inicialPet(nome: string): string {
+    return nome?.trim().charAt(0).toUpperCase() || '?';
+  }
+
   public iconePagamento(pagamento: PagamentosPendentesDto): string {
     if (pagamento.tipoPagamento === TipoPagamentoEnum.PIX)
       return 'fa fas fas fas fa-qrcode';
