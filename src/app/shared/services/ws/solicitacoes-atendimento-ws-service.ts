@@ -3,7 +3,7 @@ import { inject, Injectable, NgZone } from '@angular/core';
 import type { SolicitacoesAtendimentosDto } from '../../../modules/atendente/features/chat-atendimento/models/SolicitacoesAtendimentosDto';
 import type { SolicitacaoRemovidaDto } from '../../../modules/atendente/features/chat-atendimento/models/SolicitacaoRemovidaDto';
 import { TokenService } from '../../../core/services/token-service';
-import { environment } from '../../../core/environments/environment-dev';
+import { environment } from '../../../environments/environment';
 import type { StompSubscription } from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
 import { Subject } from 'rxjs';
@@ -34,7 +34,7 @@ export class SolicitacoesAtendimentoWsService {
     const token = this.tokenService.getToken;
 
     this.client = new Client({
-      webSocketFactory: () => new SockJS(`${this.env.api}/ws/chat-atendimento`),
+      webSocketFactory: () => new SockJS(`${this.env.apiUrl}/ws/chat-atendimento`),
       reconnectDelay: 5000,
       connectHeaders: { Authorization: `Bearer ${token}` },
     });

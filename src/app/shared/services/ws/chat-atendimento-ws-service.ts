@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { inject, Injectable, NgZone } from '@angular/core';
-import { environment } from '../../../core/environments/environment-dev';
+import { environment } from '../../../environments/environment';
 import { TokenService } from '../../../core/services/token-service';
 import type { StompSubscription } from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
@@ -45,7 +45,7 @@ export class ChatAtendimentoWsService {
     const token = this.tokenService.getToken;
 
     this.client = new Client({
-      webSocketFactory: () => new SockJS(`${this.env.api}/ws/chat-atendimento`),
+      webSocketFactory: () => new SockJS(`${this.env.apiUrl}/ws/chat-atendimento`),
       reconnectDelay: 5000,
       connectHeaders: { Authorization: `Bearer ${token}` },
     });
