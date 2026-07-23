@@ -1,0 +1,73 @@
+<div class="agenda">
+  <div class="controles">
+    <button
+      type="button"
+      class="nav"
+      (click)="mesAnterior()"
+      aria-label="Mês anterior"
+    >
+      <i class="fa fa-chevron-left"></i>
+    </button>
+    <span class="mes">{{ nomeMes }}</span>
+    <button
+      type="button"
+      class="nav"
+      (click)="proximoMes()"
+      aria-label="Próximo mês"
+    >
+      <i class="fa fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="grade">
+    <div class="cabecalho">
+      @for (dia of diasSemana; track dia) {
+        <span class="dia-semana">{{ dia }}</span>
+      }
+    </div>
+
+    @for (semana of semanas; track $index) {
+      <div class="semana">
+        @for (dia of semana; track dia.data.getTime()) {
+          <div
+            class="celula"
+            [class.fora]="!dia.noMes"
+            [class.hoje]="dia.hoje"
+          >
+            <span class="numero">{{ dia.dia }}</span>
+
+            @if (dia.noMes) {
+              <div class="eventos">
+                @for (consulta of visiveis(dia); track consulta.id) {
+                  <span
+                    class="chip {{ categoria(consulta.tipoConsulta) }}"
+                    [pTooltip]="
+                      consulta.pet +
+                      ' · ' +
+                      consulta.tipoConsulta +
+                      ' — ' +
+                      (consulta.dataHoraConsulta | date: 'dd/MM HH:mm')
+                    "
+                    tooltipPosition="top"
+                  >
+                    {{ consulta.pet }} · {{ consulta.tipoConsulta }}
+                  </span>
+                }
+                @if (restante(dia) > 0) {
+                  <span class="mais">+{{ restante(dia) }}</span>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="legenda">
+    <span><i class="ponto consulta"></i> Consulta / Vacina</span>
+    <span><i class="ponto retorno"></i> Retorno / Banho</span>
+    <span><i class="ponto exame"></i> Exame</span>
+    <span><i class="ponto cirurgia"></i> Cirurgia</span>
+  </div>
+</div>

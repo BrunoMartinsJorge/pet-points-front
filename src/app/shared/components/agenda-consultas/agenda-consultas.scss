@@ -1,0 +1,206 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+
+  .controles {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+    .mes {
+      min-width: 130px;
+      text-align: center;
+      font-weight: 600;
+      color: var(--color-title);
+    }
+
+    .nav {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--color-text);
+      cursor: pointer;
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: var(--card-hover);
+      }
+    }
+  }
+
+  .grade {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    .cabecalho,
+    .semana {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.4rem;
+    }
+
+    .dia-semana {
+      padding: 0 0.25rem 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-sub-text);
+    }
+
+    .celula {
+      position: relative;
+      min-height: 92px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 0.4rem;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      background: var(--card);
+      overflow: hidden;
+
+      .numero {
+        align-self: flex-end;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--color-text);
+      }
+
+      &.fora {
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 6px,
+          var(--color-border) 6px,
+          var(--color-border) 7px
+        );
+        opacity: 0.45;
+
+        .numero {
+          color: var(--color-sub-text);
+        }
+      }
+
+      &.hoje {
+        border-color: var(--color-card-primary);
+        box-shadow: inset 0 0 0 1px var(--color-card-primary);
+      }
+
+      .eventos {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        min-width: 0;
+
+        .chip {
+          padding: 0.15rem 0.4rem;
+          font-size: 0.7rem;
+          border-radius: 4px;
+          border-left: 3px solid var(--cor);
+          background: color-mix(in srgb, var(--cor) 14%, transparent);
+          color: var(--color-title);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          &.consulta {
+            --cor: var(--color-card-primary);
+          }
+          &.retorno {
+            --cor: var(--masculino);
+          }
+          &.exame {
+            --cor: var(--bag-pendente);
+          }
+          &.cirurgia {
+            --cor: var(--feminino);
+          }
+        }
+
+        .mais {
+          padding-left: 0.2rem;
+          font-size: 0.7rem;
+          font-weight: 600;
+          color: var(--color-sub-text);
+        }
+      }
+
+      .adicionar {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1px solid var(--color-card-primary);
+        background: var(--color-card-primary-foreground);
+        color: var(--color-card-primary);
+        cursor: pointer;
+        transition: background 0.15s ease;
+
+        &:hover {
+          background: color-mix(
+            in srgb,
+            var(--color-card-primary) 20%,
+            transparent
+          );
+        }
+      }
+    }
+  }
+
+  .legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--color-text);
+    }
+
+    .ponto {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cor);
+
+      &.consulta {
+        --cor: var(--color-card-primary);
+      }
+      &.retorno {
+        --cor: var(--masculino);
+      }
+      &.exame {
+        --cor: var(--bag-pendente);
+      }
+      &.cirurgia {
+        --cor: var(--feminino);
+      }
+    }
+  }
+}

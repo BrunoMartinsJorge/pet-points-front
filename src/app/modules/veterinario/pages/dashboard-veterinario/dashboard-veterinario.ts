@@ -105,30 +105,6 @@ export class DashboardVeterinario implements OnInit {
     ).length;
   }
 
-  /**
-   * @description Média das avaliações, formatada com vírgula (ex.: "4,0")
-   */
-  public get mediaAvaliacoes(): string {
-    if (!this.avaliacoes.length) return '0,0';
-    const soma = this.avaliacoes.reduce(
-      (total, avaliacao) => total + (avaliacao.pontuacao || 0),
-      0,
-    );
-    return (soma / this.avaliacoes.length).toFixed(1).replace('.', ',');
-  }
-
-  /**
-   * @description Quantidade de estrelas cheias (média arredondada) para exibição
-   */
-  public get estrelasPreenchidas(): number {
-    if (!this.avaliacoes.length) return 0;
-    const soma = this.avaliacoes.reduce(
-      (total, avaliacao) => total + (avaliacao.pontuacao || 0),
-      0,
-    );
-    return Math.round(soma / this.avaliacoes.length);
-  }
-
   private buscarCards(): void {
     this.cards = {
       consultasFinalizadas: 0,

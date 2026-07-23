@@ -313,9 +313,27 @@
       </section>
     }
     @case ("ATENDENTE") {
-      <section class="informacoes-atendente">
+      <ng-container
+        *ngTemplateOutlet="avaliacoesFuncionarioView"
+      ></ng-container>
+    }
+    @case ("VETERINARIO") {
+      <ng-container
+        *ngTemplateOutlet="avaliacoesFuncionarioView"
+      ></ng-container>
+    }
+  }
+
+  <ng-template #avaliacoesFuncionarioView>
+    <section class="informacoes-atendente">
         @if (carregandoConsultasAtendenteVeterinario) {
           <p-skeleton width="calc(75% - 0.5rem)" height="360px"></p-skeleton>
+        } @else if (getTipoUsuario === "VETERINARIO") {
+          <p-fieldset legend="Agenda de Consultas">
+            <app-agenda-consultas
+              [consultas]="consultasAtendenteVeterinario"
+            ></app-agenda-consultas>
+          </p-fieldset>
         } @else {
           <p-fieldset legend="Consultas Aprovadas/Reprovadas">
             <p-dataview
@@ -393,81 +411,45 @@
             <div class="pontuacao">
               @if (rankingAvaliacao !== null) {
                 <div class="card-avaliacoes">
-                  <span>
-                    <h2>{{ rankingAvaliacao.classificacao }} º</h2>
-                    Lugar no ranking de atendimentos avaliados!
-                  </span>
-                  <hr />
-                  <div class="melhor-pior">
-                    <div
-                      class="melhor"
-                      pTooltip="Melhor Avaliação"
-                      tooltipPosition="top"
-                    >
-                      <div class="header">
-                        <h4>
-                          {{ rankingAvaliacao.melhorAvaliacao.pontuacao }}
-                          Ponto(s)
-                        </h4>
-                        <span>
-                          {{ rankingAvaliacao.melhorAvaliacao.enviadoEm }}
+                  @if (rankingAvaliacao.classificacao) {
+                    <div class="banner-ranking">
+                      <div class="medalha">
+                        <i class="fa fas fa-award"></i>
+                      </div>
+                      <div class="texto">
+                        <span class="titulo">
+                          <strong
+                            >{{ rankingAvaliacao.classificacao }}º Lugar</strong
+                          >
+                          no ranking
+                        </span>
+                        <span class="subtitulo">
+                          de atendimentos avaliados!
                         </span>
                       </div>
-                      <hr />
-                      <div class="mensagem">
-                        <p>
-                          {{ rankingAvaliacao.melhorAvaliacao.observacoes }}
-                        </p>
-                      </div>
                     </div>
-                    <div
-                      class="pior"
-                      pTooltip="Pior Avaliação"
-                      tooltipPosition="top"
-                    >
-                      <div class="header">
-                        <h4>
-                          {{ rankingAvaliacao.piorAvaliacao.pontuacao }}
-                          Ponto(s)
-                        </h4>
-                        <span>
-                          {{ rankingAvaliacao.piorAvaliacao.enviadoEm }}
-                        </span>
-                      </div>
-                      <hr />
-                      <div class="mensagem">
-                        <p>
-                          {{ rankingAvaliacao.piorAvaliacao.observacoes }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
+                  }
                   <p-dataview
                     #dv
                     [value]="avaliacoes"
                     [paginator]="true"
-                    [rows]="3"
+                    [rows]="4"
                   >
                     <ng-template #list let-avaliacoes>
                       <div class="lista-avaliacoes">
                         @for (avaliacao of avaliacoes; track avaliacao.id) {
                           <div class="card-avaliacao">
                             <div class="header">
-                              <h4>
-                                {{ rankingAvaliacao.piorAvaliacao.pontuacao }}
-                                Ponto(s)
-                              </h4>
-                              <span>
-                                {{ rankingAvaliacao.piorAvaliacao.enviadoEm }}
+                              <span class="pontos">
+                                <i class="fa fas fa-star"></i>
+                                {{ avaliacao.pontuacao }}
+                                {{
+                                  avaliacao.pontuacao === 1 ? "ponto" : "pontos"
+                                }}
                               </span>
+                              <span class="data">{{ avaliacao.enviadoEm }}</span>
                             </div>
-                            <hr />
-                            <div class="mensagem">
-                              <p>
-                                {{ rankingAvaliacao.piorAvaliacao.observacoes }}
-                              </p>
-                            </div>
+                            <p class="mensagem">{{ avaliacao.observacoes }}</p>
                           </div>
                         }
                       </div>
@@ -492,7 +474,9 @@
           </p-fieldset>
         }
       </section>
-    }
+  </ng-template>
+
+  @switch (getTipoUsuario) {
     @case ("ESTOQUISTA") {
       @if (carregandoMovimentacoesEstoquista) {
         <p-skeleton height="360px"></p-skeleton>

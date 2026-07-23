@@ -1,19 +1,4 @@
 <main>
-  <header class="cabecalho">
-    <div class="saudacao">
-      <span class="overline">PAINEL DO VETERINÁRIO</span>
-      <h1>Olá, Dr. {{ usuario.nome }}</h1>
-      <p>Aqui está o resumo da sua clínica hoje, {{ hoje | date: "dd/MM/yyyy" }}.</p>
-    </div>
-    <div class="usuario-card">
-      <div class="avatar">{{ inicial(usuario.nome) }}</div>
-      <div class="dados">
-        <strong>{{ usuario.nome }}</strong>
-        <span>{{ usuario.cargo }}</span>
-      </div>
-    </div>
-  </header>
-
   <section class="destaques">
     <div class="card-proxima">
       @if (proximaConsulta) {
@@ -75,7 +60,7 @@
       }
     </div>
   </section>
-
+  <hr>
   <section class="cards-metricas">
     <div class="card">
       <div class="icon efetuado"><i class="fas fa-list-check"></i></div>
@@ -106,7 +91,7 @@
       </div>
     </div>
   </section>
-
+  <hr>
   <section class="paineis">
     <p-fieldset legend="Consultas do Dia">
       <div class="abas-filtro">
@@ -175,24 +160,20 @@
     </p-fieldset>
 
     <p-fieldset legend="Minhas Avaliações">
-      <div class="resumo-avaliacoes">
-        <strong class="media">{{ mediaAvaliacoes }}</strong>
-        <div class="detalhe">
-          <div class="estrelas">
-            @for (estrela of [1, 2, 3, 4, 5]; track estrela) {
-              <i
-                class="pi"
-                [class.pi-star-fill]="estrela <= estrelasPreenchidas"
-                [class.pi-star]="estrela > estrelasPreenchidas"
-              ></i>
-            }
+      @if (cards.ranking > 0) {
+        <div class="banner-ranking">
+          <div class="medalha">
+            <i class="fa fas fa-award"></i>
           </div>
-          <span>
-            Baseado em {{ avaliacoes.length }}
-            {{ avaliacoes.length === 1 ? "avaliação" : "avaliações" }}
-          </span>
+          <div class="texto">
+            <span class="titulo">
+              <strong>{{ cards.ranking }}º Lugar</strong>
+              no ranking
+            </span>
+            <span class="subtitulo">de atendimentos avaliados!</span>
+          </div>
         </div>
-      </div>
+      }
 
       <p-dataview
         [value]="avaliacoes"
@@ -205,18 +186,18 @@
         <ng-template let-lista #list>
           <div class="lista-avaliacoes">
             @for (avaliacao of lista; track avaliacao.id) {
-              <div class="avaliacao">
-                <div class="nota">
-                  <strong>{{ avaliacao.pontuacao }}</strong>
-                  <span class="data">{{ avaliacao.avaliadoEm | date: "dd/MM" }}</span>
-                  <span class="data">{{ avaliacao.avaliadoEm | date: "HH:mm" }}</span>
-                </div>
-                <div class="informacoes">
-                  <span class="usuario">
-                    <i class="fa fa-user"></i> {{ avaliacao.cliente }}
+              <div class="card-avaliacao">
+                <div class="header">
+                  <span class="pontos">
+                    <i class="fa fas fa-star"></i>
+                    {{ avaliacao.pontuacao }}
+                    {{ avaliacao.pontuacao === 1 ? "ponto" : "pontos" }}
                   </span>
-                  <p>"{{ avaliacao.observacoes }}"</p>
+                  <span class="data">
+                    {{ avaliacao.avaliadoEm | date: "dd/MM/yyyy - HH:mm" }}
+                  </span>
                 </div>
+                <p class="mensagem">{{ avaliacao.observacoes }}</p>
               </div>
             }
           </div>

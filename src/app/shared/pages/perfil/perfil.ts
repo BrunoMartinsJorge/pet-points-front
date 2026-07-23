@@ -34,6 +34,7 @@ import type { MovimentacoesDto } from '../../../modules/gerente/pages/movimentac
 import { LogsService } from '../../../modules/gerente/pages/logs-sistema/service/logs-service';
 import { MovimentacoesClinicaService } from '../../../modules/gerente/pages/movimentacoes-clinica/service/movimentacoes-clinica-service';
 import { BagLog } from "../../../modules/gerente/pages/logs-sistema/components/bag-log/bag-log";
+import { AgendaConsultas } from '../../components/agenda-consultas/agenda-consultas';
 
 @Component({
   selector: 'app-perfil',
@@ -43,7 +44,8 @@ import { BagLog } from "../../../modules/gerente/pages/logs-sistema/components/b
     ReactiveFormsModule,
     ConfirmDialog,
     BagTipoMovimentacao,
-    BagLog
+    BagLog,
+    AgendaConsultas
 ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './perfil.html',

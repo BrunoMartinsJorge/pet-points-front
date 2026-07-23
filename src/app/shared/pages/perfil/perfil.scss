@@ -321,67 +321,55 @@ main {
           .card-avaliacoes {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 1rem;
 
-            span {
+            .banner-ranking {
               display: flex;
               align-items: center;
-              gap: 0.5rem;
-              font-weight: 600;
+              gap: 1rem;
+              padding: 1rem;
+              border: 1px solid var(--color-border);
+              border-left: 5px solid var(--color-card-secondary);
+              border-radius: 8px;
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0;
+              background: linear-gradient(
+                90deg,
+                var(--bag-pendente-foreground),
+                var(--card)
+              );
 
-              h2 {
-                margin: 0;
-              }
-            }
-
-            .melhor-pior {
-              display: flex;
-              gap: 0.5rem;
-
-              .pior,
-              .melhor {
-                border: 1px solid var(--color-border);
-                background: var(--card);
-                border-radius: 4px;
-                padding: 0.25rem 1rem;
+              .medalha {
                 display: flex;
-                width: 100%;
-                min-width: 100px;
-                gap: 0.5rem;
-                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+                width: 48px;
+                height: 48px;
+                flex-shrink: 0;
+                border-radius: 10px;
+                background: var(--bag-pendente-foreground);
+                border: 1px solid var(--color-card-secondary);
+                color: var(--color-card-secondary);
+                font-size: 1.4rem;
+              }
+
+              .texto {
+                display: flex;
                 flex-direction: column;
-                border-top-left-radius: 0;
-                border-bottom-left-radius: 0;
+                gap: 0.15rem;
 
-                &.melhor {
-                  border-left: 5px solid var(--color-card-primary);
-                }
+                .titulo {
+                  font-size: 1rem;
+                  color: var(--color-title);
 
-                &.pior {
-                  border-left: 5px solid var(--color-danger);
-                }
-
-                .header {
-                  display: flex;
-                  flex-wrap: wrap;
-                  justify-content: space-between;
-
-                  h4 {
-                    margin: 0.25rem;
-                  }
-
-                  span {
-                    font-size: 0.8em;
-                    font-weight: 400;
-                    color: var(--color-text);
+                  strong {
+                    color: var(--color-card-secondary);
                   }
                 }
 
-                .mensagem p {
-                  margin: 0;
-                  font-size: 0.8em;
-                  max-height: 100px;
-                  overflow-y: auto;
+                .subtitulo {
+                  font-size: 0.85rem;
+                  color: var(--color-text);
                 }
               }
             }
@@ -394,46 +382,44 @@ main {
               .card-avaliacao {
                 border: 1px solid var(--color-border);
                 background: var(--card);
-                border-radius: 4px;
-                padding: 0.25rem 1rem;
+                border-radius: 8px;
+                padding: 0.75rem 1rem;
                 display: flex;
-                width: 100%;
-                min-width: 100px;
-                gap: 0.5rem;
-                flex-wrap: wrap;
                 flex-direction: column;
+                gap: 0.4rem;
+                border-left: 5px solid var(--color-card-primary);
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
-
-                &.melhor {
-                  border-left: 5px solid var(--color-card-primary);
-                }
-
-                &.pior {
-                  border-left: 5px solid var(--color-danger);
-                }
 
                 .header {
                   display: flex;
                   flex-wrap: wrap;
+                  align-items: center;
                   justify-content: space-between;
+                  gap: 0.5rem;
 
-                  h4 {
-                    margin: 0.25rem;
+                  .pontos {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.4rem;
+                    font-weight: 600;
+                    color: var(--color-card-secondary);
+
+                    i {
+                      color: var(--dourado);
+                    }
                   }
 
-                  span {
-                    font-size: 0.8em;
-                    font-weight: 400;
+                  .data {
+                    font-size: 0.8rem;
                     color: var(--color-text);
                   }
                 }
 
-                .mensagem p {
+                .mensagem {
                   margin: 0;
-                  font-size: 0.8em;
-                  max-height: 100px;
-                  overflow-y: auto;
+                  font-size: 0.9rem;
+                  color: var(--color-title);
                 }
               }
             }
