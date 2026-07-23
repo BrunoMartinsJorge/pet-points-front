@@ -1,0 +1,70 @@
+.proxima-consulta {
+  padding: 0.75rem;
+  border-radius: 4px;
+  background-color: var(--color-card-primary);
+  color: var(--color-inverted);
+  flex: 1 1 calc(6% - 0.5rem);
+  min-width: 300px;
+  &.vazia {
+    background-color: var(--card);
+    border: 1px solid var(--color-border);
+  }
+
+  .header-badge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+        margin: 0;
+        padding: 0;
+    }
+
+    span.badge {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--card-hover);
+      color: var(--primary);
+      font-size: 1.2rem;
+      border-radius: 16px;
+    }
+  }
+
+  p {
+    margin: 0.5rem 0;
+    font-size: 14px;
+  }
+
+  .footer-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 3rem;
+
+    .infos {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+
+        span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    }
+
+    button {
+        background-color: var(--color-inverted);
+        color: var(--foreground);
+        outline: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+  }
+}

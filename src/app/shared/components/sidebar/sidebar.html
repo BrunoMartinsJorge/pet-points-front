@@ -1,0 +1,81 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<section class="sidebar-element" [class.open]="sidebarIsOpen">
+  <div class="header-sidebar">
+    <div class="logo" (click)="mudarEstadoSidebar()"></div>
+    <span class="title">Pet Points</span>
+  </div>
+
+  <ul class="list-links">
+    @for (
+      routeGroup of listOfRoutes;
+      let i = $index;
+      track routeGroup.groupName
+    ) {
+      @if (routeGroup.routes.length > 0) {
+        @if (routeGroup.groupName) {
+          <span class="group-name">{{ routeGroup.groupName }}</span>
+        }
+        @for (route of routeGroup.routes; let j = $index; track route.path) {
+          @if (route.children && route.children.length > 0) {
+            <li>
+              <a
+                (click)="mudarEstadoSubMenu(i, j)"
+                [routerLinkActive]="['active']"
+                [routerLink]="route.path"
+              >
+                <i [class]="route.data?.icone"></i>
+                <span>{{ route.data?.nome }}</span>
+                <i
+                  class="pi pi-chevron-down arrow"
+                  [class.rotated]="subMenuEstaAberto(i, j)"
+                ></i>
+              </a>
+              <ul class="sub-menu" [class.open]="subMenuEstaAberto(i, j)">
+                @for (subRoute of route.children; track subRoute.path) {
+                  <li>
+                    <a [routerLink]="subRoute.path">
+                      <i [class]="subRoute.data?.icone"></i>
+                      <span>{{ subRoute.data?.nome }}</span>
+                    </a>
+                  </li>
+                }
+              </ul>
+            </li>
+          } @else {
+            <li>
+              <a
+                [routerLink]="route.path"
+                [routerLinkActive]="['active']"
+                pTooltip="{{ route.data?.nome }}"
+              >
+                <i [class]="route.data?.icone"></i>
+                <span>{{ route.data?.nome }}</span>
+              </a>
+            </li>
+          }
+        }
+        @if (i < listOfRoutes.length - 1) {
+          <hr />
+        }
+      }
+    }
+  </ul>
+
+  <div class="user-avatar">
+    <div class="imagem">
+      @if (urlImagem !== "") {
+        <img [src]="urlImagem" alt="Avatar do usuário" />
+      } @else {
+        <div class="sem-imagem">
+          <i class="pi pi-user"></i>
+        </div>
+      }
+    </div>
+    <div class="info-perfil" (click)="acessarPerfil()">
+      <span id="nome">{{ getNomeUsuario.nome }}</span>
+      <span id="tipo">{{ getNomeUsuario.tipo }}</span>
+    </div>
+    <i class="pi pi-sign-out" id="sair-perfil" (click)="sairPerfil()"></i>
+  </div>
+</section>

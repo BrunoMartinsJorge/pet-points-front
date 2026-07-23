@@ -1,0 +1,31 @@
+<p-dialog
+  header="Cancelar Consulta"
+  [visible]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: '35vw' }"
+>
+  <hr />
+  <p class="mensagem-cancelar-consulta">
+    Tem certeza que deseja cancelar essa consulta?
+  </p>
+  <hr />
+  <div class="input-group">
+    <label for="motivoCancelamento">Motivo do cancelamento da consulta</label>
+    <textarea
+      id="motivoCancelamento"
+      rows="5"
+      pTextarea
+      [(ngModel)]="motivoCancelamento"
+    ></textarea>
+    <p-button
+      label="Enviar Cancelamento"
+      icon="fa fa-send"
+      fluid
+      severity="danger"
+      [disabled]="!motivoCancelamento"
+      (click)="confirmarCancelamento()"
+    />
+  </div>
+</p-dialog>

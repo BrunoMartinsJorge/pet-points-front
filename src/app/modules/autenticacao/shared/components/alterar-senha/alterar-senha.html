@@ -1,0 +1,139 @@
+<p-stepper [value]="1" [linear]="true">
+  <p-step-list>
+    <p-step [value]="1">Solicitar Código</p-step>
+    <p-step [value]="2">Verificar Código</p-step>
+    <p-step [value]="3">Alterar Senha</p-step>
+  </p-step-list>
+  <p-step-panels>
+    <p-step-panel [value]="1">
+      <ng-template #content let-activateCallback="activateCallback">
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            grid-gap: 1em;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+          "
+        >
+          <strong style="font-size: 16px"
+            >Para prosseguir, com a alteração, favor adicionar um e-mail e
+            solicitar um código de alteração</strong
+          >
+          <hr />
+          <input
+            type="email"
+            pInputText
+            placeholder="Digite seu e-mail"
+            [(ngModel)]="email"
+          />
+          <hr />
+          <p-button
+            label="Solicitar Código de Alteração"
+            icon="pi pi-send"
+            iconPos="right"
+            severity="success"
+            [disabled]="!emailValido"
+            (onClick)="solicitarCodigoAlteracao(); activateCallback(2)"
+          />
+        </div>
+      </ng-template>
+    </p-step-panel>
+    <p-step-panel [value]="2">
+      <ng-template #content let-activateCallback="activateCallback">
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            grid-gap: 1em;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+          "
+        >
+          <p-inputotp [(ngModel)]="codigoAlteracao" [length]="5" />
+          <div
+            style="
+              display: flex;
+              gap: 1em;
+              flex-wrap: wrap;
+              justify-content: center;
+            "
+          >
+            <p-button
+              [disabled]="codigoAlteracao.length < 5"
+              label="Verificar Código"
+              icon="pi pi-check"
+              iconPos="right"
+              severity="primary"
+              (click)="validarCodigoAlteracao()"
+            />
+            <p-button
+              [disabled]="!codigoValido || codigoAlteracao.length < 5"
+              label="Avançar"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              severity="success"
+              (onClick)="activateCallback(3)"
+            />
+          </div>
+          <span>
+            Não recebeu o código?
+            <a href="javascript:void(0)" (click)="solicitarCodigoAlteracao()"
+              >Reenviar Código</a
+            >
+            ou
+            <a href="javascript:void(0)" (click)="activateCallback(1)"
+              >Alterar E-mail</a
+            >
+          </span>
+        </div>
+      </ng-template>
+    </p-step-panel>
+
+    <p-step-panel [value]="3">
+      <ng-template #content let-activateCallback="activateCallback">
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            grid-gap: 1em;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+          "
+        >
+          <strong style="font-size: 16px"
+            >Digite a nova senha para sua conta</strong
+          >
+          <hr />
+          <p-password
+            [(ngModel)]="novaSenha"
+            placeholder="Digite a nova senha"
+            [toggleMask]="true"
+            [feedback]="false"
+          />
+          <hr />
+          <div style="display: flex; gap: 1em; flex-wrap: wrap; justify-content: center">
+            <p-button
+              label="Não Alterar Senha"
+              icon="pi pi-times"
+              iconPos="right"
+              severity="danger"
+              (click)="resetarFormulario(); activateCallback(1)"
+            />
+            <p-button
+              label="Alterar Senha"
+              icon="pi pi-save"
+              iconPos="right"
+              severity="success"
+              [disabled]="!codigoValido || novaSenha.trim().length < 6"
+              (click)="alterarSenha()"
+            />
+          </div>
+        </div>
+      </ng-template>
+    </p-step-panel>
+  </p-step-panels>
+</p-stepper>

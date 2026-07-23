@@ -1,0 +1,53 @@
+main {
+  padding: 1rem;
+
+  .proxima-consulta-atual {
+    display: flex;
+    gap: 1rem;
+
+    .proxima,
+    .atual {
+      background-color: var(--card);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 0.75rem;
+      flex: 1 1 calc(40% - 5rem);
+
+      &.com-valor {
+        border: none;
+        padding: none !important;
+        background-color: transparent;
+      }
+
+      &:first-child {
+        flex: 1 1 calc(60% - 5rem);
+      }
+
+      .header-badge {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        span {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+
+      .footer-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 3rem;
+
+        span {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          align-items: center;
+        }
+      }
+    }
+  }
+}

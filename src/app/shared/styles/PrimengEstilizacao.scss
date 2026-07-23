@@ -1,0 +1,25 @@
+input,
+.p-button {
+  border-radius: 2px !important;
+}
+
+.p-fieldset,
+.p-password-input {
+  width: 100%;
+}
+
+/* Padronização das bordas/raio do fieldset em todo o app */
+.p-fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+p-paginator {
+  margin-top: 1rem;
+  border-radius: 0 !important;
+}
+
+textarea {
+  resize: vertical;
+  overflow-y: auto;
+}

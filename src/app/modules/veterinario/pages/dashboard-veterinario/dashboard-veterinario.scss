@@ -1,0 +1,463 @@
+$gap: 1rem;
+$radius: 12px;
+$radius-sm: 10px;
+$borda: 1px solid var(--color-border);
+$padding-card: 1rem 1.25rem;
+$fonte-label: 0.75rem;
+$fonte-texto: 0.9rem;
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+  padding: $gap;
+}
+
+.destaques {
+  display: flex;
+  gap: $gap;
+  flex-wrap: wrap;
+
+  .card-proxima {
+    flex: 1 1 58%;
+    min-width: 320px;
+    display: flex;
+    justify-content: space-between;
+    gap: $gap;
+    padding: 1.5rem;
+    border-radius: $radius;
+    background: linear-gradient(135deg, var(--color-card-primary), #05946a);
+    color: #04231a;
+    overflow: hidden;
+
+    .conteudo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+
+      .overline {
+        color: rgba(4, 35, 26, 0.7);
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.5rem;
+      }
+
+      p {
+        margin: 0;
+        color: rgba(4, 35, 26, 0.85);
+        font-size: $fonte-texto;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 0.75rem;
+        font-weight: 600;
+
+        span {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+      }
+    }
+
+    .acoes {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
+      position: relative;
+
+      .icone-decorativo {
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: $radius-sm;
+        font-size: 1.4rem;
+        color: #04231a;
+        background-color: rgba(4, 35, 26, 0.15);
+      }
+    }
+  }
+
+  .card-andamento {
+    flex: 1 1 30%;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.25rem 1.5rem;
+    border: $borda;
+    border-radius: $radius;
+    background-color: var(--card);
+
+    .linha-topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+
+      .pet {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--color-text);
+        font-size: $fonte-texto;
+      }
+    }
+
+    h3 {
+      margin: 0.25rem 0 0;
+      color: var(--color-title);
+    }
+
+    p {
+      margin: 0;
+      color: var(--color-sub-text);
+      font-size: $fonte-texto;
+    }
+
+    .rodape {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: auto;
+      padding-top: 0.75rem;
+
+      .meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: $fonte-texto;
+        color: var(--color-sub-text);
+
+        span {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+      }
+    }
+
+    .vazio {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--color-sub-text);
+
+      i {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+.cards-metricas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gap;
+
+  .card {
+    flex: 1 1 calc(25% - #{$gap});
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    gap: $gap;
+    padding: $padding-card;
+    border: $borda;
+    border-radius: $radius;
+    background-color: var(--card);
+
+    .icon {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: $radius-sm;
+      font-size: 1.4rem;
+      background-color: var(--color-border);
+      color: var(--color-icon);
+
+      &.efetuado {
+        color: var(--aprovado);
+        border: 1px solid var(--aprovado);
+        background-color: var(--aprovado-foreground);
+      }
+
+      &.pendente {
+        color: var(--bag-pendente);
+        border: 1px solid var(--bag-pendente);
+        background-color: var(--bag-pendente-foreground);
+      }
+
+      &.informativo {
+        color: var(--bag-iniciado);
+        border: 1px solid var(--bag-iniciado);
+        background-color: var(--bag-iniciado-foreground);
+      }
+    }
+
+    .infos {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+
+      .titulo {
+        font-size: $fonte-label;
+        color: var(--color-sub-text);
+      }
+
+      .descricao {
+        font-size: $fonte-texto;
+        color: var(--color-text);
+
+        strong {
+          font-size: 1.3rem;
+          color: var(--color-title);
+          margin-right: 0.25rem;
+        }
+      }
+    }
+  }
+}
+
+.abas-filtro {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: $gap;
+
+  button {
+    padding: 0.35rem 0.9rem;
+    font-size: $fonte-texto;
+    font-family: inherit;
+    color: var(--color-text);
+    background-color: transparent;
+    border: $borda;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: var(--card-hover);
+    }
+
+    &.ativo {
+      color: var(--color-card-primary);
+      border-color: var(--color-card-primary);
+      background-color: var(--color-card-primary-foreground);
+      font-weight: 600;
+    }
+  }
+}
+
+.paineis {
+  display: flex;
+  gap: $gap;
+  flex-wrap: wrap;
+
+  p-fieldset {
+    flex: 1 1 calc(65% - #{$gap});
+    min-width: 320px;
+
+    &:last-child {
+      flex: 1 1 calc(35% - #{$gap});
+    }
+
+    ::ng-deep .p-fieldset-legend {
+      border-left: 4px solid var(--color-card-primary);
+      border-radius: 2px;
+      padding-left: 0.6rem;
+    }
+  }
+}
+
+.lista-consultas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .consulta-card {
+    display: flex;
+    align-items: center;
+    gap: $gap;
+    padding: 0.75rem 1rem;
+    border: $borda;
+    border-left: 5px solid var(--color-card-primary);
+    border-radius: $radius-sm;
+    background-color: var(--card);
+    transition: background-color 0.15s ease;
+
+    &.iniciado {
+      border-left-color: var(--bag-iniciado);
+    }
+
+    &.pendente {
+      border-left-color: var(--bag-pendente);
+    }
+
+    &.reprovada,
+    &.cancelado {
+      border-left-color: var(--bag-reprovado);
+    }
+
+    &:hover {
+      background-color: var(--card-hover);
+    }
+
+    .conteudo {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-width: 0;
+
+      .linha-topo {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        strong {
+          color: var(--color-title);
+        }
+
+        .tipo {
+          font-size: $fonte-label;
+          color: var(--color-text);
+          border: $borda;
+          border-radius: 6px;
+          padding: 0.1rem 0.5rem;
+        }
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: $fonte-label;
+        color: var(--color-sub-text);
+
+        span {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+      }
+    }
+  }
+}
+
+.banner-ranking {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+  padding: $padding-card;
+  margin-bottom: $gap;
+  border: $borda;
+  border-left: 5px solid var(--color-card-secondary);
+  border-radius: $radius-sm;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background: linear-gradient(
+    90deg,
+    var(--bag-pendente-foreground),
+    var(--card)
+  );
+
+  .medalha {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--bag-pendente-foreground);
+    border: 1px solid var(--color-card-secondary);
+    color: var(--color-card-secondary);
+    font-size: 1.4rem;
+  }
+
+  .texto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+
+    .titulo {
+      font-size: 1rem;
+      color: var(--color-title);
+
+      strong {
+        color: var(--color-card-secondary);
+      }
+    }
+
+    .subtitulo {
+      font-size: $fonte-texto;
+      color: var(--color-sub-text);
+    }
+  }
+}
+
+.lista-avaliacoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .card-avaliacao {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.75rem 1rem;
+    border: $borda;
+    border-left: 5px solid var(--color-card-primary);
+    border-radius: $radius-sm;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: var(--card);
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+
+      .pontos {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-weight: 600;
+        color: var(--color-card-secondary);
+
+        i {
+          color: var(--dourado);
+        }
+      }
+
+      .data {
+        font-size: 0.8rem;
+        color: var(--color-sub-text);
+      }
+    }
+
+    .mensagem {
+      margin: 0;
+      font-size: $fonte-texto;
+      color: var(--color-title);
+    }
+  }
+}

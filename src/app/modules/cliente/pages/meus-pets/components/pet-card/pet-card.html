@@ -1,0 +1,27 @@
+@if (pet !== null) {
+  <div [ngClass]="'card ' + pet.status.toLowerCase()">
+    <app-imagem
+      [urlImagem]="getUrlImagem(pet)"
+      [alt]="pet.nome"
+      [width]="'100'"
+      [height]="'100'"
+      [preview]="true"
+      [imagemRedonda]="true"
+    ></app-imagem>
+    <div class="info">
+      <div>
+        <strong>{{ pet.nome }} - {{ pet.raca }}</strong>
+        <app-genero-bag [genero]="pet.genero"></app-genero-bag>
+        <span [ngClass]="'status ' + pet.status.toLowerCase()">{{
+          pet.status === "A" ? "Ativo" : "Desativado"
+        }}</span>
+        <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
+      </div>
+      <hr />
+      <div>
+        <span>Nascido em {{ pet.dataNascimento | date: "dd/MM/yyyy" }}</span>
+      </div>
+    </div>
+    <p-button icon="pi pi-eye" (click)="acessarPet()" />
+  </div>
+}

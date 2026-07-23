@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import "primeicons/primeicons.css";
+@import url("app/shared/styles/ThemesCollors.scss");
+@import url("app/shared/styles/PrimengEstilizacao.scss");
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+  background-color: var(--background);
+}
+
+body {
+  overflow-x: hidden !important;
+  width: 100vw;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 0.5em;
+  margin-bottom: 1em;
+}
+
+span.sem-resultados {
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  flex: 1;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-fieldset {
+  display: flex;
+  align-items: center;
+  grid-gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+hr {
+  border: none;
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+
+// div.carteirinha {
+//   width: 420px;
+//   height: 520px;
+//   border: 1px solid #ddd;
+
+//   .lateral {
+//     width: 40px;
+//     background-color: #0c6369;
+//     color: #fff;
+//     text-align: center;
+//     vertical-align: middle;
+//     font-weight: bold;
+//     font-size: 12px;
+//     letter-spacing: 2px;
+//   }
+
+//   .titulo-rotacionado {
+//     writing-mode: vertical-rl;
+//     transform: rotate(180deg);
+//   }
+
+//   .pet-info {
+//     padding: 10px;
+//     background: #fafafa;
+//   }
+
+//   .pet-foto {
+//     text-align: center;
+//     padding: 10px;
+//     background: #e9eef0;
+//   }
+
+//   .pet-foto img {
+//     width: 150px;
+//     height: 150px;
+//   }
+
+//   .infos {
+//     margin-top: 10px;
+//     border: 1px solid #ddd;
+//     background: #fff;
+//   }
+
+//   .section-title {
+//     background: #ffffff;
+//     color: #0c6369;
+//     font-weight: bold;
+//     font-size: 11px;
+//     padding: 4px;
+//     border-bottom: 1px solid #ddd;
+//   }
+
+//   .data {
+//     width: 100%;
+//     border-bottom: 1px dashed #eee;
+//   }
+
+//   .data td {
+//     padding: 4px 6px;
+//     font-size: 13px;
+//   }
+
+//   .label {
+//     font-weight: bold;
+//     color: #333;
+//     width: 40%;
+//   }
+
+//   .value {
+//     color: #666;
+//   }
+// }
+
+.loading {
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  flex-direction: column;
+  gap: 0.5rem;
+}

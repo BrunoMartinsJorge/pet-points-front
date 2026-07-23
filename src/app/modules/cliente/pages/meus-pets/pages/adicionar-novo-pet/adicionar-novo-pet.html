@@ -1,0 +1,109 @@
+<main>
+  <section>
+    @if (petForm) {
+      <form [formGroup]="petForm">
+        <p-fieldset legend="Informações Gerais" [toggleable]="false">
+          <div class="info-gerais">
+            <input
+              type="text"
+              placeholder="Nome do Pet"
+              formControlName="nome"
+              pInputText
+            />
+            <p-select
+              formControlName="tipo"
+              [options]="petOpcoes"
+              appendTo="body"
+              (onChange)="mudarTipoPetSelecionado($event.value)"
+            ></p-select>
+            <input
+              type="text"
+              placeholder="Raça"
+              formControlName="raca"
+              pInputText
+            />
+            <p-select
+              [options]="generoOpcoes"
+              formControlName="sexo"
+              appendTo="body"
+              (onChange)="mudarSexoPetSelecionado($event.value)"
+            ></p-select>
+            <p-datepicker
+              placeholder="Data de Nascimento"
+              formControlName="dataNascimento"
+              dateFormat="dd/mm/yy"
+              appendTo="body"
+            />
+          </div>
+        </p-fieldset>
+        <p-fieldset legend="Informações Adicionais" [toggleable]="false">
+          <div class="info-adicionais">
+            <textarea
+              pInputTextarea
+              placeholder="Observações/Problemas de saúde"
+              formControlName="observacoes"
+              rows="5"
+              cols="30"
+            ></textarea>
+          </div>
+        </p-fieldset>
+        <p-fieldset legend="Imagen do Pet" [toggleable]="false">
+          <div class="upload-container">
+            <p-fileupload
+              #fu
+              mode="basic"
+              chooseLabel="Selecionar Foto"
+              chooseIcon="pi pi-upload"
+              [multiple]="false"
+              name="demo[]"
+              [fileLimit]="1"
+              accept="image/*"
+              maxFileSize="1000000"
+              (onSelect)="carregarArquivo($event)"
+            >
+              <ng-template #empty>
+                <div>Faça o upload da foto aqui</div>
+              </ng-template>
+            </p-fileupload>
+          </div>
+        </p-fieldset>
+      </form>
+      <p-button
+        severity="primary"
+        label="Cadastrar Pet"
+        icon="fa-solid fa-paw"
+        [style]="{ width: '100%' }"
+        [disabled]="petForm.invalid"
+        (onClick)="cadastrarPet()"
+      />
+    }
+  </section>
+  <section
+    id="banner-pet"
+    [class]="
+      petForm
+        ? petForm.get('sexo')?.value === 'M'
+          ? 'masculino'
+          : 'feminino'
+        : ''
+    "
+  >
+    <div
+      id="pet-item"
+      [class]="
+        petForm
+          ? petForm.get('sexo')?.value === 'M'
+            ? 'masculino'
+            : 'feminino'
+          : ''
+      "
+    >
+      <i
+        id="icon-pet"
+        [class]="getIconePorTipoPet"
+        [class.animate]="animateIcon"
+        (animationend)="animateIcon = false"
+      ></i>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,181 @@
+<main>
+  @if (carregandoConsultasAgendadas) {
+    <p-skeleton width="100%" height="42.5vh"></p-skeleton>
+  } @else {
+    <p-fieldset
+      legend="Consultas Agendadas"
+      [toggleable]="false"
+      class="panel-consultas"
+    >
+      <p-dataview #dv [value]="consultasAgendadas" [paginator]="true" [rows]="3">
+        <ng-template #list let-consultas>
+          <div class="lista-consultas">
+            @for (consulta of consultas; track consulta.id) {
+              <div class="consulta-card">
+                <div class="avatar-pet" aria-hidden="true">
+                  {{ inicialPet(consulta.pet) }}
+                </div>
+                <div class="informacoes-card">
+                  <div class="titulo-linha">
+                    <strong class="tipo-consulta">
+                      {{ consulta.tipoConsulta }}
+                    </strong>
+                    <span
+                      [ngClass]="
+                        'status-consulta ' + consulta.status.toLowerCase()
+                      "
+                    >
+                      {{ consulta.status | titlecase }}
+                    </span>
+                  </div>
+                  <div class="veterinario-pet">
+                    <span class="veterinario">
+                      <i class="fa fa-user-doctor"></i>{{ consulta.veterinario }}
+                    </span>
+                    <span class="pet">
+                      <i class="fa fa-paw"></i> {{ consulta.pet }}
+                    </span>
+                  </div>
+                  <div class="datas">
+                    <span>
+                      <i class="fa far fa-calendar-check"></i>
+                      Data da Consulta:
+                      <strong>{{ consulta.dataConsulta }}</strong>
+                    </span>
+                    <span class="data-solicitacao">
+                      <i class="fa far fa-clock"></i>
+                      Solicitada em: {{ consulta.dataSolicitacao }}
+                    </span>
+                  </div>
+                </div>
+                <p-button
+                  label="Ver"
+                  icon="fa fa-eye"
+                  severity="secondary"
+                  (click)="acessarConsulta(consulta)"
+                />
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhuma consulta agendada!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  }
+
+  @if (carregandoPagamentosPendentes) {
+    <p-skeleton width="calc(50% - 0.5rem)" height="42.5vh"></p-skeleton>
+  } @else {
+    <p-fieldset
+      legend="Pagamentos Pendentes/Atrasados"
+      [toggleable]="false"
+      class="panel-pagamentos"
+    >
+      <p-dataview #dv [value]="pagamentosPendentes" [paginator]="true" [rows]="5">
+        <ng-template #list let-pagamentos>
+          <div class="lista-pagamentos">
+            @for (pagamento of pagamentos; track pagamento.id) {
+              <div
+                [ngClass]="
+                  'card-pagamento ' +
+                  (pagamento.atrasado
+                    ? 'atrasado'
+                    : pagamento.statusPagamento.toLowerCase())
+                "
+              >
+                <div class="status-valor">
+                  <span
+                    [ngClass]="
+                      'status-pagamento ' +
+                      (pagamento.atrasado
+                        ? 'atrasado'
+                        : pagamento.statusPagamento.toLowerCase())
+                    "
+                  >
+                    {{
+                      pagamento.atrasado
+                        ? "Atrasado"
+                        : (pagamento.statusPagamento | titlecase)
+                    }}
+                  </span>
+                  <span class="valor">
+                    {{ pagamento.valor | currency: "BRL" }}
+                  </span>
+                </div>
+                <div class="forma-pagamento">
+                  <i [class]="iconePagamento(pagamento.tipoPagamento)"></i>
+                  <span>{{ pagamento.tipoPagamento | titlecase }}</span>
+                </div>
+                <span class="data-limite-pagamento">
+                  <i class="fa far fa-calendar-alt"></i>
+                  Limite: {{ pagamento.dataLimitePagamento }}
+                </span>
+                <p-button
+                  label="Acessar Pagamento"
+                  icon="fa fa-eye"
+                  (click)="acessarPagamento(pagamento)"
+                  [style]="{ width: '100%' }"
+                  severity="secondary"
+                />
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">
+            Nenhum pagamento pendente ou atrasado!
+          </span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  }
+
+  @if (carregandoAtendimentosPendentes) {
+    <p-skeleton width="calc(50% - 0.5rem)" height="42.5vh"></p-skeleton>
+  } @else {
+    <p-fieldset
+      legend="Atendimentos Pendentes"
+      [toggleable]="false"
+      class="panel-atendimentos"
+    >
+      <p-dataview
+        #dv
+        [value]="atendimentosPendentes"
+        [paginator]="true"
+        [rows]="3"
+      >
+        <ng-template #list let-atendimentos>
+          <div class="lista-atendimentos">
+            @for (atendimento of atendimentos; track atendimento.id) {
+              <div class="card-atendimento">
+                <div class="informacoes">
+                  <div class="icon">
+                    <i class="fa fas fa-headset"></i>
+                  </div>
+                  <div class="conteudo">
+                    <div class="informacoes-status">
+                      <p>{{ atendimento.mensagem }}</p>
+                      <span class="status">
+                        {{ atendimento.status | titlecase }}
+                      </span>
+                    </div>
+                    <span class="data-solicitacao">
+                      <i class="fa far fa-clock"></i>
+                      Solicitado em: {{ atendimento.dataSolicitacao }}
+                    </span>
+                  </div>
+                </div>
+                <p-button icon="fa fa-eye" severity="secondary" />
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhum atendimento pendente!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  }
+</main>

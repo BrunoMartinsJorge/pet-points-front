@@ -1,0 +1,34 @@
+@if (rota) {
+  <header class="header-page">
+    <div class="descricao-pagina">
+      <h2>
+        {{ rota.title }}
+      </h2>
+      <p>
+        {{ rota.data?.descricao }}
+      </p>
+    </div>
+    <div class="input-tema">
+      <p-toggleswitch [(ngModel)]="checked" (onChange)="alterarTema()">
+        <ng-template #handle let-checked="checked">
+          <i
+            [ngClass]="[
+              '!text-xs',
+              'fa-solid ',
+              checked ? 'fa-sun' : 'fa-moon',
+            ]"
+          ></i>
+        </ng-template>
+      </p-toggleswitch>
+      @if (rota.data?.voltar) {
+        <p-button
+          icon="pi pi-arrow-left"
+          (click)="voltar()"
+          label="Voltar"
+          severity="danger"
+        ></p-button>
+      }
+      <app-notificacoes-pop></app-notificacoes-pop>
+    </div>
+  </header>
+}

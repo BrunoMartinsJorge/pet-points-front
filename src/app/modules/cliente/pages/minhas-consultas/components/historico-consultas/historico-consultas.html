@@ -1,0 +1,118 @@
+<section class="consultas">
+  @if (carregando) {
+    <div class="header-section">
+      <div class="info">
+        <p-skeleton width="35%" height="25px"></p-skeleton>
+        <p-skeleton width="50%"></p-skeleton>
+      </div>
+      <div class="filtros">
+        <p-skeleton width="200px" height="25px"></p-skeleton>
+        <div class="tipos">
+          <p-skeleton width="75px" height="25px"></p-skeleton>
+          <p-skeleton width="75px" height="25px"></p-skeleton>
+          <p-skeleton width="75px" height="25px"></p-skeleton>
+          <p-skeleton width="75px" height="25px"></p-skeleton>
+        </div>
+      </div>
+    </div>
+    <div class="lista-consultas">
+      <p-skeleton width="calc(50% - 1rem)" height="200px"></p-skeleton>
+      <p-skeleton width="calc(50% - 1rem)" height="200px"></p-skeleton>
+      <p-skeleton width="calc(50% - 1rem)" height="200px"></p-skeleton>
+      <p-skeleton width="calc(50% - 1rem)" height="200px"></p-skeleton>
+    </div>
+  } @else {
+    <div class="header-section">
+      <div class="info">
+        <h2>Meu Histórico de Consultas</h2>
+        <p>Histórico de consultas e solicitações pendentes</p>
+      </div>
+      <div class="filtros">
+        <p-select
+          placeholder="Buscar Consulta por Pet"
+          filter
+          [options]="petsParaFiltro"
+          [(ngModel)]="petFiltro"
+          optionLabel="label"
+          optionValue="value"
+          appendTo="body"
+          emptyMessage="Nenhum pet encontrado!"
+          emptyFilterMessage="Nenhum pet encontrado!"
+          filterPlaceholder="Filtre suas consultas por seus Pets"
+          [showClear]="true"
+          (onChange)="filtrar()"
+        />
+        <p-selectbutton
+          [(ngModel)]="statusFiltro"
+          [options]="statusOpcoes"
+          (onChange)="filtrar()"
+        />
+      </div>
+    </div>
+
+    <p-dataview [value]="consultasFiltradas" [rows]="4" [paginator]="true">
+      <ng-template #list let-consultas>
+        <div class="lista-consultas">
+          @for (consulta of consultas; track consulta.id) {
+            <div class="consulta-card">
+              <div class="header-card">
+                <div class="infos">
+                  <div class="iniciais">{{ pegarIniciais(consulta.petConsulta) }}</div>
+                  <div class="base">
+                    <h4>{{ consulta.petConsulta }}</h4>
+                    <p>{{ consulta.tipoConsulta }}</p>
+                  </div>
+                </div>
+                <app-bag-status-consulta
+                  [status]="consulta.statusConsulta"
+                ></app-bag-status-consulta>
+              </div>
+
+              <div class="card-body">
+                <div class="info">
+                  <span class="label">Data e Horário</span>
+                  <strong class="data">
+                    {{ consulta.dataHoraConsulta | date: "dd/MM/yyyy - HH:mm" }}
+                  </strong>
+                </div>
+                <div class="info">
+                  <span class="label">Profissional</span>
+                  <strong class="data">{{ consulta.veterinarioConsulta }}</strong>
+                </div>
+              </div>
+
+              <div class="acoes">
+                <button (click)="selecionar.emit(consulta)">
+                  Acessar consulta
+                  <i class="fa fas fa-angle-right"></i>
+                </button>
+                @if (podeCancelar(consulta.statusConsulta)) {
+                  <button class="cancelar-consulta" (click)="cancelar.emit(consulta)">
+                    Cancelar consulta
+                    <i class="fa fas fa-times"></i>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </ng-template>
+
+      <ng-template #emptymessage>
+        <span class="sem-resultados">
+          Você ainda não possui nenhuma consulta registrada!
+        </span>
+      </ng-template>
+
+      <ng-template #paginatorleft>
+        <p-button
+          label="Solicitar Consulta"
+          icon="fa fa-plus"
+          severity="success"
+          rounded="true"
+          (click)="solicitar.emit()"
+        />
+      </ng-template>
+    </p-dataview>
+  }
+</section>

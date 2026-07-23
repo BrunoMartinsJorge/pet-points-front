@@ -1,0 +1,107 @@
+<p-toast></p-toast>
+<main>
+  <section class="proxima-consulta-atual">
+    @if (carregandoProximaConsulta) {
+      <div class="proxima">
+        <div class="header-badge">
+          <span>
+            <p-skeleton width="125px" height="20px"></p-skeleton>
+            <p-skeleton width="250px" height="30px"></p-skeleton>
+          </span>
+          <p-skeleton width="50px" height="50px"></p-skeleton>
+        </div>
+        <p><p-skeleton width="70%" height="25px"></p-skeleton></p>
+        <div class="footer-card">
+          <span>
+            <p-skeleton width="100px" height="25px"></p-skeleton>
+            <p-skeleton width="100px" height="25px"></p-skeleton>
+            <p-skeleton width="100px" height="25px"></p-skeleton>
+          </span>
+          <p-skeleton width="100px" height="25px"></p-skeleton>
+        </div>
+      </div>
+    } @else {
+      @if (consultaAtual) {
+        <app-proxima-consulta-cliente
+          pTooltip="Próxima Consulta"
+          tooltipPosition="top"
+          [style]="{ width: '100%' }"
+          [proximaConsulta]="consultaAtual"
+          (verDetalhes)="selecionarConsulta(consultaAtual)"
+        ></app-proxima-consulta-cliente>
+      } @else {
+        <div class="proxima">
+          <span class="sem-resultados"
+            >Você não possui outra consulta agendada!</span
+          >
+        </div>
+      }
+    }
+
+    @if (carregandoConsultaAtual) {
+      <div class="atual">
+        <div class="header-badge">
+          <span>
+            <p-skeleton width="125px" height="20px"></p-skeleton>
+            <p-skeleton width="250px" height="30px"></p-skeleton>
+          </span>
+          <p-skeleton width="50px" height="50px"></p-skeleton>
+        </div>
+        <p><p-skeleton width="30%" height="25px"></p-skeleton></p>
+        <div class="footer-card">
+          <p-skeleton width="100%" height="25px"></p-skeleton>
+        </div>
+      </div>
+    } @else {
+      @if (consultaAtual) {
+        <div class="atual">
+          <app-consulta-atual-cliente
+            pTooltip="Consulta Atual"
+            tooltipPosition="top"
+            [consultaAtual]="consultaAtual"
+            [style]="{ width: '100%' }"
+            (verDetalhes)="selecionarConsulta(consultaAtual)"
+          ></app-consulta-atual-cliente>
+        </div>
+      } @else {
+        <div class="atual">
+          <span class="sem-resultados">Você não possui nenhuma iniciada!</span>
+        </div>
+      }
+    }
+  </section>
+
+  <hr />
+
+  <app-cards-resumo-consultas
+    [cards]="cards"
+    [carregando]="carregandoInformacoesCards"
+  ></app-cards-resumo-consultas>
+
+  <hr />
+
+  <app-historico-consultas
+    [consultas]="historicoConsultas"
+    [carregando]="carregandoHistoricoConsultas"
+    (selecionar)="selecionarConsulta($event)"
+    (cancelar)="abrirCancelamento($event)"
+    (solicitar)="abrirAgendamento()"
+  ></app-historico-consultas>
+</main>
+
+<app-dialog-detalhes-consulta
+  [(visible)]="visibilidadeDetalhes"
+  [consulta]="consultaSelecionada"
+  (atualizado)="aoAtualizarConsultas()"
+></app-dialog-detalhes-consulta>
+
+<app-dialog-agendar-consulta
+  [(visible)]="visibilidadeAgendamento"
+  (agendado)="aoAtualizarConsultas()"
+></app-dialog-agendar-consulta>
+
+<app-dialog-cancelar-consulta
+  [(visible)]="visibilidadeCancelamento"
+  [consulta]="consultaSelecionada"
+  (cancelado)="aoAtualizarConsultas()"
+></app-dialog-cancelar-consulta>

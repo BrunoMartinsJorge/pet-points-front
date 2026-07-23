@@ -1,0 +1,151 @@
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  .input-group {
+    margin: 0;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 0.75rem 0;
+  }
+
+  section.informacoes-pet {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .informacoes {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    div.input-group {
+      flex: 1 1 25%;
+    }
+
+    textarea {
+      height: 120px;
+      resize: none;
+    }
+
+    .acoes-pet {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  section#informacoes-adicionais {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    p-fieldset {
+      min-width: 250px;
+
+      &:nth-child(1) {
+        flex: 1 1 300px;
+
+        .tutor-card {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .imagem-tutor {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+            border-radius: 12px;
+            color: var(--color-sub-text);
+            background-color: var(--color-border);
+
+            &::before {
+              content: "\f007";
+              font-family: "Font Awesome 6 Free", "FontAwesome";
+              font-weight: 900;
+              font-size: 2.5rem;
+            }
+          }
+
+          .informacoes-tutor {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+          }
+        }
+      }
+
+      &:nth-child(2) {
+        flex: 1 1 700px;
+
+        div.lista-consultas {
+          display: flex;
+          flex-wrap: wrap;
+          max-height: 500px;
+          overflow-y: auto;
+          gap: 1rem;
+
+          div.consulta-card {
+            cursor: pointer;
+            flex: 1 1 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--color-border);
+            justify-content: center;
+            border-radius: 4px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: 5px solid var(--color-card-primary);
+
+            &:nth-child(even) {
+              border-left: 5px solid var(--color-card-secondary);
+            }
+
+            hr {
+              margin: 0.25rem 0;
+            }
+
+            .body-card {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 1rem;
+              justify-content: space-between;
+
+              span.tipo-consulta {
+                font-size: 0.8rem;
+                font-weight: 600;
+                border: 1px solid var(--color-border);
+                border-radius: 4px;
+                padding: 0.25rem 0.5rem;
+              }
+            }
+
+            div span.solicitado-em {
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep .p-fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background-color: var(--card);
+
+  .p-fieldset-legend {
+    color: var(--color-title);
+    font-weight: 600;
+  }
+}

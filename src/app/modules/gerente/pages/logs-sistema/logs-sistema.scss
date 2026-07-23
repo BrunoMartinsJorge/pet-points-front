@@ -1,0 +1,19 @@
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 1em;
+
+    section.filtros {
+        display: flex;
+        flex-wrap: wrap;
+        grid-gap: 1em;
+    }
+
+    .btns {
+        display: flex;
+        flex-wrap: wrap;
+        grid-gap: 1em;
+        align-items: center;
+    }
+}

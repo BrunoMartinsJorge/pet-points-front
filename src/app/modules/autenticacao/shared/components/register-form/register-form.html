@@ -1,0 +1,177 @@
+<main>
+  <div class="logo">
+    <span class="img-logo">
+      <i class="fa fa-paw"></i>
+    </span>
+    <h3>Pet Points</h3>
+  </div>
+  <h2>
+    Bem-vindo ao <span>Pet Points!</span> Registe-se para<br />
+    criar sua conta.
+  </h2>
+
+  <div class="step-indicators">
+    <div [ngClass]="'step-indicator ' + (etapa >= 1 ? 'active' : '')">
+      <span class="step-number">1</span>
+      <span class="step-label">Dados de Login</span>
+    </div>
+    <div class="step-line" [ngClass]="etapa >= 2 ? 'active' : ''"></div>
+    <div [ngClass]="'step-indicator ' + (etapa >= 2 ? 'active' : '')">
+      <span class="step-number">2</span>
+      <span class="step-label">Informações Pessoais</span>
+    </div>
+  </div>
+
+  <form [formGroup]="registroForm">
+    @if (etapa === 1) {
+      <div class="form-content">
+        <div class="input-group">
+          <label for="email">E-mail</label>
+          <input
+            pInputText
+            type="email"
+            formControlName="email"
+            id="email"
+            placeholder="Digite seu e-mail"
+          />
+        </div>
+        <div class="input-group">
+          <label for="password">Senha</label>
+          <p-password
+            id="password"
+            formControlName="password"
+            placeholder="Digite sua senha"
+            [toggleMask]="true"
+            [feedback]="false"
+          />
+        </div>
+        <div class="input-group">
+          <label for="confirmPassword">Confirmar Senha</label>
+          <p-password
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Digite sua senha novamente"
+            [toggleMask]="true"
+            [feedback]="false"
+          />
+        </div>
+      </div>
+    } @else if (etapa === 2) {
+      <div class="form-content">
+        <div class="input-group">
+          <label for="nome">Nome Completo</label>
+          <input
+            pInputText
+            type="text"
+            formControlName="nome"
+            id="nome"
+            placeholder="Digite seu nome completo"
+          />
+        </div>
+        <div class="input-group">
+          <label for="genero">Gênero</label>
+          <p-select
+            id="genero"
+            formControlName="genero"
+            [options]="generos"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione seu gênero"
+          />
+        </div>
+        <div class="input-group">
+          <label for="cpf">CPF</label>
+          <input
+            pInputText
+            type="text"
+            formControlName="cpf"
+            id="cpf"
+            placeholder="Digite seu CPF"
+          />
+        </div>
+        <div class="input-group">
+          <label for="telefone">Telefone</label>
+          <input
+            pInputText
+            type="text"
+            formControlName="telefone"
+            id="telefone"
+            placeholder="Digite seu telefone"
+          />
+        </div>
+        <div class="input-group">
+          <label for="dataNascimento">Data de Nascimento</label>
+          <p-datepicker
+            [showTime]="false"
+            [inputStyle]="{ width: '100%' }"
+            id="dataNascimento"
+            formControlName="dataNascimento"
+            [showIcon]="true"
+            [dateFormat]="'dd/mm/yy'"
+            placeholder="Selecione sua data de nascimento"
+            [maxDate]="dataMaxima"
+          />
+        </div>
+        <div class="input-group">
+          <label for="foto">Foto de Perfil</label>
+          <p-fileupload
+            #fu
+            mode="basic"
+            [chooseLabel]="
+              registroForm.get('foto')?.value
+                ? 'Alterar Foto'
+                : 'Selecionar Foto'
+            "
+            chooseIcon="pi pi-upload"
+            [multiple]="false"
+            accept="image/*"
+            maxFileSize="1000000"
+            (onSelect)="carregarArquivo($event)"
+          />
+          @if (registroForm.get('foto')?.value) {
+            <span class="arquivo-selecionado">
+              {{ registroForm.get('foto')?.value.name }}
+            </span>
+          } @else {
+            <span class="arquivo-vazio">Nenhum arquivo selecionado</span>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="form-actions">
+      @if (etapa === 1) {
+        <p-button
+          label="Avançar"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          severity="primary"
+          (click)="etapa = 2"
+          [disabled]="!dadosLoginValidos"
+          [style]="{ width: '100%' }"
+        />
+      } @else if (etapa === 2) {
+        <p-button
+          icon="pi pi-arrow-left"
+          label="Voltar"
+          severity="secondary"
+          (click)="etapa = 1"
+        />
+        <p-button
+          icon="pi pi-user-plus"
+          label="Registrar-se"
+          severity="primary"
+          (click)="registrarUsuario()"
+          iconPos="right"
+          [disabled]="
+            !dadosPessoaisValidos || carregandoRegistro || !dadosLoginValidos
+          "
+        />
+      }
+    </div>
+  </form>
+
+  <p class="login-link">
+    Já tenho conta · <span (click)="logarUsuario()" [style.cursor]="!carregandoRegistro ? 'pointer' : 'not-allowed'">Login</span>
+  </p>
+</main>

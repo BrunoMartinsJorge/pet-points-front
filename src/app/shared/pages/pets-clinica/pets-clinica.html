@@ -1,0 +1,135 @@
+<main>
+  <p-fieldset legend="Filtros" [toggleable]="false">
+    <div class="filtros">
+      <div class="inputs">
+        <div class="input-group">
+          <label for="nome">Nome do Pet</label>
+          <input
+            [(ngModel)]="filtros.nome"
+            type="text"
+            pInputText
+            id="nome"
+            placeholder="Digite o nome do pet"
+            (input)="filtrarPets()"
+            [disabled]="carregandoPets"
+          />
+        </div>
+        <div class="input-group">
+          <label for="tipo">Tipo</label>
+          <p-select
+            appendTo="body"
+            [(ngModel)]="filtros.tipo"
+            placeholder="Selecione o tipo do pet"
+            [options]="tipoAnimalOpcoes"
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="filtrarPets()"
+            [disabled]="carregandoPets"
+          >
+          </p-select>
+        </div>
+        <div class="input-group">
+          <label for="genero">Gênero</label>
+          <p-select
+            appendTo="body"
+            [(ngModel)]="filtros.genero"
+            placeholder="Selecione o gênero do pet"
+            [options]="generosOpcoes"
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="filtrarPets()"
+            [disabled]="carregandoPets"
+          >
+          </p-select>
+        </div>
+        <div class="input-group">
+          <label for="genero">Tutor</label>
+          <p-select
+            appendTo="body"
+            [(ngModel)]="filtros.idTutor"
+            placeholder="Selecione um tutor"
+            [options]="tutores"
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="filtrarPets()"
+            [disabled]="
+              carregandoPets || carregandoTutores || tutores.length === 0
+            "
+          >
+          </p-select>
+        </div>
+      </div>
+      <div class="btns">
+        <p-button
+          label="Limpar Filtros"
+          severity="danger"
+          icon="fa fa-eraser"
+          (click)="limparFiltros()"
+          [disabled]="carregandoPets"
+        />
+        <p-button
+          [label]="
+            carregandoRelatorio ? 'Gerando Relatório...' : 'Gerar Relatório'
+          "
+          severity="success"
+          [icon]="carregandoRelatorio ? 'pi pi-spin pi-spinner' : 'fa fa-file'"
+          (click)="gerarRelatorio()"
+          [disabled]="carregandoPets || carregandoRelatorio"
+        />
+      </div>
+    </div>
+  </p-fieldset>
+  <hr />
+  @if (carregandoPets) {
+    <p-skeleton height="450px"></p-skeleton>
+  } @else {
+    <p-fieldset legend="Pets da Clinica" [toggleable]="false">
+      <p-dataview
+        [value]="petsFiltrados"
+        [style]="{ width: '100%' }"
+        [rows]="5"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords}"
+        [rowsPerPageOptions]="[10, 20, 30]"
+      >
+        <ng-template #list let-items>
+          <section class="lista-pets">
+            @for (pet of items; track pet.id) {
+              <div [class]="'card-pets ' + pet.genero.toLowerCase()">
+                <div class="imagem-pet"></div>
+                <div class="informacoes">
+                  <div class="header">
+                    <h3>{{ pet.nome }}</h3>
+                    <strong
+                      ><i class="fa fa-user"></i>{{ pet.tutor.nome }}</strong
+                    >
+                  </div>
+                  <div class="outras">
+                    <app-genero-bag [genero]="pet.genero"></app-genero-bag>
+                    <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
+                    <span
+                      >Registrado em
+                      {{ pet.registradoEm | date: "dd/MM/yyyy" }}</span
+                    >
+                  </div>
+                </div>
+                <button
+                  pButton
+                  [severity]="'secondary'"
+                  icon="fa fa-paw"
+                  (click)="verDetalhesPet(pet.id)"
+                >
+                  Acessar Pet
+                </button>
+              </div>
+            }
+          </section>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhum pet encontrado!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  }
+</main>

@@ -1,0 +1,208 @@
+<main>
+  @if (carregandoDetalhesPet) {
+    <p-skeleton width="100%" height="350px"></p-skeleton>
+  } @else {
+    <p-fieldset legend="Detalhes do Pet" [toggleable]="false">
+      @if (detalhesPet === null) {
+      } @else {
+        <section class="informacoes-pet">
+          <div class="informacoes">
+            <div class="input-group">
+              <label for="nome">Nome do Pet</label>
+              <input
+                [value]="detalhesPet.nome"
+                type="text"
+                disabled
+                pInputText
+                id="nome"
+                placeholder="Digite o nome do pet"
+              />
+            </div>
+            <div class="input-group">
+              <label for="genero">Gênero</label>
+              <input
+                [value]="detalhesPet.genero === 'M' ? 'Masculino' : 'Feminino'"
+                type="text"
+                disabled
+                pInputText
+                id="genero"
+              />
+            </div>
+            <div class="input-group">
+              <label for="genero">Data de Nascimento</label>
+              <input
+                [value]="detalhesPet.dataNascimento | date: 'dd/MM/yyyy'"
+                type="text"
+                disabled
+                pInputText
+                id="genero"
+              />
+            </div>
+            <div class="input-group">
+              <label for="genero">Data de Registro</label>
+              <input
+                [value]="detalhesPet.registradoEm | date: 'dd/MM/yyyy - HH:mm'"
+                type="text"
+                disabled
+                pInputText
+                id="genero"
+              />
+            </div>
+            <div class="input-group">
+              <label for="genero">Tipo Animal</label>
+              <input
+                [value]="detalhesPet.tipo"
+                type="text"
+                disabled
+                pInputText
+                id="genero"
+              />
+            </div>
+            <div class="input-group">
+              <label for="genero">Raça</label>
+              <input
+                [value]="detalhesPet.raca"
+                type="text"
+                disabled
+                pInputText
+                id="genero"
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="observacoes">Observações</label>
+            <textarea
+              disabled
+              [value]="detalhesPet.observacoes"
+              pTextarea
+            ></textarea>
+          </div>
+          <div class="acoes-pet">
+            <p-button
+              label="Acessar Carteirinha Digital"
+              icon="fa fa-id-card"
+              severity="secondary"
+              (click)="buscarCarteirinha()"
+            />
+          </div>
+        </section>
+      }
+    </p-fieldset>
+  }
+  <hr />
+  <section id="informacoes-adicionais">
+    @if (carregandoDetalhesTutor) {
+      <p-skeleton width="29%" height="250px"></p-skeleton>
+    } @else {
+      <p-fieldset legend="Informações do Tutor" [toggleable]="false">
+        @if (detalhesTutor === null) {
+        } @else {
+          <div class="tutor-card">
+            <div class="imagem-tutor"></div>
+            <hr />
+            <div class="informacoes-tutor">
+              <div class="input-group">
+                <label for="nome">Nome do Tutor</label>
+                <input
+                  [value]="detalhesTutor.nome"
+                  type="text"
+                  disabled
+                  pInputText
+                  id="nome"
+                  placeholder="Digite o nome do tutor"
+                />
+              </div>
+              <div class="input-group">
+                <label for="genero">Telefone</label>
+                <input
+                  [value]="detalhesTutor.telefone"
+                  type="text"
+                  disabled
+                  pInputText
+                  id="genero"
+                />
+              </div>
+              <div class="input-group">
+                <label for="genero">Email</label>
+                <input
+                  [value]="detalhesTutor.email"
+                  type="text"
+                  disabled
+                  pInputText
+                  id="genero"
+                />
+              </div>
+            </div>
+            <hr />
+            <p-button
+              icon="pi pi-user"
+              label="Ver"
+              severity="secondary"
+              [style]="{ width: '100%' }"
+              (click)="verDetalhesCliente()"
+            />
+          </div>
+        }
+      </p-fieldset>
+    }
+    @if (carregandoHistoricoConsultas) {
+      <p-skeleton width="69%" height="250px"></p-skeleton>
+    } @else {
+      <p-fieldset legend="Histórico de Consultas do Pet" [toggleable]="false">
+        <div class="lista-consultas">
+          @if (historicoConsultas.length === 0) {
+            <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+          } @else {
+            @for (consulta of historicoConsultas; track consulta.id) {
+              <div class="consulta-card">
+                <div class="body-card">
+                  <app-bag-status-consulta
+                    [status]="consulta.status"
+                  ></app-bag-status-consulta>
+                  <strong>Veterinário: {{ consulta.veterinario }}</strong>
+                  <span class="tipo-consulta">{{ consulta.tipoConsulta }}</span>
+                </div>
+                <hr />
+                <div>
+                  <span class="solicitado-em"
+                    >Data e Hora da Consulta:
+                    {{
+                      consulta.dataHoraConsulta | date: "dd/MM/yyyy - HH:mm"
+                    }}</span
+                  >
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </p-fieldset>
+    }
+  </section>
+</main>
+
+<p-dialog
+  header="Carteirinha do Pet"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [(visible)]="visibilidadeDialogCarteirinha"
+>
+  <hr />
+  @if (informacoesCarteirinha) {
+    <div #pdfcarteirinha>
+      <app-carteirinha-pet
+        [pet]="informacoesCarteirinha"
+        [imagemBaseUrl]="'http://localhost:8080/arquivos/'"
+      ></app-carteirinha-pet>
+    </div>
+  }
+  <hr />
+  <p-button
+    label="Baixar"
+    severity="success"
+    [icon]="gerandoPdf ? 'pi spin pi-spinner' : 'fa fa-download'"
+    [style]="{ width: '100%' }"
+    [disabled]="gerandoPdf"
+    (click)="baixarCarteirinha()"
+  />
+</p-dialog>

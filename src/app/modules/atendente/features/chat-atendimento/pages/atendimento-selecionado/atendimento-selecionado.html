@@ -1,0 +1,118 @@
+<main>
+  <section class="chat">
+    <div class="mensagens">
+      @for (mensagem of mensagens; track mensagem.id) {
+        <div [ngClass]="mensagem.enviadoPorVoce ? 'mensagem voce' : 'mensagem'">
+          {{ mensagem.mensagem }}
+          <span class="data">
+            {{ mensagem.enviadoEm | date: "dd/MM/yyyy HH:mm:ss" }}
+          </span>
+        </div>
+      }
+    </div>
+    <hr />
+    @if (atendimentoFinalizado) {
+      <p class="atendimento-finalizado-aviso">
+        Este atendimento foi finalizado pelo cliente.
+      </p>
+    }
+    <div class="formulario">
+      <input
+        type="text"
+        pInputText
+        placeholder="Digite sua mensagem..."
+        [(ngModel)]="mensagem"
+        [disabled]="atendimentoFinalizado"
+      />
+      <p-button
+        icon="fa fa-send"
+        severity="secondary"
+        (click)="enviar()"
+        [disabled]="atendimentoFinalizado"
+      />
+    </div>
+  </section>
+  <p-fieldset legend="Detalhes do Atendimento">
+    @if (atendimentoSelecionado === null) {
+    } @else {
+      <p-tabs value="0">
+        <p-tablist>
+          <p-tab value="0">Base</p-tab>
+          <p-tab value="1" [disabled]="atendimentoSelecionado.status !== 'FINALIZADO'">Avaliação</p-tab>
+        </p-tablist>
+        <p-tabpanels [style]="{ padding: '0.5em 0' }">
+          <p-tabpanel value="0">
+            <div class="informacoes-base">
+              <div class="input-group">
+                <label for="solicitante">Solicitado Por:</label>
+                <input
+                  type="text"
+                  disabled
+                  pInputText
+                  [value]="atendimentoSelecionado.cliente"
+                  fluid
+                />
+              </div>
+              <div class="input-group">
+                <label for="solicitadoEm">Foi Solicitado Em:</label>
+                <input
+                  type="text"
+                  disabled
+                  pInputText
+                  [value]="
+                    atendimentoSelecionado.solicitadoEm
+                      | date: 'dd/MM/yyyy - HH:mm'
+                  "
+                  fluid
+                />
+              </div>
+              <div class="input-group">
+                <label for="finalizadoEm">Foi Finalizado Em:</label>
+                <input
+                  type="text"
+                  disabled
+                  pInputText
+                  [value]="
+                    atendimentoSelecionado.finalizadoEm
+                      | date: 'dd/MM/yyyy - HH:mm'
+                  "
+                  fluid
+                />
+              </div>
+            </div>
+            <hr />
+            <div class="mensagens-enviadas">
+              <h3>
+                {{ mensagens.length }}
+              </h3>
+              <span> Mensagem(s) Enviada(s) </span>
+            </div>
+            <div class="grafico">
+              <p-chart
+                type="doughnut"
+                [data]="dadosGrafico.dados"
+                [options]="dadosGrafico.opcoes"
+              />
+            </div>
+          </p-tabpanel>
+          <p-tabpanel value="1">
+            @if (avaliacaoAtendimento === null) {
+
+            } @else {
+              <div class="avaliacoes">
+                <div class="input-group">
+                  <label for="estrelas">Pontuação:</label>
+                  <p-rating [ngModel]="avaliacaoAtendimento.pontuacao" [disabled]="true" />
+                </div>
+                <div class="input-group">
+                  <label for="observacoes">Obserações:</label>
+                  <textarea name="observacoes" pInputTextarea [value]="avaliacaoAtendimento.mensagem" [disabled]="true"></textarea>
+                </div>
+              </div>
+            }
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+    }
+  </p-fieldset>
+</main>

@@ -1,0 +1,232 @@
+.informacoes-tipo-consulta,
+.informacoes-veterinarios,
+.informacoes-pagamento-pet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  p {
+    color: var(--color-text);
+    font-size: 14px;
+  }
+}
+
+.lista-atendimentos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+
+  .tipo {
+    min-width: 250px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 1.2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-hover);
+    color: var(--aprovado);
+    text-align: left;
+    cursor: pointer;
+    gap: 0.5rem;
+    transition: 0.2s ease-in-out;
+
+    &.ativo {
+      background-color: var(--aprovado-foreground);
+      border-color: var(--color-card-primary);
+    }
+
+    .icone {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      border: 1px solid var(--color-card-primary);
+      background-color: var(--aprovado-foreground);
+    }
+
+    .infos {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+
+      h4,
+      span {
+        margin: 0;
+      }
+
+      h4 {
+        font-size: 1.2rem;
+      }
+
+      span {
+        color: var(--color-text);
+      }
+    }
+
+    strong {
+      margin-top: 1rem;
+      color: var(--primary);
+    }
+  }
+}
+
+.lista-veterinarios {
+  margin-top: 1rem;
+  overflow-x: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .card-veterinario {
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 1rem;
+    display: flex !important;
+    background-color: var(--color-hover);
+    text-align: left;
+    cursor: pointer;
+    gap: 0.5rem;
+    min-width: 320px;
+    align-items: center;
+    transition: 0.2s ease-in-out;
+
+    &.ativo {
+      background-color: var(--aprovado-foreground);
+      border-color: var(--color-card-primary);
+    }
+
+    .iniciais {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--aprovado-foreground);
+    }
+
+    .infos {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      font-size: 16px;
+
+      span {
+        color: var(--color-text);
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.data-horario {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .input-group {
+    width: 100%;
+    flex: 1 1 calc(50% - 1rem);
+    min-width: 200px;
+  }
+}
+
+.etapa-final {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  .informacoes-adicionais {
+    flex: 1 1 calc(50% - 1rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  }
+
+  .resumo-solicitacao {
+    flex: 1 1 calc(50% - 1rem);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 1rem;
+
+    .detalhes {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+
+      .info-consulta {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .icon {
+          font-size: 1.2em;
+          width: 45px;
+          height: 45px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 16px;
+          color: var(--aprovado);
+          background-color: var(--aprovado-foreground);
+        }
+
+        .infos {
+          display: flex;
+          flex-direction: column;
+
+          span {
+            color: var(--color-text);
+            font-size: 14px;
+          }
+
+          strong {
+            font-size: 16px;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    .valor {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      span {
+        font-size: 14px;
+        color: var(--color-text);
+      }
+
+      strong {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--aprovado);
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+<main>
+  <div class="logo">
+    <span class="img-logo">
+      <i class="fa fa-paw"></i>
+    </span>
+    <h3>Pet Points</h3>
+  </div>
+  <h2>
+    Bem-vindo de volta.<br />
+    Acesse sua <span>clínica</span>.
+  </h2>
+  <form [formGroup]="loginForm">
+    <div class="input-group">
+      <label for="email">E-mail</label>
+      <input
+        pInputText
+        type="email"
+        formControlName="email"
+        id="email"
+        name="email"
+        placeholder="Digite seu e-mail"
+      />
+    </div>
+    <div class="input-group">
+      <label for="password">Senha</label>
+      <p-password
+        id="password"
+        name="password"
+        formControlName="password"
+        placeholder="Digite sua senha"
+        [toggleMask]="true"
+        [feedback]="false"
+      />
+      <i
+        aria-hidden="true"
+        id="alterar-senha"
+        (click)="mudarVisibilidadeSenha()"
+        [style.cursor]="carregandoLogin ? 'not-allowed' : 'pointer'"
+        (keyup)="mudarVisibilidadeSenha()"
+      >
+        Esqueci minha senha
+      </i>
+    </div>
+    <p-button
+      [disabled]="loginForm.invalid || carregandoLogin"
+      icon="pi pi-sign-in"
+      label="Entrar"
+      iconPos="right"
+      severity="primary"
+      (click)="logarUsuario()"
+      [style]="{ width: '100%' }"
+    />
+    <p class="registrar">
+      Novo por aqui?
+      <span
+        aria-hidden="true"
+        (click)="!carregandoLogin && toogleModeForm.emit()"
+        (keyup)="!carregandoLogin && toogleModeForm.emit()"
+      >
+        Criar conta
+      </span>
+    </p>
+  </form>
+</main>
+<p-dialog
+  header="Alterar Senha"
+  [(visible)]="visibilidadeAlterarSenha"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ maxWidth: '600px', width: '100%' }"
+>
+  <app-alterar-senha
+    (mudarVisibilidadeAlterarSenha)="mudarVisibilidadeSenha()"
+  ></app-alterar-senha>
+</p-dialog>

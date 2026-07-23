@@ -1,0 +1,149 @@
+<main>
+  <p-fieldset legend="Filtros de Movimentações" [toggleable]="false">
+    <div class="filtros">
+      <div class="inputs">
+        <div class="input-group">
+          <label for="dataInicio">Data Início:</label>
+          <p-datePicker
+            id="dataInicio"
+            [(ngModel)]="filtros.dataInicio"
+            dateFormat="dd/mm/yy"
+            showIcon="true"
+            (onSelect)="filtrarMovimentacoes()"
+          ></p-datePicker>
+        </div>
+        <div class="input-group">
+          <label for="dataFim">Data Fim:</label>
+          <p-datePicker
+            id="dataFim"
+            [(ngModel)]="filtros.dataFim"
+            dateFormat="dd/mm/yy"
+            showIcon="true"
+            (onSelect)="filtrarMovimentacoes()"
+          ></p-datePicker>
+        </div>
+        <div class="input-group">
+          <label for="tipoMovimentacao">Tipo de Movimentação:</label>
+          <p-select
+            id="tipoMovimentacao"
+            [(ngModel)]="filtros.tipoMovimentacao"
+            [options]="[
+              { label: 'Todas', value: '' },
+              { label: 'Entrada', value: 'ENTRADA' },
+              { label: 'Saída', value: 'SAIDA' },
+            ]"
+            (onChange)="filtrarMovimentacoes()"
+          ></p-select>
+        </div>
+        <div class="input-group">
+          <label for="produto">Produto:</label>
+          <p-select
+            id="produto"
+            [(ngModel)]="filtros.idProduto"
+            [options]="produtos"
+            optionLabel="nome"
+            optionValue="id"
+            filter="true"
+            filterBy="nome"
+            [showClear]="true"
+            emptyFilterMessage="Nenhum produto encontrado"
+            placeholder="Selecione um produto"
+            (onChange)="filtrarMovimentacoes()"
+          ></p-select>
+        </div>
+      </div>
+      <div class="botoes">
+        <p-button
+          label="Limpar Filtros"
+          severity="danger"
+          icon="fa fa-eraser"
+          (click)="limparFiltros()"
+        ></p-button>
+        <p-button
+          label="Gerar Relatório"
+          severity="success"
+          icon="fa fa-file"
+          (click)="gerarRelatorio()"
+        ></p-button>
+        <p-button
+          label="Gerar Nova Movimentação"
+          severity="secondary"
+          icon="fa fa-plus"
+          (click)="visibilidadeNovaMovimentacao = true"
+        ></p-button>
+      </div>
+    </div>
+  </p-fieldset>
+  <hr />
+  <p-table
+    [value]="movimentacoesFiltradas"
+    [paginator]="true"
+    [rows]="12"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[12, 24, 36]"
+    [stripedRows]="true"
+    [showGridlines]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="dataHora">
+          <p-sortIcon field="dataHora" />
+          Data Hora
+        </th>
+        <th>Tipo</th>
+        <th>Produto</th>
+        <th pSortableColumn="quantidadeMovimentada">
+          <p-sortIcon field="quantidadeMovimentada" /> Quantidade em Estoque
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-movimentacao>
+      <tr>
+        <td>
+          {{ movimentacao.dataHora | date: "dd/MM/yyyy HH:mm" }}
+        </td>
+        <td>{{ movimentacao.tipoMovimentacao }}</td>
+        <td>{{ movimentacao.produto.nome }}</td>
+        <td>
+          {{ movimentacao.quantidadeMovimentada }} Unidade(s)
+          <i
+            [ngClass]="
+              movimentacao.tipoMovimentacao === 'SAIDA'
+                ? 'fa fa-arrow-down'
+                : 'fa fa-arrow-up'
+            "
+          ></i>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" class="text-center">
+          @if (existeFiltrosAplicados) {
+            <span style="text-align: center"
+              >Nenhuma movimentação encontrada com os filtros aplicados.</span
+            >
+          } @else {
+            <span style="text-align: center"
+              >Nenhuma movimentação encontrada.</span
+            >
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</main>
+<p-dialog
+  header="Gerar Nova Movimentação"
+  [(visible)]="visibilidadeNovaMovimentacao"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  [style]="{ minWidth: '400px' }"
+>
+  <app-gerar-nova-movimentacao
+    [visibilidade]="visibilidadeNovaMovimentacao"
+    (fechar)="fecharDialogNovaMovimentacao()"
+  ></app-gerar-nova-movimentacao>
+</p-dialog>

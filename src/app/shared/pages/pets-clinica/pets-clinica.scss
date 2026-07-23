@@ -1,0 +1,132 @@
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: end;
+
+    .inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .input-group {
+        margin: 0;
+      }
+    }
+
+    .btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 0.75rem 0;
+  }
+
+  section.lista-pets {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .card-pets {
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      gap: 1rem;
+      border: 1px solid var(--color-border);
+      background-color: var(--card);
+      border-radius: 12px;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: var(--card-hover);
+      }
+
+      &.m {
+        border-left: 5px solid var(--masculino);
+      }
+
+      &.f {
+        border-left: 5px solid var(--feminino);
+      }
+
+      .imagem-pet {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 110px;
+        width: 110px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        color: var(--color-sub-text);
+        background-color: var(--color-border);
+
+        &::before {
+          content: "\f1b0";
+          font-family: "Font Awesome 6 Free", "FontAwesome";
+          font-weight: 900;
+          font-size: 2rem;
+        }
+      }
+
+      .informacoes {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        flex: 1;
+
+        .header {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 1rem;
+
+          strong {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+          }
+
+          h3 {
+            margin: 0;
+          }
+        }
+        .outras {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+      }
+
+      button {
+        float: right;
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .p-fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background-color: var(--card);
+
+  .p-fieldset-legend {
+    color: var(--color-title);
+    font-weight: 600;
+  }
+}

@@ -1,0 +1,140 @@
+<main>
+  <p-fieldset legend="Filtros de Logs" [toggleable]="false">
+    <section style="display: flex; justify-content: space-between">
+      <section class="filtros">
+        <div class="input-group">
+          <label for="data_hora">Data Hora</label>
+          <p-datePicker
+            appendTo="body"
+            selectionMode="range"
+            [readonlyInput]="true"
+            (onSelect)="filtrarLogs()"
+            [(ngModel)]="filtros.data_hora"
+            dateFormat="dd/mm/yy"
+            (onClear)="filtrarLogs()"
+            [showClear]="true"
+            [showButtonBar]="true"
+            [maxDate]="dataMaxima"
+            placeholder="Data Inicial - Data Final"
+          ></p-datePicker>
+        </div>
+        <div class="input-group">
+          <label for="tipoLog">Tipo de Log</label>
+          <p-select
+            appendTo="body"
+            optionLabel="label"
+            optionValue="value"
+            [options]="opcoesTipoLogs"
+            placeholder="Selecione um tipo de log"
+            (onChange)="filtrarLogs()"
+            [(ngModel)]="filtros.tipo"
+            name="tipoLog"
+            emptyMessage="Aparentemente, não foram encontrados os tipos de logs cadastrados!"
+          >
+          </p-select>
+        </div>
+        <div class="input-group">
+          <label for="data_hora">Lançado Por</label>
+          <p-select
+            appendTo="body"
+            optionLabel="nome"
+            optionValue="idUsuario"
+            [options]="usuariosLogs"
+            [(ngModel)]="filtros.usuario"
+            (onChange)="filtrarLogs()"
+            placeholder="Selecione o usuário que lançou o log"
+            [showClear]="true"
+            [filter]="true"
+            filterBy="nome"
+            filterPlaceholder="Digite o nome do usuário"
+            emptyFilterMessage="Nenhum usuário encontrado"
+            emptyMessage="Nenhum usuário cadastrado"
+          >
+          </p-select>
+        </div>
+      </section>
+      <div class="btns">
+        <p-button
+          label="Limpar Filtros"
+          severity="danger"
+          icon="fa fa-eraser"
+          [disabled]="!habilitarBotaoLimparFiltros"
+          (click)="limparFiltros()"
+        />
+        <p-button
+          [label]="carregandoRelatorio ? 'Gerando Relatório...' : 'Gerar Relatório'"
+          [icon]="'fa' + (carregandoRelatorio ? ' fa-spin fa-spinner' : ' fa-file-pdf')"
+          severity="success"
+          [disabled]="carregandoRelatorio"
+          (click)="gerarRelatorio()"
+        />
+      </div></section
+  ></p-fieldset>
+  <p-fieldset legend="Gráfico de Logs" [toggleable]="true">
+    @if (!carregandoGrafico && logsFiltrados.length > 0) {
+      <p-chart
+        type="line"
+        [data]="basicData"
+        [options]="basicOptions"
+        width="100%"
+        height="50vh"
+      />
+    } @else {
+      @if (carregandoGrafico) {
+        <span style="text-align: center; overflow: hidden">
+          <p-progressSpinner></p-progressSpinner>
+        </span>
+      } @else if (logsFiltrados.length === 0) {
+        <h3>Nenhum log encontrado</h3>
+      }
+    }
+  </p-fieldset>
+  <p-fieldset legend="Tabela de Logs" [toggleable]="true">
+    <p-table
+      [value]="logsFiltrados"
+      [paginator]="true"
+      [rows]="12"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+      [rowsPerPageOptions]="[12, 24, 36]"
+      [stripedRows]="true"
+      [showGridlines]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="registradoEm">Data Hora
+            <p-sortIcon field="registradoEm"/>
+          </th>
+          <th>Tipo</th>
+          <th>Mensagem</th>
+          <th>Lançado Por</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-log>
+        <tr>
+          <td>{{ log.registradoEm }}</td>
+          <td>
+            <app-bag-log [tipoLog]="log.tipo" />
+          </td>
+          <td>{{ log.mensagem || "Sem mensagem" }}</td>
+          <td>{{ log.lancadoPor || "Não identificado" }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" style="text-align: center; overflow: hidden">
+            @if (!carregandoLogs) {
+              @if (filtros.tipo === "") {
+                Nenhum log encontrado
+              } @else {
+                Nenhum log de <strong>{{ filtros.tipo }}</strong> encontrado
+              }
+            } @else {
+              <p-progressSpinner></p-progressSpinner>
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-fieldset>
+</main>

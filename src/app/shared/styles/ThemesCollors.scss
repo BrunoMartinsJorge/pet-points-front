@@ -1,0 +1,121 @@
+:root {
+  /* Tema principal */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --color-inverted: #fff;
+
+  /* Compatibilidade com o sistema atual */
+  --color-border: #ccc;
+  --color-title: #333;
+  --color-text: #2d2d2d;
+  --color-sub-text: #a0aec0;
+  --color-icon: #1e293b;
+  --color-hover: #e2f3f0;
+  --color-secondary: #fff;
+  --card: #cccccc61;
+  --card-hover: #cccccc43;
+
+
+  /* Cards */
+  --color-card-primary: #00A870;
+  --color-card-primary-foreground: #00a87012;
+  --color-card-secondary: rgb(223, 89, 12);
+  --color-card-secondary-foreground: #df590c14;
+
+  /* Status */
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+
+  /* Gênero */
+  --masculino: #007bff;
+  --feminino: #e81c74;
+
+  /* Outros */
+  --dourado: #d4af37;
+  --bag-pendente: #ffc107;
+  --bag-pendente-foreground: #ffc10714;
+  --enviado: #19554a;
+  --aprovado: #28a745;
+  --aprovado-foreground: #28a74514;
+  --bag-reprovado: #dc3545;
+  --bag-reprovado-foreground: #dc354514;
+  --bag-iniciado: #1b68d4;
+  --bag-iniciado-foreground: #1b68d414;
+
+  /* Radius */
+  --radius: 0.625rem;
+}
+
+html[data-theme="dark"] {
+  /* Tema principal */
+  --background: #0A0A0A;
+  --foreground: oklch(0.985 0 0);
+  --card: #121212;
+  --card-hover: oklch(16.842% 0.00002 271.152 / 0.871);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --color-inverted: #000;
+
+  /* Compatibilidade com o sistema atual */
+  --color-border: rgb(63, 63, 70);
+  --color-title: #fff;
+  --color-text: #ccc;
+  --color-sub-text: #a0aec0;
+  --color-icon: #ccc;
+  --color-hover: #4d4c4c29;
+  --color-secondary: #121212;
+
+  /* Cards */
+  --color-card-primary: #00BC7D;
+  --color-card-primary-foreground: #00bc7d12;
+  --color-card-secondary: #FE9A00;
+
+  /* Status */
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+
+  /* Gênero */
+  --masculino: #58a6f8;
+  --feminino: #ff519c;
+
+  /* Outros */
+  --dourado: #f7cf4b;
+  --enviado: #36e5c5;
+  --aprovado: #00D492;
+  --bag-reprovado: #dc3545;
+  --bag-reprovado-foreground: #291415;
+  --bag-iniciado: #1b68d4;
+  --bag-iniciado-foreground: #1b68d428;
+  --bag-pendente: #ffc107;
+  --bag-pendente-foreground: #291F10;
+  --aprovado-foreground: #10231C;
+}

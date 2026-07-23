@@ -1,0 +1,4 @@
+<div [class]="tipoMovimentacao ? tipoMovimentacao.toLocaleLowerCase() : ''">
+    <span>{{tipoMovimentacao === 'ENTRADA' ? 'Entrada' : 'Saida'}}</span>
+    <i [class]="tipoMovimentacao === 'ENTRADA' ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+</div>

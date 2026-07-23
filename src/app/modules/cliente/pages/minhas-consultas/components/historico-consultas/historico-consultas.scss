@@ -1,0 +1,149 @@
+.consultas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .header-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .info {
+      display: flex;
+      gap: 0.5rem;
+      flex-direction: column;
+      flex: 1;
+
+      h2,
+      p {
+        margin: 0;
+      }
+
+      p {
+        color: var(--color-text);
+      }
+    }
+
+    .filtros {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .tipos {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+  }
+
+  .lista-consultas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding: 0.5rem;
+
+    .consulta-card {
+      width: calc(50% - 0.5rem);
+      background-color: var(--card);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 0.75rem;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .header-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .infos {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 1rem;
+
+          .iniciais {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--color-border);
+            background-color: var(--color-hover);
+          }
+
+          .base {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+
+            h4,
+            p {
+              margin: 0;
+            }
+
+            p {
+              color: var(--color-text);
+              font-size: 14px;
+            }
+          }
+        }
+      }
+
+      .card-body {
+        margin-top: 1rem;
+        display: flex;
+        border-radius: 4px;
+        padding: 0.5rem;
+        flex-wrap: wrap;
+        min-height: 50px;
+        align-items: center;
+        background-color: var(--color-hover);
+
+        .info {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-width: 120px;
+
+          span {
+            font-size: 14px;
+          }
+
+          strong {
+            margin-top: 4px;
+            font-weight: 600;
+          }
+        }
+      }
+
+      .acoes {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        gap: 0.5rem;
+
+        button {
+          margin-top: 0.5rem;
+          background-color: var(--color-inverted);
+          color: var(--foreground);
+          outline: none;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &.cancelar-consulta {
+            background-color: var(--bag-reprovado);
+          }
+        }
+      }
+    }
+  }
+}

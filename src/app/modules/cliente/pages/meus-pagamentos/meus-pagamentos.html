@@ -1,0 +1,290 @@
+<main>
+  <section class="cards">
+    @if (carregandoInformacoesCards) {
+      <span style="display: flex; gap: 1rem; width: 100%">
+        <p-skeleton height="140px" />
+        <p-skeleton height="140px" />
+        <p-skeleton height="140px" />
+      </span>
+    } @else {
+      <div class="card-pagamentos">
+        <span class="icon efetuado">
+          <i class="fa far far fa-check-circle"></i>
+        </span>
+        <div class="infos">
+          <span>Pagamentos Efetuados</span>
+          <span>
+            <strong>
+              {{ informacoesCards.pagamentosEfetuados }}
+            </strong>
+            Pagamento(s) efetuado(s)
+          </span>
+        </div>
+      </div>
+      <div class="card-pagamentos">
+        <span class="icon pendente">
+          <i class="fa far far fa-clock"></i>
+        </span>
+        <div class="infos">
+          <span>Pagamentos Atrasados</span>
+          <span>
+            <strong>
+              {{ informacoesCards.pagamentosAtrasados }}
+            </strong>
+            Pagamentos(s) atrasados
+          </span>
+        </div>
+      </div>
+      <div class="card-pagamentos">
+        <span class="icon reprovado">
+          <i class="fa far fa-thumbs-down"></i>
+        </span>
+        <div class="infos">
+          <span>Pagamentos Reprovados</span>
+          <span>
+            <strong>
+              {{ informacoesCards.pagamentosReprovados }}
+            </strong>
+            Pagamento(s) reprovados
+          </span>
+        </div>
+      </div>
+    }
+  </section>
+  <hr />
+  <section class="pagamentos">
+    @if (carregandoPagamentosPendentesAtrasados) {
+      <p-skeleton height="250px" width="calc(50% - 0.5rem)" />
+    } @else {
+      <p-fieldset>
+        <ng-template pTemplate="header">
+          <div class="header-fieldset">
+            <i class="fas fa-clock"></i
+            ><span>Pagamentos Pendentes ou Atrasados</span>
+          </div>
+        </ng-template>
+        <p-dataview
+          #dv
+          [value]="pagamentosPendentesAtrasados"
+          [paginator]="true"
+          [rows]="4"
+        >
+          <ng-template #list let-pagamentos>
+            <div class="lista-pagamentos">
+              @for (pagamento of pagamentos; track pagamento.id) {
+                <div class="card-pagamento">
+                  <div>
+                    <div
+                      class="forma-pagamento"
+                      pTooltip="{{ pagamento.tipoPagamento }}"
+                    >
+                      <i [class]="iconePagamento(pagamento.tipoPagamento)"></i>
+                    </div>
+                    <div class="data-valor">
+                      <strong class="valor"
+                        >Valor: {{ pagamento.valor | currency: "BRL" }}</strong
+                      >
+                      <span class="data-limite">
+                        Data Limite:
+                        {{ pagamento.dataLimitePagamento }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="body-card">
+                    <div class="badges">
+                      <span
+                        [ngClass]="
+                          'status-pagamento ' +
+                          (pagamento.atrasado
+                            ? 'atrasado'
+                            : pagamento.statusPagamento.toLowerCase())
+                        "
+                      >
+                        {{
+                          pagamento.atrasado
+                            ? "ATRASADO"
+                            : (pagamento.statusPagamento | titlecase)
+                        }}
+                      </span>
+                      <span
+                        [ngClass]="pagamento.atrasado ? 'atrasado' : 'em-tempo'"
+                      >
+                        {{ pagamento.atrasado ? "Atrasado" : "Em Tempo" }}
+                      </span>
+                    </div>
+                    <p-button
+                      icon="fa fa-eye"
+                      severity="secondary"
+                      (click)="selecionarPagamento(pagamento)"
+                    />
+                  </div>
+                </div>
+              }
+            </div>
+          </ng-template>
+          <ng-template #emptymessage>
+            <span class="sem-resultados"
+              >Nenhum pagamento pendente ou atrasado!</span
+            >
+          </ng-template>
+        </p-dataview>
+      </p-fieldset>
+    }
+    @if (carregandoPagamentosReprovados) {
+      <p-skeleton height="250px" width="calc(50% - 0.5rem)" />
+    } @else {
+      <p-fieldset>
+        <ng-template pTemplate="header">
+          <div class="header-fieldset">
+            <i class="fas fa-thumbs-down"></i><span>Pagamentos Reprovados</span>
+          </div>
+        </ng-template>
+        <p-dataview
+          #dv
+          [value]="pagamentosReprovados"
+          [paginator]="true"
+          [rows]="4"
+        >
+          <ng-template #list let-pagamentos>
+            <div class="lista-pagamentos">
+              @for (pagamento of pagamentos; track pagamento.id) {
+                <div class="card-pagamento">
+                  <div>
+                    <div
+                      class="forma-pagamento"
+                      pTooltip="{{ pagamento.tipoPagamento }}"
+                    >
+                      <i [class]="iconePagamento(pagamento.tipoPagamento)"></i>
+                    </div>
+                    <div class="motivo-valor">
+                      <strong class="valor"
+                        >Valor: {{ pagamento.valor | currency: "BRL" }}</strong
+                      >
+                      <span class="motivo">
+                        Motivo: {{ pagamento.motivoIndeferimento }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="body-card">
+                    <div class="badges">
+                      <span
+                        [ngClass]="
+                          'status-pagamento ' +
+                          (pagamento.atrasado
+                            ? 'atrasado'
+                            : pagamento.statusPagamento.toLowerCase())
+                        "
+                      >
+                        {{
+                          pagamento.atrasado
+                            ? "ATRASADO"
+                            : (pagamento.statusPagamento | titlecase)
+                        }}
+                      </span>
+                      <span
+                        [ngClass]="pagamento.atrasado ? 'atrasado' : 'em-tempo'"
+                      >
+                        {{ pagamento.atrasado ? "Atrasado" : "Em Tempo" }}
+                      </span>
+                    </div>
+                    <p-button
+                      icon="fa fa-eye"
+                      severity="secondary"
+                      (click)="selecionarPagamento(pagamento)"
+                    />
+                  </div>
+                </div>
+              }
+            </div>
+          </ng-template>
+          <ng-template #emptymessage>
+            <span class="sem-resultados">Nenhum pagamento reprovado!</span>
+          </ng-template>
+        </p-dataview>
+      </p-fieldset>
+    }
+    @if (carregandoHistoricoPagamentos) {
+      <p-skeleton height="330px" width="100%" />
+    } @else {
+      <p-fieldset>
+        <ng-template pTemplate="header">
+          <div class="header-fieldset">
+            <i class="fas fas fa-clipboard-list"></i
+            ><span>Histórico de Pagamentos</span>
+          </div>
+        </ng-template>
+        <p-dataview
+          #dv
+          [value]="historicoPagamentos"
+          [paginator]="true"
+          [rows]="4"
+        >
+          <ng-template #list let-pagamentos>
+            <div class="lista-pagamentos">
+              @for (pagamento of pagamentos; track pagamento.id) {
+                <div class="card-pagamento">
+                  <div>
+                    <div
+                      class="forma-pagamento"
+                      pTooltip="{{ pagamento.tipoPagamento }}"
+                    >
+                      <i [class]="iconePagamento(pagamento.tipoPagamento)"></i>
+                    </div>
+                    <div class="data-valor">
+                      <strong class="valor"
+                        >Valor: {{ pagamento.valor | currency: "BRL" }}</strong
+                      >
+                      <span class="data-limite">
+                        Data Limite:
+                        {{ pagamento.dataLimitePagamento }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="body-card">
+                    <div class="badges">
+                      <span
+                        [ngClass]="
+                          'status-pagamento ' +
+                          (pagamento.atrasado
+                            ? 'atrasado'
+                            : pagamento.statusPagamento.toLowerCase())
+                        "
+                      >
+                        {{
+                          pagamento.atrasado
+                            ? "ATRASADO"
+                            : (pagamento.statusPagamento | titlecase)
+                        }}
+                      </span>
+                      <span
+                        [ngClass]="pagamento.atrasado ? 'atrasado' : 'em-tempo'"
+                      >
+                        {{ pagamento.atrasado ? "Atrasado" : "Em Tempo" }}
+                      </span>
+                    </div>
+                    <p-button
+                      icon="fa fa-eye"
+                      severity="secondary"
+                      (click)="selecionarPagamento(pagamento)"
+                    />
+                  </div>
+                </div>
+              }
+            </div>
+          </ng-template>
+          <ng-template #emptymessage>
+            <span class="sem-resultados"
+              >Nenhum pagamento finalizado ou enviado!</span
+            >
+          </ng-template>
+        </p-dataview>
+      </p-fieldset>
+    }
+  </section>
+</main>
+<app-detalhes-pagamento
+  [pagamentoSelecionado]="pagamentoSelecionado"
+  [visibilidade]="visibilidadeDialogDetalhesPagamento"
+  [(visibilidade)]="visibilidadeDialogDetalhesPagamento"
+  (alteracoesEfetuadas)="carregarAlteracoes()"
+></app-detalhes-pagamento>

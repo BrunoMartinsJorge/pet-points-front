@@ -1,0 +1,101 @@
+<main>
+  <p-fieldset legend="Filtros" [toggleable]="false">
+    <div class="filtros">
+      <div class="inputs">
+        <div class="input-group">
+          <label for="nome">Nome do Produto</label>
+          <input
+            type="text"
+            pInputText
+            [(ngModel)]="filtros.nome"
+            id="nome"
+            placeholder="Digite o nome do produto"
+            (input)="filtrarProdutos()"
+          />
+        </div>
+        <div class="input-group">
+          <label for="nome">Tipo de Produto</label>
+          <p-select
+            appendTo="body"
+            [(ngModel)]="filtros.tipoProduto"
+            placeholder="Selecione o tipo do produto"
+            [options]="opcoesTipoProduto"
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="filtrarProdutos()"
+          >
+          </p-select>
+        </div>
+        <div class="input-group">
+          <label for="precoMin">Preço Minimo</label>
+          <input
+            type="number"
+            pInputText
+            [(ngModel)]="filtros.precoMin"
+            id="precoMin"
+            placeholder="Preço Minimo"
+            (input)="filtrarProdutos()"
+          />
+        </div>
+        <div class="input-group">
+          <label for="precoMax">Preço Máximo</label>
+          <input
+            type="number"
+            pInputText
+            [(ngModel)]="filtros.precoMax"
+            id="precoMax"
+            placeholder="Preço Máximo"
+            (input)="filtrarProdutos()"
+          />
+        </div>
+      </div>
+      <div class="btns">
+        <p-button
+          label="Limpar Filtros"
+          icon="fa fa-eraser"
+          (click)="limparFiltros()"
+          severity="danger"
+        />
+        <p-button
+          label="Gerar Relatório"
+          icon="fa fa-file"
+          (click)="gerarRelatorio()"
+          severity="success"
+        />
+      </div>
+    </div>
+  </p-fieldset>
+  <p-table
+    [value]="produtosFiltrados"
+    [paginator]="true"
+    [rows]="12"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[12, 24, 36]"
+    [stripedRows]="true"
+    [showGridlines]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Produto</th>
+        <th>Descrição</th>
+        <th pSortableColumn="valorUnitario">
+          <p-sortIcon field="valorUnitario"></p-sortIcon> Valor por Unidade
+        </th>
+        <th>Tipo</th>
+        <th pSortableColumn="quantidadeEstoque">
+          <p-sortIcon field="quantidadeEstoque"></p-sortIcon>Quantidade
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-produto>
+      <tr>
+        <td>{{ produto.nome }}</td>
+        <td>{{ produto.descricao }}</td>
+        <td>R$ {{ produto.valorUnitario }}</td>
+        <td>{{ produto.tipo }}</td>
+        <td>{{ produto.quantidadeEstoque }} Unidade(s)</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</main>

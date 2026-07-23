@@ -1,0 +1,222 @@
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  section.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .card-pagamentos {
+      flex: 1 1 calc(33% - 0.5rem);
+      min-width: 200px;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 2rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--card);
+      gap: 1rem;
+
+      .icon {
+        font-size: 2em;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        background-color: var(--color-border);
+
+        &.efetuado {
+          color: var(--aprovado);
+          border: 1px solid var(--aprovado);
+          background-color: var(--aprovado-foreground);
+        }
+
+        &.pendente {
+          color: var(--bag-pendente);
+          border: 1px solid var(--bag-pendente);
+          background-color: var(--bag-pendente-foreground);
+        }
+
+        &.reprovado {
+          color: var(--bag-reprovado);
+          border: 1px solid var(--bag-reprovado);
+          background-color: var(--bag-reprovado-foreground);
+        }
+      }
+      .infos {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        span {
+          color: var(--color-text);
+        }
+        strong {
+          color: var(--color-title);
+        }
+      }
+    }
+  }
+
+  section.pagamentos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    p-fieldset {
+      flex: 1 1 calc(50% - 0.5rem);
+      min-width: 320px;
+
+      .header-fieldset {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--color-text);
+
+        span {
+          font-weight: 600;
+        }
+      }
+
+      .lista-pagamentos {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .card-pagamento {
+          display: flex;
+          align-items: center;
+          border: 1px solid var(--color-border);
+          border-radius: 8px;
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          padding: 1rem;
+          
+          div {
+            gap: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+
+            &.body-card {
+              align-items: center;
+            }
+          }
+
+          &:nth-child(even) {
+            border-left: 5px solid var(--color-card-primary);
+          }
+
+          &:nth-child(odd) {
+            border-left: 5px solid var(--color-card-secondary);
+          }
+
+          .forma-pagamento {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background-color: var(--color-border);
+            color: var(--color-title);
+          }
+
+          .motivo-valor,
+          .data-valor {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            strong {
+              color: var(--color-title);
+            }
+
+            span {
+              color: var(--color-text);
+              font-size: 0.8em;
+
+              &.motivo {
+                color: var(--color-danger);
+              }
+            }
+          }
+
+          .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+
+            span.status-pagamento {
+              padding: 0.5rem;
+              border-radius: 8px;
+              border: 1px solid var(--color-border);
+              font-weight: 600;
+              font-size: 0.8em;
+              right: 0;
+              position: relative;
+              float: right;
+
+              &.atrasado,
+              &.reprovado {
+                border-color: var(--bag-reprovado);
+                color: var(--bag-reprovado);
+                background-color: var(--bag-reprovado-foreground);
+              }
+
+              &.em-tempo,
+              &.pendente {
+                border-color: var(--bag-pendente);
+                color: var(--bag-pendente);
+                background-color: var(--bag-pendente-foreground);
+              }
+
+              &.enviado {
+                border-color: var(--bag-iniciado);
+                color: var(--bag-iniciado);
+                background-color: var(--bag-iniciado-foreground);
+              }
+
+              &.aprovado {
+                border-color: var(--aprovado);
+                color: var(--aprovado);
+                background-color: var(--aprovado-foreground);
+              }
+            }
+            span {
+              padding: 0.5rem;
+              border-radius: 8px;
+              font-weight: 600;
+              font-size: 0.8em;
+              &.em-tempo {
+                border: 1px solid var(--bag-pendente);
+                color: var(--bag-pendente);
+                background-color: var(--bag-pendente-foreground);
+              }
+
+              &.atrasado {
+                border: 1px solid var(--bag-reprovado);
+                color: var(--bag-reprovado);
+                background-color: var(--bag-reprovado-foreground);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

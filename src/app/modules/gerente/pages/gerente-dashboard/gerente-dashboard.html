@@ -1,0 +1,167 @@
+<main>
+  <header class="dashboard-header">
+    <div class="titulo">
+      <h1>Visão geral da clínica</h1>
+      <p>Acompanhe a operação, o estoque e os atendimentos em um só lugar.</p>
+    </div>
+    <div class="acoes">
+      <span class="atualizado">
+        Atualizado: {{ dataAtualizacao | date: "shortTime" }}
+      </span>
+      <p-button
+        label="Atualizar"
+        icon="fa fa-rotate-right"
+        severity="secondary"
+        [outlined]="true"
+        (click)="recarregar()"
+      />
+    </div>
+  </header>
+
+  <section class="kpis">
+    <div class="kpi-card">
+      <span class="kpi-icon iniciado">
+        <i class="fa fa-clipboard-list"></i>
+      </span>
+      <div class="kpi-info">
+        <span class="kpi-label">Consultas do dia</span>
+        <strong class="kpi-valor">{{ qtdConsultas }}</strong>
+        <span class="kpi-sub">Agenda de hoje</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-icon efetuado">
+        <i class="fa fa-right-left"></i>
+      </span>
+      <div class="kpi-info">
+        <span class="kpi-label">Movimentações</span>
+        <strong class="kpi-valor">{{ qtdMovimentacoes }}</strong>
+        <span class="kpi-sub">Registradas no mês</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-icon entrada">
+        <i class="fa fa-arrow-up"></i>
+      </span>
+      <div class="kpi-info">
+        <span class="kpi-label">Entradas</span>
+        <strong class="kpi-valor">{{ qtdEntradas }}</strong>
+        <span class="kpi-sub">Reposições de estoque</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-icon saida">
+        <i class="fa fa-arrow-down"></i>
+      </span>
+      <div class="kpi-info">
+        <span class="kpi-label">Saídas</span>
+        <strong class="kpi-valor">{{ qtdSaidas }}</strong>
+        <span class="kpi-sub">Consumo de estoque</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="painel-grafico">
+    <p-fieldset legend="Acessos ao sistema" [toggleable]="false">
+      <div class="grafico-stats">
+        <div class="stat">
+          <span class="stat-label">Total</span>
+          <strong class="stat-valor">{{ totalAcessos }}</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Média</span>
+          <strong class="stat-valor">{{ mediaAcessos }}</strong>
+        </div>
+      </div>
+      <p-chart
+        type="line"
+        [data]="grafico"
+        [options]="opcoesGrafico"
+        height="320px"
+      ></p-chart>
+    </p-fieldset>
+  </section>
+
+  <section class="painel-inferior">
+    <p-fieldset legend="Movimentações do mês" [toggleable]="false">
+      <p-table
+        [value]="movimentacoes"
+        [paginator]="true"
+        [rows]="8"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+        [rowsPerPageOptions]="[8, 16, 24]"
+        [stripedRows]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Estoquista</th>
+            <th>Tipo</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-produto>
+          <tr>
+            <td>{{ produto.produto }}</td>
+            <td>{{ produto.quantidade }}</td>
+            <td>{{ produto.estoquista }}</td>
+            <td>
+              <app-bag-tipo-movimentacao
+                [tipoMovimentacao]="produto.tipo"
+              ></app-bag-tipo-movimentacao>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4">
+              <span class="sem-resultados"
+                >Nenhuma movimentação encontrada!</span
+              >
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-fieldset>
+
+    <p-fieldset legend="Consultas do dia" [toggleable]="false">
+      <p-table
+        [value]="consultas"
+        [paginator]="true"
+        [rows]="8"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+        [rowsPerPageOptions]="[8, 16, 24]"
+        [stripedRows]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Descrição</th>
+            <th>Tipo</th>
+            <th>Data Hora</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>{{ product.descricao }}</td>
+            <td>
+              {{ product.tipoMovimentacao }}
+            </td>
+            <td>{{ product.dataSolicitacao }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3">
+              <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-fieldset>
+  </section>
+</main>

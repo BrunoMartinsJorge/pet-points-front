@@ -1,0 +1,140 @@
+.sem-resultados {
+  background-color: var(--card);
+}
+main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+
+  section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    p-fieldset {
+      min-width: 300px;
+      flex: 1 1 calc(50% - 0.5rem);
+      display: flex;
+      height: auto;
+
+      &:nth-child(3) {
+        height: auto;
+      }
+
+      .card-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        &.cliente,
+        &.pet {
+          flex: 1;
+
+          .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: end;
+          }
+
+          .foto-base {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+
+            .infos {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+              align-items: start;
+              justify-content: center;
+              margin-bottom: 1rem;
+
+              h3 {
+                width: 250px;
+                display: flex;
+                margin: 0.5rem 0;
+                align-items: center;
+                gap: 0.5rem;
+                color: var(--color-border);
+
+                span {
+                  color: var(--color-text);
+                  font-size: 0.9em;
+                }
+              }
+
+              ul {
+                margin: 0;
+                padding: 0 0.5rem;
+
+                li {
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  color: var(--color-text);
+                  font-size: 0.9em;
+                }
+              }
+
+              span {
+                width: 70%;
+                display: block;
+              }
+            }
+          }
+
+          .saude {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+
+          .avaliacao {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+
+            span {
+              display: flex;
+              align-items: center;
+              gap: 0.25rem;
+            }
+          }
+        }
+
+        &.consulta {
+          .status {
+            display: flex;
+            justify-content: end;
+          }
+
+          .datas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+
+            .input-group {
+              flex: 1 1 calc(50% - 0.5rem);
+            }
+          }
+
+          .atendente,
+          .observacoes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+textarea {
+  min-height: 150px;
+  max-height: 200px;
+}

@@ -1,0 +1,34 @@
+@if (
+  urlImagem === null ||
+  urlImagem === "" ||
+  urlImagem === undefined ||
+  urlImagem.trim() === ""
+) {
+<div
+  [ngClass]="{
+    'imagem-vazia': true,
+    'imagem-redonda': imagemRedonda,
+    'tamanho-total': tamanhoTotal
+  }"
+  [style.width]="width"
+  [style.height]="height"
+>
+  <i class="pi pi-image"></i>
+</div>
+} @else {
+  <p-image
+    [src]="urlImagem"
+    [alt]="alt"
+    [width]="width"
+    [height]="height"
+    [preview]="preview"
+    [imageStyle]="
+      tamanhoTotal
+        ? { 'aspect-ratio': '1 / 1' }
+        : imagemRedonda
+          ? { 'border-radius': '50%', 'object-fit': 'cover' }
+          : { 'object-fit': 'cover' }
+    "
+    appendTo="body"
+  />
+}

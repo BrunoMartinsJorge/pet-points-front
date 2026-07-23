@@ -1,0 +1,48 @@
+<div class="cards">
+  @if (carregando) {
+    <span style="display: flex; gap: 1rem; width: 100%">
+      <p-skeleton height="140px" />
+      <p-skeleton height="140px" />
+      <p-skeleton height="140px" />
+    </span>
+  } @else if (cards) {
+    <div class="card">
+      <div class="icon total">
+        <i class="fa fas fa-clipboard-list"></i>
+      </div>
+      <div class="infos">
+        <span>Consultas Finalizadas</span>
+        <span>
+          <strong>{{ cards.consultasFinalizadas }}</strong>
+          Consultas Finalizadas
+        </span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="icon pendentes">
+        <i class="fa fas fa-clock"></i>
+      </div>
+      <div class="infos">
+        <span>Consultas Pendentes</span>
+        <span>
+          <strong>{{ cards.consultasPendentes }}</strong>
+          Aguardando Avaliação
+        </span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="icon indeferidos-cancelados">
+        <i class="fa fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="infos">
+        <span>Consultas Indeferidas/Canceladas</span>
+        <span>
+          <strong>{{ cards.consultasIndeferidasCanceladas }}</strong>
+          Consultas Indeferidas ou Canceladas
+        </span>
+      </div>
+    </div>
+  }
+</div>

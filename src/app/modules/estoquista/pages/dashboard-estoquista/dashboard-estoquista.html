@@ -1,0 +1,44 @@
+<main>
+  <p-fieldset legend="Gráfico de Movimentações deste Mês" [toggleable]="false">
+    @if (this.grafico) {
+      <p-chart
+        type="line"
+        [data]="grafico"
+        [options]="options"
+        width="100%"
+        height="45vh"
+      />
+    }
+  </p-fieldset>
+  <hr>
+  <p-table
+    [value]="produtosComBaixoEstoque"
+    [paginator]="true"
+    [rows]="12"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[12, 24, 36]"
+    [stripedRows]="true"
+    [showGridlines]="true"
+  >
+    <ng-template pTemplate="caption">
+      <strong>Produtos com Quantidade Abaixo do Estoque Minimo</strong>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Produto</th>
+        <th>Tipo do Produto</th>
+        <th>Quantidade em Estoque</th>
+        <th>Valor por Unidade</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-produto>
+      <tr>
+        <td>{{ produto.nome }}</td>
+        <td>{{ produto.tipo }}</td>
+        <td>{{ produto.quantidadeEstoque }} Unidades</td>
+        <td>R$ {{ produto.valorUnitario | number: "1.2-2" }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</main>

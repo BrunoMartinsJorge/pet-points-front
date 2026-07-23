@@ -1,0 +1,216 @@
+<main>
+  <section class="destaques">
+    <div class="card-proxima">
+      @if (proximaConsulta) {
+        <div class="conteudo">
+          <span class="overline">PRÓXIMA CONSULTA</span>
+          <h2>{{ proximaConsulta.tipo }}</h2>
+          <p>Consulta aprovada e preparada — pronta para iniciar.</p>
+          <div class="meta">
+            <span><i class="fa far fa-calendar"></i> {{ proximaConsulta.data | date: "dd/MM/yyyy" }}</span>
+            <span><i class="fa far fa-clock"></i> {{ proximaConsulta.data | date: "HH:mm" }}</span>
+            <span><i class="fa fa-paw"></i> {{ proximaConsulta.pet }}</span>
+          </div>
+        </div>
+        <div class="acoes">
+          <div class="icone-decorativo"><i class="fa fa-stethoscope"></i></div>
+          <p-button
+            label="Iniciar atendimento"
+            severity="contrast"
+            (click)="acessarConsulta(proximaConsulta.id)"
+          />
+        </div>
+      } @else {
+        <div class="conteudo">
+          <span class="overline">PRÓXIMA CONSULTA</span>
+          <h2>Sem consultas na fila</h2>
+          <p>Nenhuma consulta aprovada aguardando início no momento.</p>
+        </div>
+      }
+    </div>
+
+    <div class="card-andamento">
+      @if (consultaEmAndamento) {
+        <div class="linha-topo">
+          <span class="pet"><i class="fa fa-paw"></i> {{ consultaEmAndamento.pet }}</span>
+          @if (consultaEmAndamento !== null) {
+            <app-bag-status-consulta [status]="consultaEmAndamento.status"></app-bag-status-consulta>
+          }
+        </div>
+        <h3>{{ consultaEmAndamento.tipo }}</h3>
+        <p>Consulta iniciada por {{ usuario.nome }}</p>
+        <div class="rodape">
+          <div class="meta">
+            <span><i class="fa far fa-calendar"></i> {{ consultaEmAndamento.data | date: "dd/MM/yyyy" }}</span>
+            <span><i class="fa far fa-clock"></i> {{ consultaEmAndamento.data | date: "HH:mm" }}</span>
+          </div>
+          <p-button
+            label="Acessar"
+            icon="fa fa-chevron-right"
+            iconPos="right"
+            severity="secondary"
+            (click)="acessarConsulta(consultaEmAndamento.id)"
+          />
+        </div>
+      } @else {
+        <div class="vazio">
+          <i class="fa fa-mug-hot"></i>
+          <span>Nenhuma consulta em andamento.</span>
+        </div>
+      }
+    </div>
+  </section>
+  <hr>
+  <section class="cards-metricas">
+    <div class="card">
+      <div class="icon efetuado"><i class="fas fa-list-check"></i></div>
+      <div class="infos">
+        <span class="titulo">Consultas Finalizadas</span>
+        <span class="descricao"><strong>{{ cards.consultasFinalizadas }}</strong> finalizadas</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="icon neutro"><i class="fas fa-list"></i></div>
+      <div class="infos">
+        <span class="titulo">Total de Consultas</span>
+        <span class="descricao"><strong>{{ cards.totalConsultas }}</strong> totalizadas</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="icon pendente"><i class="fas fa-clock"></i></div>
+      <div class="infos">
+        <span class="titulo">Consultas Pendentes</span>
+        <span class="descricao"><strong>{{ consultasPendentes }}</strong> aguardando</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="icon informativo"><i class="fas fa-ranking-star"></i></div>
+      <div class="infos">
+        <span class="titulo">Ranking de Avaliação</span>
+        <span class="descricao"><strong>{{ cards.ranking }}º</strong> melhor avaliado</span>
+      </div>
+    </div>
+  </section>
+  <hr>
+  <section class="paineis">
+    <p-fieldset legend="Consultas do Dia">
+      <div class="abas-filtro">
+        @for (filtro of filtros; track filtro.valor) {
+          <button
+            type="button"
+            [class.ativo]="filtroConsulta === filtro.valor"
+            (click)="selecionarFiltro(filtro.valor)"
+          >
+            {{ filtro.label }}
+          </button>
+        }
+      </div>
+
+      <p-dataview
+        [value]="consultasFiltradas"
+        [paginator]="true"
+        [rows]="4"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords}"
+        [rowsPerPageOptions]="[4, 8, 12]"
+      >
+        <ng-template let-lista #list>
+          <div class="lista-consultas">
+            @for (consulta of lista; track consulta.id) {
+              <div [ngClass]="'consulta-card ' + consulta.status.toLowerCase()">
+                <div class="avatar">{{ inicial(consulta.pet) }}</div>
+                <div class="conteudo">
+                  <div class="linha-topo">
+                    <strong>{{ consulta.cliente }}</strong>
+                    <span class="tipo">{{ consulta.tipo }}</span>
+                    <app-bag-status-consulta [status]="consulta.status"></app-bag-status-consulta>
+                  </div>
+                  <div class="meta">
+                    <span>
+                      <i class="fa fa-info-circle"></i>
+                      Observações: {{ consulta.observacoes || "Não possui" }}
+                    </span>
+                    <span>
+                      <i class="fa far fa-calendar"></i>
+                      {{ consulta.data | date: "dd/MM/yyyy – HH:mm" }}
+                    </span>
+                  </div>
+                </div>
+                <p-button
+                  label="Acessar"
+                  icon="fa fa-chevron-right"
+                  iconPos="right"
+                  severity="secondary"
+                  (click)="acessarConsulta(consulta.id)"
+                />
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          @if (carregandoConsultas) {
+            <p-skeleton height="90px" [style]="{ margin: '0.5rem 0' }"></p-skeleton>
+            <p-skeleton height="90px" [style]="{ margin: '0.5rem 0' }"></p-skeleton>
+            <p-skeleton height="90px" [style]="{ margin: '0.5rem 0' }"></p-skeleton>
+          } @else {
+            <span class="sem-resultados">Nenhuma consulta para hoje!</span>
+          }
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+
+    <p-fieldset legend="Minhas Avaliações">
+      @if (cards.ranking > 0) {
+        <div class="banner-ranking">
+          <div class="medalha">
+            <i class="fa fas fa-award"></i>
+          </div>
+          <div class="texto">
+            <span class="titulo">
+              <strong>{{ cards.ranking }}º Lugar</strong>
+              no ranking
+            </span>
+            <span class="subtitulo">de atendimentos avaliados!</span>
+          </div>
+        </div>
+      }
+
+      <p-dataview
+        [value]="avaliacoes"
+        [paginator]="true"
+        [rows]="4"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords}"
+        [rowsPerPageOptions]="[4, 8, 12]"
+      >
+        <ng-template let-lista #list>
+          <div class="lista-avaliacoes">
+            @for (avaliacao of lista; track avaliacao.id) {
+              <div class="card-avaliacao">
+                <div class="header">
+                  <span class="pontos">
+                    <i class="fa fas fa-star"></i>
+                    {{ avaliacao.pontuacao }}
+                    {{ avaliacao.pontuacao === 1 ? "ponto" : "pontos" }}
+                  </span>
+                  <span class="data">
+                    {{ avaliacao.avaliadoEm | date: "dd/MM/yyyy - HH:mm" }}
+                  </span>
+                </div>
+                <p class="mensagem">{{ avaliacao.observacoes }}</p>
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          @if (carregandoAvaliacoes) {
+            <p-skeleton height="90px" [style]="{ margin: '0.5rem 0' }"></p-skeleton>
+            <p-skeleton height="90px" [style]="{ margin: '0.5rem 0' }"></p-skeleton>
+          } @else {
+            <span class="sem-resultados">Nenhuma avaliação recebida!</span>
+          }
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  </section>
+</main>

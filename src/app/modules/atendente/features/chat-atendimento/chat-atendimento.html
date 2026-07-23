@@ -1,0 +1,141 @@
+<p-toast />
+<main>
+  <section class="cards">
+    <div class="card-pagamentos">
+      <span class="icon pendente">
+        <i class="fa far far fa-clock"></i>
+      </span>
+      <div class="infos">
+        <span>Atendimentos em Andamento</span>
+        <span>
+          <strong>
+            {{ cardsAtendimentos.atendimentosEmAndamento }}
+          </strong>
+          Em Andamento
+        </span>
+      </div>
+    </div>
+    <div class="card-pagamentos">
+      <span class="icon efetuado">
+        <i class="fa far far fa-check-circle"></i>
+      </span>
+      <div class="infos">
+        <span>Atendimentos Finalizados</span>
+        <span>
+          <strong>
+            {{ cardsAtendimentos.atendimentosFinalizadas }}
+          </strong>
+          Finalizados
+        </span>
+      </div>
+    </div>
+    <div class="card-pagamentos">
+      <span class="icon iniciado">
+        <i class="fa far fa-star"></i>
+      </span>
+      <div class="infos">
+        <span>Pontuação Média</span>
+        <span>
+          <strong>
+            {{ cardsAtendimentos.pontuacaoMedia }}
+          </strong>
+          Pontuação
+        </span>
+      </div>
+    </div>
+  </section>
+  <hr />
+  <section class="atendimentos">
+    <p-fieldset legend="Meus Atendimentos">
+      <p-dataview #dv [value]="listaAtendimentos" [paginator]="true" [rows]="6">
+        <ng-template #list let-atendimentos>
+          <div class="lista-atendimentos">
+            @for (atendimento of atendimentos; track atendimento.id) {
+              <div class="card-atendimento">
+                <div class="informacoes">
+                  <span
+                    [ngClass]="'status ' + atendimento.status.toLowerCase()"
+                  >
+                    {{ atendimento.status | titlecase }}
+                  </span>
+                  <div class="info cliente">
+                    <i class="fa fa-user"></i>
+                    <span>
+                      {{ atendimento.cliente }}
+                    </span>
+                  </div>
+                  <div class="info mensagem">
+                    <i class="fa far fa-calendar-alt"></i>
+                    <span>
+                      {{
+                        atendimento.solicitadoEm | date: "dd/MM/yyyy HH:mm:ss"
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <p-button
+                  label="Acessar Chat"
+                  severity="secondary"
+                  icon="fa far fa-envelope"
+                  (click)="acessarChatAtendimento(atendimento)"
+                />
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+    <p-fieldset legend="Atendimentos Pendentes">
+      <p-dataview
+        #dv
+        [value]="listaSolicitacoesAtendimentos"
+        [paginator]="true"
+        [rows]="6"
+      >
+        <ng-template #list let-solicitacoes>
+          <div class="lista-solicitacoes">
+            @for (solicitacao of solicitacoes; track solicitacao.id) {
+              <div class="card-solicitacao">
+                <div class="informacoes">
+                  <div class="info cliente">
+                    <i class="fa fas fa-user"></i>
+                    <span>
+                      {{ solicitacao.solicitante }}
+                    </span>
+                  </div>
+                  <hr />
+                  <div class="info">
+                    <i class="pi pi-comment"></i>
+                    <span>
+                      {{ solicitacao.mensagem || "Sem mensagem" }}
+                    </span>
+                  </div>
+                </div>
+                <hr />
+                <p-button
+                  label="Iniciar Atendimento"
+                  (click)="aceitarSolicitacaoAtendimento(solicitacao.id)"
+                  severity="success"
+                  icon="fa far fa-check-circle"
+                  fluid
+                />
+                <div class="data">
+                  <i class="pi pi-clock"></i>
+                  <span>
+                    {{ solicitacao.solicitadoEm | date: "dd/MM/yyyy HH:mm:ss" }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+        </ng-template>
+      </p-dataview>
+    </p-fieldset>
+  </section>
+</main>

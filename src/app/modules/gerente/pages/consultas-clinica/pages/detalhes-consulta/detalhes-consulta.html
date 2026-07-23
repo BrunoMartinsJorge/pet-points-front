@@ -1,0 +1,176 @@
+<main>
+  <p-fieldset legend="Membros Participantes" [toggleable]="false">
+    @if (detalhesConsulta === null) {
+    } @else {
+      <section class="participantes">
+        <div class="input-group">
+          <label for="cliente">Cliente</label>
+          <input
+            type="text"
+            pInputText
+            [(ngModel)]="detalhesConsulta.cliente.nome"
+            disabled
+          />
+        </div>
+        <div class="input-group">
+          <label for="cliente">Veterinário</label>
+          <input
+            type="text"
+            pInputText
+            [(ngModel)]="detalhesConsulta.veterinario.nome"
+            disabled
+          />
+        </div>
+        <div class="input-group">
+          <label for="cliente">Atendente</label>
+          <input
+            type="text"
+            pInputText
+            [value]="detalhesConsulta.atendente ? detalhesConsulta.atendente.nome : 'Não Possui Atendente'"
+            disabled
+          />
+        </div>
+      </section>
+    }
+  </p-fieldset>
+  <hr />
+  <section class="detalhes-consulta">
+    @if (detalhesConsulta === null) {
+    } @else {
+      <p-fieldset legend="Datas Importantes" [toggleable]="false">
+        <div class="datas">
+          <div class="input-group">
+            <label for="cliente">Data da Solicitação</label>
+            <input
+              type="text"
+              pInputText
+              [value]="
+                detalhesConsulta.dataSolicitacao | date: 'dd/MM/yyyy - HH:mm'
+              "
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label for="cliente">Data da Consulta</label>
+            <input
+              type="text"
+              pInputText
+              [value]="
+                detalhesConsulta.dataConsulta | date: 'dd/MM/yyyy - HH:mm'
+              "
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label for="cliente">Data Atendimento</label>
+            <input
+              type="text"
+              pInputText
+              [value]="
+                (detalhesConsulta.dataAtendimento | date: 'dd/MM/yyyy - HH:mm') || 'Não Atendida'
+              "
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label for="cliente">Data Cancelamento</label>
+            <input
+              type="text"
+              pInputText
+              [value]="
+                detalhesConsulta.dataCancelamento
+                  ? (detalhesConsulta.dataCancelamento
+                    | date: 'dd/MM/yyyy - HH:mm')
+                  : 'Não Cancelada'
+              "
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label for="cliente">Iniciada Em</label>
+            <input
+              type="text"
+              pInputText
+              [value]="
+                detalhesConsulta.dataIniciado
+                  ? (detalhesConsulta.dataIniciado | date: 'dd/MM/yyyy - HH:mm')
+                  : 'Não Iniciada'
+              "
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label for="cliente">Finalizado Em</label>
+            <input
+              type="text"
+              pInputText
+              [value]="
+                detalhesConsulta.dataFinalizado
+                  ? (detalhesConsulta.dataFinalizado
+                    | date: 'dd/MM/yyyy - HH:mm')
+                  : 'Não Finalizada'
+              "
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label for="cliente">Indeferido</label>
+            <textarea
+              type="text"
+              [value]="detalhesConsulta.motivoIndeferimento || 'Não Indeferido'"
+              disabled
+              pTextarea
+              style="resize: none; overflow-y: auto"
+            ></textarea>
+          </div>
+          <div class="input-group">
+            <label for="cliente">Cancelado</label>
+            <textarea
+              type="text"
+              [value]="detalhesConsulta.motivoCancelamento || 'Não Cancelado'"
+              disabled
+              pTextarea
+              style="resize: none; overflow-y: auto"
+            ></textarea>
+          </div>
+        </div>
+      </p-fieldset>
+    }
+    @if (detalhesConsulta === null) {
+    } @else {
+      <p-fieldset legend="Informações Gerais" [toggleable]="false">
+        <div class="informacoes-gerais">
+          <div class="principal">
+            <div class="input-group">
+              <label for="cliente">Pet/Paciente da Consulta</label>
+              <input
+                type="text"
+                pInputText
+                [value]="detalhesConsulta.pet"
+                disabled
+              />
+            </div>
+            <div class="status-tipo">
+              <app-bag-status-consulta
+                [status]="detalhesConsulta.status"
+              ></app-bag-status-consulta>
+              <span class="tipo">
+                {{ detalhesConsulta.tipo }}
+              </span>
+            </div>
+          </div>
+          <hr />
+          <div class="input-group">
+            <label for="obs">Observações</label>
+            <textarea
+              type="text"
+              [value]="detalhesConsulta.observacoes || 'Sem Observações'"
+              disabled
+              pTextarea
+            ></textarea>
+          </div>
+        </div>
+      </p-fieldset>
+    }
+  </section>
+</main>

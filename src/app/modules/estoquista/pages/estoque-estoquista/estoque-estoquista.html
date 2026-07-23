@@ -1,0 +1,228 @@
+<main>
+  <section class="cards">
+    @if (cards === null) {
+      @if (carregandoCards) {
+        <span style="display: flex; gap: 1rem; width: 100%">
+          <p-skeleton height="140px" />
+          <p-skeleton height="140px" />
+          <p-skeleton height="140px" />
+        </span>
+      }
+    } @else {
+      <div class="card">
+        <div class="icon valor">
+          <i class="fas fa-coins"></i>
+        </div>
+        <div class="informacoes">
+          <span id="titulo">Valor Total em Estoque</span>
+          <span>
+            <strong id="descricao">
+              R$ {{ cards.valorTotalEstoque | number: "1.2-2" }}
+            </strong>
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon quantidade">
+          <i class="fas fa-box"></i>
+        </div>
+        <div class="informacoes">
+          <span id="titulo">Produtos em Estoque</span>
+          <span>
+            <strong id="descricao">
+              {{ cards.quantidadeProdutosEstoque }}
+            </strong>
+            Produtos
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon limite">
+          <i class="fas fa-triangle-exclamation"></i>
+        </div>
+        <div class="informacoes">
+          <span id="titulo">Produtos Abaixo do Estoque</span>
+          <span>
+            <strong id="descricao">{{ cards.produtosAbaixoEstoque }}</strong>
+            Produtos
+          </span>
+        </div>
+      </div>
+    }
+  </section>
+  <hr />
+  <section>
+    <p-fieldset legend="Filtros e Ações" [toggleable]="false">
+      <div class="filtros">
+        <div class="inputs">
+          <div class="input-group">
+            <label for="nome">Nome:</label>
+            <input
+              [disabled]="carregandoRelatorio"
+              id="nome"
+              type="text"
+              pInputText
+              [(ngModel)]="filtros.nome"
+              placeholder="Digite o nome do produto"
+              (input)="filtrarProdutos()"
+            />
+          </div>
+          <div class="input-group">
+            <label for="tipo">Tipo:</label>
+            <p-select
+              [disabled]="carregandoRelatorio"
+              appendTo="body"
+              [(ngModel)]="filtros.tipoProduto"
+              placeholder="Selecione o tipo do produto"
+              [options]="opcoesTipoProduto"
+              optionLabel="label"
+              optionValue="value"
+              (onChange)="filtrarProdutos()"
+            >
+            </p-select>
+          </div>
+          <div class="input-group">
+            <label for="precoMinimo">Preço Mínimo:</label>
+            <input
+              [disabled]="carregandoRelatorio"
+              id="precoMinimo"
+              type="number"
+              min="0"
+              pInputText
+              [(ngModel)]="filtros.precoMin"
+              placeholder="Digite o preço mínimo"
+              (input)="filtrarProdutos()"
+            />
+          </div>
+          <div class="input-group">
+            <label for="precoMaximo">Preço Máximo:</label>
+            <input
+              [disabled]="carregandoRelatorio"
+              id="precoMaximo"
+              type="number"
+              min="0"
+              pInputText
+              [(ngModel)]="filtros.precoMax"
+              placeholder="Digite o preço máximo"
+              (input)="filtrarProdutos()"
+            />
+          </div>
+          <div class="input-group">
+            <label for="nome">Incluir:</label>
+            <p-togglebutton
+              [disabled]="carregandoRelatorio"
+              [(ngModel)]="filtros.todosOsProdutos"
+              [onLabel]="'Todos os Itens'"
+              [offLabel]="'Apenas Abaixo do Estoque'"
+              (onChange)="filtrarProdutos()"
+            />
+          </div>
+        </div>
+        <div class="botoes">
+          <p-button
+            [disabled]="carregandoRelatorio"
+            label="Limpar Filtros"
+            severity="danger"
+            icon="fa fa-eraser"
+            (click)="limparFiltros()"
+          ></p-button>
+          <p-button
+            [disabled]="carregandoRelatorio"
+            label="Gerar Relatório"
+            severity="success"
+            [icon]="
+              carregandoRelatorio ? 'fa fa-spin fa-spinner' : 'fa fa-file'
+            "
+            (click)="gerarRelatorio()"
+          ></p-button>
+        </div>
+      </div>
+    </p-fieldset>
+  </section>
+  <hr />
+  <p-table
+    [value]="produtosFiltrados"
+    [paginator]="true"
+    [rows]="12"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[12, 24, 36]"
+    [stripedRows]="true"
+    [showGridlines]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th pSortableColumn="valorUnitario">
+          Valor Unitário
+          <p-sortIcon field="valorUnitario" />
+        </th>
+        <th>Tipo do Produto</th>
+        <th pSortableColumn="quantidadeEstoque">
+          Quantidade em Estoque
+          <p-sortIcon field="quantidadeEstoque" />
+        </th>
+        <th>Ações</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-produto>
+      <tr
+        [ngStyle]="
+          produto.quantidadeAbaixoEstoque
+            ? {
+                border: '1px solid #f00',
+                'background-color': 'rgba(255, 0, 0, 0.108)',
+              }
+            : {}
+        "
+      >
+        <td>
+          {{ produto.nome }}
+        </td>
+        <td>{{ produto.descricao }}</td>
+        <td>{{ produto.valorUnitario | currency: "BRL" }}</td>
+        <td>{{ produto.tipo }}</td>
+        <td>
+          <i
+            id="icone-quantidade"
+            [ngClass]="
+              produto.quantidadeAbaixoEstoque
+                ? 'fa fa-arrow-down'
+                : 'fa fa-arrow-up'
+            "
+            [pTooltip]="
+              produto.quantidadeAbaixoEstoque
+                ? 'Produto Abaixo do Estoque'
+                : 'Produto Acima do Estoque'
+            "
+          ></i>
+          {{ produto.quantidadeEstoque }} Unidades
+        </td>
+        <td>
+          <p-button
+            label="Ver Detalhes"
+            icon="fa fa-eye"
+            severity="secondary"
+            (click)="verDetalhesProduto(produto.id)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" style="text-align: center; overflow: hidden">
+          @if (carregandoProdutos) {
+            <p-progressSpinner></p-progressSpinner>
+          } @else {
+            @if (possuiFiltrosAtivos) {
+              <span>Nenhum produto encontrado com os filtros aplicados.</span>
+            } @else {
+              <span>Nenhum produto encontrado.</span>
+            }
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</main>

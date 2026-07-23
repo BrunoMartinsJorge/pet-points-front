@@ -1,0 +1,71 @@
+<main>
+  <section class="form-container">
+    <app-login-form
+      [hidden]="mode_form === 'register'"
+      (toogleModeForm)="toogleModeForm()"
+    ></app-login-form>
+    <app-register-form
+      [hidden]="mode_form === 'login'"
+      (toogleModeForm)="toogleModeForm()"
+    ></app-register-form>
+  </section>
+
+  <section class="preview">
+    <div class="preview-conteudo">
+      <span class="preview-eyebrow">Visão geral da clínica</span>
+      <h2 class="preview-titulo">Tudo num só lugar.</h2>
+
+      <div class="preview-stats">
+        <div class="preview-stat">
+          <span class="stat-icon">
+            <i class="fa fa-calendar-check"></i>
+          </span>
+          <div class="stat-texto">
+            <span class="stat-label">Consultas hoje</span>
+            <div class="stat-linha">
+              <strong>5</strong>
+              <span>4 confirmadas</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-stat">
+          <span class="stat-icon amarelo">
+            <i class="fa fa-clock"></i>
+          </span>
+          <div class="stat-texto">
+            <span class="stat-label">Aguardando</span>
+            <div class="stat-linha">
+              <strong>2</strong>
+              <span>próx. 11:30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-agenda">
+        <span class="agenda-titulo">Agenda de hoje</span>
+
+        <div class="agenda-item">
+          <span class="agenda-hora">08:30</span>
+          <span class="agenda-avatar">ME</span>
+          <div class="agenda-info">
+            <strong>Mel · Check-up geral</strong>
+            <span>Dr. Carlos Zaul</span>
+          </div>
+          <span class="agenda-status finalizada">Finalizada</span>
+        </div>
+
+        <div class="agenda-item">
+          <span class="agenda-hora">10:00</span>
+          <span class="agenda-avatar laranja">TH</span>
+          <div class="agenda-info">
+            <strong>Theo · Vacinação</strong>
+            <span>Dra. Ana Costa</span>
+          </div>
+          <span class="agenda-status andamento">Em andamento</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

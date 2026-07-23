@@ -1,0 +1,111 @@
+main {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+
+  section {
+    width: 70%;
+    padding: 1em 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    justify-content: space-between;
+k
+    h1 {
+      color: var(--color-title);
+    }
+
+    p {
+      padding: 0;
+    }
+
+    &#banner-pet {
+      overflow: hidden;
+      width: 30%;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+      div#pet-item {
+        padding: 2.5em;
+        background-color: #fff;
+        display: grid;
+        place-items: center;
+        clip-path: circle();
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        i#icon-pet {
+          font-size: 5em;
+          display: inline-block;
+          transition:
+            transform 0.4s ease,
+            opacity 0.4s ease;
+          transform: translateY(0);
+          opacity: 1;
+        }
+
+        i#icon-pet.animate {
+          animation: trocaPet 0.4s ease forwards;
+        }
+
+        &.masculino {
+          color: #58c9af;
+        }
+
+        &.feminino {
+          color: #ff6f91;
+        }
+      }
+
+      &.masculino {
+        background-color: #58c9af;
+      }
+
+      &.feminino {
+        background-color: #ff6f91;
+      }
+    }
+
+    form {
+      width: auto;
+      display: flex;
+      flex-direction: column;
+      grid-gap: 1em;
+      height: auto;
+
+      div.info-gerais {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 1em;
+      }
+
+      div.info-adicionais {
+        display: grid;
+        grid-gap: 1em;
+      }
+    }
+  }
+}
+
+@keyframes trocaPet {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  49% {
+    transform: translateY(80px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,643 @@
+<p-toast />
+<p-confirmdialog>
+  <ng-template pTemplate="message">
+    <div class="mensagem-desativacao">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>
+        Tem certeza que deseja desativar seu perfil? Essa ação não pode ser
+        desfeita.
+      </span>
+      @switch (getTipoUsuario) {
+        @case ("CLIENTE") {
+          <hr />
+          Suas consultas seram canceladas e seus pets serão desabilitados.
+        }
+      }
+    </div>
+  </ng-template>
+</p-confirmdialog>
+<main>
+  @if (carregandoUsuario) {
+    <p-skeleton width="100%" height="300px"></p-skeleton>
+  } @else {
+    <p-fieldset legend="Perfil do Usuário">
+      <section
+        class="informacoes-usuario"
+        [class.imagem]="getImagemUsuario || novaImagem.url"
+      >
+        <div>
+          <app-imagem
+            [urlImagem]="novaImagem.url || getImagemUsuario"
+            [alt]="'Imagem do Usuário'"
+            [imagemRedonda]="false"
+            [tamanhoTotal]="true"
+            [width]="'200px'"
+            [preview]="true"
+          />
+          @if (podeEditar) {
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 0.5rem;
+              "
+            >
+              <p-fileupload
+                #fu
+                mode="basic"
+                [chooseLabel]="
+                  novaImagem ? 'Alterar Imagem' : 'Carregar Imagem'
+                "
+                chooseIcon="pi pi-upload"
+                [multiple]="false"
+                name="demo[]"
+                [fileLimit]="1"
+                accept="image/*"
+                maxFileSize="1000000"
+                (onSelect)="carregarArquivo($event)"
+                [auto]="true"
+                [disabled]="!podeEditar"
+                [style]="{ width: '100%' }"
+              />
+            </div>
+          }
+        </div>
+        <form [formGroup]="informacoesUsuario">
+          <div class="input-group">
+            <label for="nome">Nome</label>
+            <input
+              id="nome"
+              type="text"
+              formControlName="nome"
+              [disabled]="true"
+              pInputText
+            />
+          </div>
+          <div class="input-group">
+            <label for="cpf">CPF</label>
+            <input
+              id="cpf"
+              type="text"
+              formControlName="cpf"
+              [disabled]="true"
+              pInputText
+            />
+          </div>
+          <div class="input-group">
+            <label for="dataNascimento">Data de Nascimento</label>
+            <p-datepicker
+              formControlName="dataNascimento"
+              appendTo="body"
+              [disabled]="!podeEditar"
+              inputId="dataNascimento"
+              dateFormat="dd/mm/yy"
+              [fluid]="true"
+              [showIcon]="true"
+            />
+          </div>
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              [disabled]="true"
+              pInputText
+            />
+          </div>
+          <div class="input-group">
+            <label for="telefone">Telefone</label>
+            <input
+              id="telefone"
+              type="text"
+              formControlName="telefone"
+              [disabled]="true"
+              pInputText
+            />
+          </div>
+          <div class="input-group">
+            <label for="genero">Gênero</label>
+            <p-select [options]="tiposGeneros" formControlName="genero">
+            </p-select>
+          </div>
+        </form>
+      </section>
+      <div class="acoes">
+        @if (podeEditar) {
+          <p-button
+            label="Salvar Alterações"
+            severity="success"
+            icon="fa fa-save"
+            (click)="enviarAlteracoes()"
+          />
+        }
+        <p-button
+          label="Editar Perfil"
+          severity="secondary"
+          icon="fa fa-user-edit"
+          (click)="alterarPermissaoEdicao()"
+        />
+        <p-button
+          label="Desativar Perfil"
+          severity="danger"
+          icon="fa fa-user-minus"
+          (click)="desativarPerfil($event)"
+        />
+      </div>
+    </p-fieldset>
+  }
+  <hr />
+  @switch (getTipoUsuario) {
+    @case ("CLIENTE") {
+      <section class="outras-informacoes cliente">
+        <p-fieldset legend="Minhas Avaliações">
+          @if (carregandoMinhasAvaliacoes) {
+            <span style="display: flex; justify-content: center">
+              <p-progressSpinner></p-progressSpinner>
+            </span>
+          } @else {
+            <p-dataview
+              #dv
+              [value]="minhasAvaliacoes"
+              [paginator]="true"
+              [rows]="3"
+            >
+              <ng-template #list let-avaliacoes>
+                <div class="avaliacoes">
+                  @for (avaliacao of avaliacoes; track avaliacao.id) {
+                    <div class="card-avaliacao">
+                      <div class="icon">
+                        <i
+                          [ngClass]="
+                            'fa fa-' +
+                            (avaliacao.tipo === 'ATENDIMENTO'
+                              ? 'comments'
+                              : 'clipboard-check')
+                          "
+                          [pTooltip]="
+                            'Avaliação de: ' +
+                            (avaliacao.tipo === 'ATENDIMENTO'
+                              ? 'Atendimento'
+                              : 'Consulta')
+                          "
+                        ></i>
+                      </div>
+                      <div class="body">
+                        <span class="mensagem">
+                          {{ avaliacao.mensagem }}
+                        </span>
+                        <span class="data">
+                          {{
+                            (avaliacao.dataAvaliacao
+                              | date: "dd/MM/yyyy - HH:mm") ?? "Sem Data"
+                          }}
+                        </span>
+                      </div>
+                      <strong pTooltip="Pontuação">{{
+                        avaliacao.pontuacao
+                      }}</strong>
+                    </div>
+                  }
+                </div>
+              </ng-template>
+              <ng-template #emptymessage>
+                <span class="sem-resultados">Nenhum pagamento registrado!</span>
+              </ng-template>
+            </p-dataview>
+          }
+        </p-fieldset>
+        <p-fieldset legend="Pagamentos">
+          <section class="pagamentos">
+            @if (carregandoInformacoesPagamentos) {
+              <p-skeleton width="calc(25% - 0.5rem)" height="300px" />
+              <p-skeleton width="calc(75% - 0.5rem)" height="300px" />
+            } @else {
+              <div
+                [ngClass]="
+                  'questao-financeira ' +
+                  (pagamentosPendentes.pagamentosPendentes > 0
+                    ? 'pendente'
+                    : '')
+                "
+              >
+                <h2>{{ pagamentosPendentes.pagamentosPendentes }}</h2>
+                <span> Pagamentos pendentes </span>
+                <hr />
+                <strong class="saldo-pendente">
+                  Saldo Pendente: R$
+                  {{ pagamentosPendentes.saldoPendente | currency: "BRL" }}
+                </strong>
+              </div>
+              <div class="lista-pagamentos">
+                <p-dataview
+                  #dv
+                  [value]="pagamentosPendentes.meusPagamentosAtrasadosPendentes"
+                  [paginator]="true"
+                  [rows]="3"
+                >
+                  <ng-template #list let-pagamentos>
+                    <div class="pagamentos">
+                      @for (pagamento of pagamentos; track pagamento.id) {
+                        <div class="card-pagamento">
+                          <div>
+                            <div
+                              class="forma-pagamento"
+                              pTooltip="{{ pagamento.tipoPagamento }}"
+                            >
+                              <i
+                                [class]="
+                                  iconePagamento(pagamento.tipoPagamento)
+                                "
+                              ></i>
+                            </div>
+                            <div class="data-valor">
+                              <strong class="valor"
+                                >Valor:
+                                {{ pagamento.valor | currency: "BRL" }}</strong
+                              >
+                              <span class="data-limite">
+                                Data Limite:
+                                {{ pagamento.dataLimitePagamento }}
+                              </span>
+                            </div>
+                          </div>
+                          <div class="body-card">
+                            <div class="badges">
+                              @if (!pagamento.atrasado) {
+                                <span
+                                  [ngClass]="
+                                    'status-pagamento ' +
+                                    (pagamento.atrasado
+                                      ? 'atrasado'
+                                      : pagamento.statusPagamento.toLowerCase())
+                                  "
+                                >
+                                  {{
+                                    pagamento.atrasado
+                                      ? "ATRASADO"
+                                      : (pagamento.statusPagamento | titlecase)
+                                  }}
+                                </span>
+                              }
+                              <span
+                                [ngClass]="
+                                  pagamento.atrasado ? 'atrasado' : 'em-tempo'
+                                "
+                              >
+                                {{
+                                  pagamento.atrasado ? "Atrasado" : "Em Tempo"
+                                }}
+                              </span>
+                            </div>
+                            <p-button
+                              icon="fa fa-eye"
+                              severity="secondary"
+                              (click)="selecionarPagamento(pagamento)"
+                            />
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </ng-template>
+                  <ng-template #emptymessage>
+                    <span class="sem-resultados"
+                      >Nenhum pagamento registrado!</span
+                    >
+                  </ng-template>
+                </p-dataview>
+              </div>
+            }
+          </section>
+        </p-fieldset>
+      </section>
+    }
+    @case ("ATENDENTE") {
+      <ng-container
+        *ngTemplateOutlet="avaliacoesFuncionarioView"
+      ></ng-container>
+    }
+    @case ("VETERINARIO") {
+      <ng-container
+        *ngTemplateOutlet="avaliacoesFuncionarioView"
+      ></ng-container>
+    }
+  }
+
+  <ng-template #avaliacoesFuncionarioView>
+    <section class="informacoes-atendente">
+        @if (carregandoConsultasAtendenteVeterinario) {
+          <p-skeleton width="calc(75% - 0.5rem)" height="360px"></p-skeleton>
+        } @else if (getTipoUsuario === "VETERINARIO") {
+          <p-fieldset legend="Agenda de Consultas">
+            <app-agenda-consultas
+              [consultas]="consultasAtendenteVeterinario"
+            ></app-agenda-consultas>
+          </p-fieldset>
+        } @else {
+          <p-fieldset legend="Consultas Aprovadas/Reprovadas">
+            <p-dataview
+              #dv
+              [value]="consultasAtendenteVeterinario"
+              [paginator]="true"
+              [rows]="4"
+            >
+              <ng-template #list let-consultas>
+                <div class="lista-consultas">
+                  @for (consulta of consultas; track consulta.id) {
+                    <div
+                      [ngClass]="
+                        'card-consulta ' + consulta.status.toLowerCase()
+                      "
+                    >
+                      <div class="badges">
+                        <span
+                          [ngClass]="'status ' + consulta.status.toLowerCase()"
+                        >
+                          {{ consulta.status | titlecase }}
+                        </span>
+                        <span class="tipo-consulta">
+                          {{ consulta.tipoConsulta }}
+                        </span>
+                      </div>
+                      <div class="informacoes">
+                        <div>
+                          <span class="info">
+                            <i class="fa fas fa-user"></i>
+                            {{ consulta.cliente }}
+                          </span>
+                          <span class="info">
+                            <i class="fa fas fa-paw"></i>
+                            {{ consulta.pet }}
+                          </span>
+                          <span class="data-consulta">
+                            <i class="fa fas fa-calendar"></i>
+                            {{
+                              consulta.dataHoraConsulta
+                                | date: "dd/MM/yyyy - HH:mm"
+                            }}
+                          </span>
+                        </div>
+                        <p-button
+                          icon="fa fa-eye"
+                          severity="secondary"
+                          (click)="selecionarConsulta(consulta)"
+                        />
+                      </div>
+                      @if (
+                        consulta.status === "CANCELADA" ||
+                        consulta.status === "REPROVADA"
+                      ) {
+                        <div class="cancelada-indeferida">
+                          <span>
+                            {{ gerarTextoCancelamentoIndeferimento(consulta) }}
+                          </span>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              </ng-template>
+              <ng-template #emptymessage>
+                <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+              </ng-template>
+            </p-dataview>
+          </p-fieldset>
+        }
+        @if (carregandoRankingAvaliacao) {
+          <p-skeleton width="calc(25% - 0.5rem)" height="360px"> </p-skeleton>
+        } @else {
+          <p-fieldset legend="Minhas Avaliações">
+            <div class="pontuacao">
+              @if (rankingAvaliacao !== null) {
+                <div class="card-avaliacoes">
+                  @if (rankingAvaliacao.classificacao) {
+                    <div class="banner-ranking">
+                      <div class="medalha">
+                        <i class="fa fas fa-award"></i>
+                      </div>
+                      <div class="texto">
+                        <span class="titulo">
+                          <strong
+                            >{{ rankingAvaliacao.classificacao }}º Lugar</strong
+                          >
+                          no ranking
+                        </span>
+                        <span class="subtitulo">
+                          de atendimentos avaliados!
+                        </span>
+                      </div>
+                    </div>
+                  }
+                  <p-dataview
+                    #dv
+                    [value]="avaliacoes"
+                    [paginator]="true"
+                    [rows]="4"
+                  >
+                    <ng-template #list let-avaliacoes>
+                      <div class="lista-avaliacoes">
+                        @for (avaliacao of avaliacoes; track avaliacao.id) {
+                          <div class="card-avaliacao">
+                            <div class="header">
+                              <span class="pontos">
+                                <i class="fa fas fa-star"></i>
+                                {{ avaliacao.pontuacao }}
+                                {{
+                                  avaliacao.pontuacao === 1 ? "ponto" : "pontos"
+                                }}
+                              </span>
+                              <span class="data">{{ avaliacao.enviadoEm }}</span>
+                            </div>
+                            <p class="mensagem">{{ avaliacao.observacoes }}</p>
+                          </div>
+                        }
+                      </div>
+                    </ng-template>
+                    <ng-template #emptymessage>
+                      <span class="sem-resultados"
+                        >Nenhuma avaliação encontrada!</span
+                      >
+                    </ng-template>
+                  </p-dataview>
+                </div>
+              } @else {
+                <div class="card-sem-avaliacoes">
+                  <i class="fa fas far fa-star"></i>
+                  <div class="infos">
+                    <h4>Você ainda não possui nenhum atendimento avaliado</h4>
+                    <span>Um cliente pode avaliar seu atendimento</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </p-fieldset>
+        }
+      </section>
+  </ng-template>
+
+  @switch (getTipoUsuario) {
+    @case ("ESTOQUISTA") {
+      @if (carregandoMovimentacoesEstoquista) {
+        <p-skeleton height="360px"></p-skeleton>
+      } @else {
+        <p-fieldset legend="Movimentações">
+          <p-table
+            [value]="movimentacoesEstoquista"
+            [paginator]="true"
+            [rows]="4"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+            [rowsPerPageOptions]="[12, 24, 36]"
+            [stripedRows]="true"
+            [showGridlines]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="dataHora">
+                  <p-sortIcon field="dataHora" />
+                  Data Hora
+                </th>
+                <th>Tipo</th>
+                <th>Produto</th>
+                <th pSortableColumn="quantidadeMovimentada">
+                  <p-sortIcon field="quantidadeMovimentada" /> Quantidade em
+                  Estoque
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-movimentacao>
+              <tr>
+                <td>
+                  {{ movimentacao.dataHora | date: "dd/MM/yyyy HH:mm" }}
+                </td>
+                <td>
+                  <app-bag-tipo-movimentacao
+                    [tipoMovimentacao]="movimentacao.tipoMovimentacao"
+                  ></app-bag-tipo-movimentacao>
+                </td>
+                <td>{{ movimentacao.produto.nome }}</td>
+                <td>
+                  {{ movimentacao.quantidadeMovimentada }} Unidade(s)
+                  <i
+                    [ngClass]="
+                      movimentacao.tipoMovimentacao === 'SAIDA'
+                        ? 'fa fa-arrow-down'
+                        : 'fa fa-arrow-up'
+                    "
+                  ></i>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="4" class="text-center">
+                  <span style="text-align: center"
+                    >Nenhuma movimentação encontrada.</span
+                  >
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-fieldset>
+      }
+    }
+    @case ("GERENTE") {
+      <section class="informacoes-gerente">
+        <p-fieldset legend="Logs do Sistema">
+          <p-table
+            [value]="logsSistema"
+            [paginator]="true"
+            [rows]="6"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+            [rowsPerPageOptions]="[6, 12, 24]"
+            [stripedRows]="true"
+            [showGridlines]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Tipo</th>
+                <th pSortableColumn="registradoEm">
+                  Data Hora
+                  <p-sortIcon field="registradoEm" />
+                </th>
+                <th>Lançado Por</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-log>
+              <tr>
+                <td>
+                  <app-bag-log [tipoLog]="log.tipo" />
+                </td>
+                <td>{{ log.registradoEm }}</td>
+                <td>{{ log.lancadoPor || "Não identificado" }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="3" style="text-align: center; overflow: hidden">
+                  @if (!carregandoLogsSistema) {
+                    Nenhum log encontrado
+                  } @else {
+                    <p-progressSpinner></p-progressSpinner>
+                  }
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-fieldset>
+        <p-fieldset legend="Funcionários Registrados">
+          <p-table
+            [value]="movimentacoes"
+            [paginator]="true"
+            [rows]="6"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+            [rowsPerPageOptions]="[6, 12, 24]"
+            [stripedRows]="true"
+            [showGridlines]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Tipo</th>
+                <th>Produto</th>
+                <th pSortableColumn="quantidadeMovimentada">
+                  <p-sortIcon field="quantidadeMovimentada"></p-sortIcon>
+                  Quantidade Movimentada
+                </th>
+                <th>Lançado Por</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-movimentacao>
+              <tr>
+                <td>
+                  <app-bag-tipo-movimentacao
+                    [tipoMovimentacao]="movimentacao.tipoMovimentacao"
+                  ></app-bag-tipo-movimentacao>
+                </td>
+                <td>{{ movimentacao.produto.nome }}</td>
+                <td>
+                  {{ movimentacao.quantidadeMovimentada }} Unidade(s)
+                  Movimentada(s)
+                </td>
+                <td>{{ movimentacao.lancadoPor.nome }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="4" style="text-align: center; overflow: hidden">
+                  @if (carregandoMovimentacoes) {
+                    <p-progressSpinner></p-progressSpinner>
+                  } @else {
+                    <span>Nenhuma movimentação encontrada</span>
+                  }
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-fieldset>
+      </section>
+    }
+  }
+</main>

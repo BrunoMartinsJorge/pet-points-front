@@ -1,0 +1,234 @@
+<p-dialog
+  header="Agendar Consulta"
+  [visible]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: '50vw' }"
+>
+  <p-stepper [value]="1" [linear]="true">
+    <p-step-list>
+      <p-step [value]="1">Detalhes Consulta</p-step>
+      <p-step [value]="2">Veterinário</p-step>
+      <p-step [value]="3">Solicitar Agendamento</p-step>
+    </p-step-list>
+
+    <p-step-panels>
+      <!-- Etapa 1: tipo de consulta -->
+      <p-step-panel [value]="1">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="informacoes-tipo-consulta">
+            <h2>Qual tipo de consulta você deseja?</h2>
+            <p>Selecione o tipo de consulta que deseja realizar e clique em "Avançar".</p>
+          </div>
+          <div class="lista-atendimentos">
+            @for (tipoConsulta of tiposConsulta; track tipoConsulta.id) {
+              <button
+                (click)="selecionarTipoConsulta(tipoConsulta)"
+                [class.ativo]="tipoConsultaSelecionado?.id === tipoConsulta.id"
+                class="tipo"
+              >
+                <div class="icone"><i class="fa fas fa-stethoscope"></i></div>
+                <div class="infos">
+                  <h4>{{ tipoConsulta.nome }}</h4>
+                  <span>{{ tipoConsulta.descricao }}</span>
+                </div>
+                <strong>R$ {{ tipoConsulta.valor }}</strong>
+              </button>
+            }
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 1rem">
+            <p-button
+              label="Avançar"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              severity="success"
+              size="small"
+              [disabled]="!tipoConsultaSelecionado"
+              (onClick)="activateCallback(2); listarVeterinariosTipoConsulta()"
+            />
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <!-- Etapa 2: veterinário + data/hora -->
+      <p-step-panel [value]="2">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="informacoes-veterinarios">
+            <h2>Selecione o Veterinário que deseja</h2>
+            <p>
+              Ao selecionar o veterinário, você poderá selecionar o horário e a
+              data que estiverem disponíveis
+            </p>
+          </div>
+          <div class="lista-veterinarios">
+            @for (veterinario of veterinarios; track veterinario.id) {
+              <button
+                class="card-veterinario"
+                [class.ativo]="veterinarioSelecionado?.id === veterinario.id"
+                (click)="selecionarVeterinario(veterinario)"
+              >
+                <div class="iniciais">{{ pegarIniciais(veterinario.nome) }}</div>
+                <div class="infos">
+                  <strong>{{ veterinario.nome }}</strong>
+                  <span>
+                    {{ veterinario.especializacoes }}
+                    - <i class="fa fa-star"></i>
+                    {{ typeof veterinario.avaliacao === "number" ? veterinario.avaliacao : "Sem Avaliação" }}
+                  </span>
+                </div>
+              </button>
+            }
+          </div>
+          <hr />
+          <div class="data-horario">
+            <div class="input-group">
+              <label for="data">Data da Consulta</label>
+              <p-datepicker
+                appendTo="body"
+                placeholder="Selecione a data da consulta"
+                dateFormat="dd/mm/yy"
+                [minDate]="dataMinima"
+                [(ngModel)]="dataConsulta"
+                (ngModelChange)="selecionarData($event)"
+                fluid
+              ></p-datepicker>
+            </div>
+            <div class="input-group">
+              <label for="horario">Horários Disponíveis</label>
+              <p-select
+                [options]="horariosDisponiveis"
+                [(ngModel)]="horarioConsulta"
+                placeholder="Selecione o horário"
+                appendTo="body"
+                [disabled]="!dataConsulta || horariosDisponiveis.length === 0"
+                fluid
+              />
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; gap: 1rem">
+            <p-button
+              label="Voltar"
+              icon="pi pi-arrow-left"
+              severity="secondary"
+              size="small"
+              (onClick)="activateCallback(1)"
+            />
+            <p-button
+              label="Avançar"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              severity="success"
+              size="small"
+              [disabled]="!veterinarioSelecionado || !horarioConsulta || !dataConsulta"
+              (onClick)="activateCallback(3)"
+            />
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <!-- Etapa 3: pet + pagamento + resumo -->
+      <p-step-panel [value]="3">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="etapa-final">
+            <div class="informacoes-adicionais">
+              <div class="informacoes-pagamento-pet">
+                <h2>Últimas Informações</h2>
+                <p>Selecione o pet para a consulta e o método de pagamento.</p>
+              </div>
+              <div class="input-group">
+                <label for="pet">Pet</label>
+                <p-select
+                  [options]="pets"
+                  appendTo="body"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Selecione um pet"
+                  [(ngModel)]="idPetSelecionado"
+                />
+              </div>
+              <div class="input-group">
+                <label for="forma-pagamento">Forma de Pagamento</label>
+                <p-select
+                  [options]="formasPagamento"
+                  appendTo="body"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Selecione uma opção"
+                  [(ngModel)]="formaPagamento"
+                />
+              </div>
+              <div class="input-group">
+                <label for="observacoes">Observações</label>
+                <textarea
+                  id="observacoes"
+                  placeholder="Observações sobre a consulta..."
+                  [(ngModel)]="observacoes"
+                  pTextarea
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="resumo-solicitacao">
+              <h4>Resumo da Solicitação</h4>
+              <div class="detalhes">
+                <div class="info-consulta">
+                  <div class="icon"><i class="fa fas fa-heartbeat"></i></div>
+                  <div class="infos">
+                    <span>Atendimento</span>
+                    <strong>{{ tipoConsultaSelecionado?.nome }}</strong>
+                  </div>
+                </div>
+                <div class="info-consulta">
+                  <div class="icon"><i class="fa fas fa-user-md"></i></div>
+                  <div class="infos">
+                    <span>Profissional</span>
+                    <strong>{{ veterinarioSelecionado?.nome }}</strong>
+                  </div>
+                </div>
+                <div class="info-consulta">
+                  <div class="icon"><i class="fa fa-calendar"></i></div>
+                  <div class="infos">
+                    <span>Data</span>
+                    <strong>{{ dataConsulta | date: "dd/MM/yyyy" }}</strong>
+                  </div>
+                </div>
+                <div class="info-consulta">
+                  <div class="icon"><i class="fa fa-clock"></i></div>
+                  <div class="infos">
+                    <span>Horário</span>
+                    <strong>{{ horarioConsulta }}</strong>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div class="valor">
+                <span>Valor da Consulta</span>
+                <strong>R$ {{ tipoConsultaSelecionado?.valor }}</strong>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div style="display: flex; justify-content: space-between; gap: 1rem">
+            <p-button
+              label="Voltar"
+              icon="pi pi-arrow-left"
+              severity="secondary"
+              size="small"
+              (onClick)="activateCallback(2)"
+            />
+            <p-button
+              label="Enviar Solicitação"
+              icon="pi pi-check"
+              iconPos="right"
+              severity="success"
+              size="small"
+              [disabled]="!veterinarioSelecionado || !horarioConsulta || !dataConsulta || !idPetSelecionado || !formaPagamento"
+              (onClick)="agendarConsulta()"
+            />
+          </div>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
+</p-dialog>
