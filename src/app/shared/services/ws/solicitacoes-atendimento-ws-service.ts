@@ -3,7 +3,7 @@ import { inject, Injectable, NgZone } from '@angular/core';
 import type { SolicitacoesAtendimentosDto } from '../../../modules/atendente/features/chat-atendimento/models/SolicitacoesAtendimentosDto';
 import type { SolicitacaoRemovidaDto } from '../../../modules/atendente/features/chat-atendimento/models/SolicitacaoRemovidaDto';
 import { TokenService } from '../../../core/services/token-service';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import type { StompSubscription } from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
 import { Subject } from 'rxjs';

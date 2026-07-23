@@ -2,7 +2,7 @@ import type { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { TokenService } from '../services/token-service';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 export const tokenApiInterceptor: HttpInterceptorFn = (req, next) => {
   // Adiciona o serviço de autenticação
