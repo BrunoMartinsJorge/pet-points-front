@@ -27,8 +27,8 @@ export class ClientesClinica implements OnInit {
   public filtros = {
     nome: '',
     genero: '',
-    ordenarDataCrescente: true,
   };
+  public carregandoRelatorio = false;
 
   public tipoUsuario = '';
 
@@ -47,7 +47,6 @@ export class ClientesClinica implements OnInit {
       next: (res: ClienteDto[]) => {
         this.clientes = res;
         this.clientesFiltrados = res;
-        this.ordenarDatas();
       },
     });
   }
@@ -65,23 +64,6 @@ export class ClientesClinica implements OnInit {
       );
     }
     this.clientesFiltrados = clientes;
-    this.ordenarDatas();
-  }
-
-  public ordenarDatas(): void {
-    this.clientesFiltrados.sort((a, b) => {
-      if (this.filtros.ordenarDataCrescente) {
-        return (
-          new Date(a.registradoEm).getTime() -
-          new Date(b.registradoEm).getTime()
-        );
-      } else {
-        return (
-          new Date(b.registradoEm).getTime() -
-          new Date(a.registradoEm).getTime()
-        );
-      }
-    });
   }
 
   public verDetalhesCliente(idCliente: number): void {
@@ -92,8 +74,26 @@ export class ClientesClinica implements OnInit {
     this.filtros = {
       nome: '',
       genero: '',
-      ordenarDataCrescente: true,
     };
     this.filtrarClientes();
+  }
+
+  public gerarRelatorioClientes(): void {
+    this.carregandoRelatorio = true;
+    const form = {
+      nome: this.filtros.nome,
+      genero: this.filtros.genero
+    };
+    this.service.gerarRelatorioClientes(form).subscribe({
+      next: (res: Blob) => {
+        const file = new Blob([res], { type: 'application/pdf' });
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
+        this.carregandoRelatorio = false;
+      },
+      error: () => {
+        this.carregandoRelatorio = false;
+      }
+    });
   }
 }

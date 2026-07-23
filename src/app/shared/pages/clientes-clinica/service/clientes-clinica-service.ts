@@ -17,15 +17,36 @@ export class ClientesClinicaService {
     return this.http.get<ClienteDto[]>(this.URL);
   }
 
-  public buscarDetalhesCliente(idCliente: number): Observable<ClientesDetalhesDto> {
-    return this.http.get<ClientesDetalhesDto>(`${this.URL}/detalhes/${idCliente}`);
+  public buscarDetalhesCliente(
+    idCliente: number,
+  ): Observable<ClientesDetalhesDto> {
+    return this.http.get<ClientesDetalhesDto>(
+      `${this.URL}/detalhes/${idCliente}`,
+    );
   }
 
-  public buscarListaPetsCliente(idCliente: number): Observable<PetsClienteDto[]> {
-    return this.http.get<PetsClienteDto[]>(`${this.URL}/pets-cliente/${idCliente}`);
+  public buscarListaPetsCliente(
+    idCliente: number,
+  ): Observable<PetsClienteDto[]> {
+    return this.http.get<PetsClienteDto[]>(
+      `${this.URL}/pets-cliente/${idCliente}`,
+    );
   }
 
-  public buscarHistoricoConsultasCliente(idCliente: number): Observable<HistoricoConsultasClienteDto[]> {
-    return this.http.get<HistoricoConsultasClienteDto[]>(`${this.URL}/historico-consultas/${idCliente}`);
+  public buscarHistoricoConsultasCliente(
+    idCliente: number,
+  ): Observable<HistoricoConsultasClienteDto[]> {
+    return this.http.get<HistoricoConsultasClienteDto[]>(
+      `${this.URL}/historico-consultas/${idCliente}`,
+    );
+  }
+
+  public gerarRelatorioClientes(form: {
+    nome: string | null;
+    genero: string | null;
+  }): Observable<Blob> {
+    return this.http.post(`${this.URL}/relatorios`, form, {
+      responseType: 'blob',
+    });
   }
 }
