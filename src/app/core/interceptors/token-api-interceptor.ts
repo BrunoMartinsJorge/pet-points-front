@@ -2,7 +2,7 @@ import type { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { TokenService } from '../services/token-service';
 import { Router } from '@angular/router';
-import { environment } from '../environments/environment-dev';
+import { environment } from '../../environments/environment';
 
 export const tokenApiInterceptor: HttpInterceptorFn = (req, next) => {
   // Adiciona o serviço de autenticação
@@ -22,7 +22,7 @@ export const tokenApiInterceptor: HttpInterceptorFn = (req, next) => {
   const env = environment;
 
   // Pega a URL da API do ambiente
-  const apiUrl = env.api;
+  const apiUrl = env.apiUrl;
 
   // Verifica se a URL da requisição começa com a URL da API
   if (!req.url.startsWith(apiUrl))

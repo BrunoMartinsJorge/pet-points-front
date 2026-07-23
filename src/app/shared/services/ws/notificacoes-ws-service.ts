@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { inject, Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
-import { environment } from '../../../core/environments/environment-dev';
+import { environment } from '../../../environments/environment';
 import SockJS from 'sockjs-client';
 import { TokenService } from '../../../core/services/token-service';
 import { NotificacoesService } from '../notificacoes-service';
@@ -39,7 +39,7 @@ export class NotificacoesWsService {
     }
 
     this.client = new Client({
-      webSocketFactory: () => new SockJS(`${this.env.api}/ws/notificacoes`),
+      webSocketFactory: () => new SockJS(`${this.env.apiUrl}/ws/notificacoes`),
       reconnectDelay: 5000,
       connectHeaders: {
         Authorization: `Bearer ${token}`,
@@ -60,7 +60,7 @@ export class NotificacoesWsService {
           }
 
           const msg = data as NotificacaoDto;
-          
+
           if (!msg?.mensagem?.trim()) return;
           if (msg.id === this.lastMessageId) return;
           if (!msg.id) return;
