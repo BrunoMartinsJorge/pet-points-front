@@ -275,12 +275,6 @@ main {
     &:last-child {
       flex: 1 1 calc(35% - #{$gap});
     }
-
-    ::ng-deep .p-fieldset-legend {
-      border-left: 4px solid var(--color-card-primary);
-      border-radius: 2px;
-      padding-left: 0.6rem;
-    }
   }
 }
 
