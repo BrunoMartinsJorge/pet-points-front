@@ -1,0 +1,249 @@
+<main>
+  <header class="financeiro-header">
+    <div class="titulo">
+      <h1>Registros Financeiros</h1>
+      <p>Acompanhe a receita, pagamentos pendentes e o histórico de faturas da clínica.</p>
+    </div>
+    <p-button
+      label="Atualizar"
+      icon="fa fa-rotate-right"
+      severity="secondary"
+      [outlined]="true"
+      (click)="recarregar()"
+    />
+  </header>
+
+  <section class="kpis">
+    @if (carregandoCards) {
+      <p-skeleton height="110px" />
+      <p-skeleton height="110px" />
+      <p-skeleton height="110px" />
+      <p-skeleton height="110px" />
+    } @else {
+      <div class="kpi-card">
+        <span class="kpi-icon receita">
+          <i class="fa fa-sack-dollar"></i>
+        </span>
+        <div class="kpi-info">
+          <span class="kpi-label">Receita do Mês</span>
+          <strong class="kpi-valor">{{ cards.receitaMesAtual | currency: "BRL" }}</strong>
+          @if (cards.variacaoReceitaMesAtual !== null) {
+            <span class="kpi-sub" [ngClass]="cards.variacaoReceitaMesAtual >= 0 ? 'positivo' : 'negativo'">
+              {{ cards.variacaoReceitaMesAtual >= 0 ? "+" : "" }}{{ cards.variacaoReceitaMesAtual | number: "1.1-1" }}% em relação ao mês anterior
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-icon hoje">
+          <i class="fa fa-credit-card"></i>
+        </span>
+        <div class="kpi-info">
+          <span class="kpi-label">Receita de Hoje</span>
+          <strong class="kpi-valor">{{ cards.receitaHoje | currency: "BRL" }}</strong>
+          @if (cards.variacaoReceitaHoje !== null) {
+            <span class="kpi-sub" [ngClass]="cards.variacaoReceitaHoje >= 0 ? 'positivo' : 'negativo'">
+              {{ cards.variacaoReceitaHoje >= 0 ? "+" : "" }}{{ cards.variacaoReceitaHoje | number: "1.1-1" }}% em relação a ontem
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-icon pendente">
+          <i class="fa fa-clock"></i>
+        </span>
+        <div class="kpi-info">
+          <span class="kpi-label">Pagamentos Pendentes</span>
+          <strong class="kpi-valor">{{ cards.valorPendente | currency: "BRL" }}</strong>
+          <span class="kpi-sub">{{ cards.quantidadePendentes }} fatura(s) a receber</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-icon atraso">
+          <i class="fa fa-triangle-exclamation"></i>
+        </span>
+        <div class="kpi-info">
+          <span class="kpi-label">Em Atraso</span>
+          <strong class="kpi-valor">{{ cards.valorEmAtraso | currency: "BRL" }}</strong>
+          <span class="kpi-sub">{{ cards.quantidadeEmAtraso }} fatura(s) vencida(s)</span>
+        </div>
+      </div>
+    }
+  </section>
+
+  <section class="painel-grafico">
+    <p-fieldset legend="Visão Geral da Receita" [toggleable]="false">
+      <ng-template pTemplate="header">
+        <div class="header-grafico">
+          <span>Visão Geral da Receita</span>
+          <div class="alternar-agrupamento">
+            <button
+              type="button"
+              class="opcao"
+              [class.ativo]="!exibirGraficoMensal"
+              (click)="alternarAgrupamentoGrafico(false)"
+            >
+              Diário
+            </button>
+            <button
+              type="button"
+              class="opcao"
+              [class.ativo]="exibirGraficoMensal"
+              (click)="alternarAgrupamentoGrafico(true)"
+            >
+              Mensal
+            </button>
+          </div>
+        </div>
+      </ng-template>
+      @if (carregandoGrafico) {
+        <p-skeleton height="320px" />
+      } @else {
+        <p-chart
+          type="line"
+          [data]="grafico"
+          [options]="opcoesGrafico"
+          height="320px"
+        ></p-chart>
+      }
+    </p-fieldset>
+  </section>
+
+  <section class="painel-faturas">
+    <p-fieldset legend="Filtros" [toggleable]="false">
+      <div class="filtros">
+        <div class="inputs">
+          <div class="input-group busca">
+            <label for="busca">Buscar</label>
+            <input
+              type="text"
+              pInputText
+              [(ngModel)]="filtros.busca"
+              id="busca"
+              placeholder="Cliente ou número da fatura"
+              (input)="filtrarFaturas()"
+            />
+          </div>
+          <div class="input-group">
+            <label for="status">Status</label>
+            <p-select
+              appendTo="body"
+              [(ngModel)]="filtros.status"
+              placeholder="Status"
+              [options]="opcoesStatusFatura"
+              optionLabel="label"
+              optionValue="value"
+              (onChange)="filtrarFaturas()"
+            ></p-select>
+          </div>
+          <div class="input-group">
+            <label for="tipoPagamento">Forma de Pagamento</label>
+            <p-select
+              appendTo="body"
+              [(ngModel)]="filtros.tipoPagamento"
+              placeholder="Forma de Pagamento"
+              [options]="opcoesTipoPagamento"
+              optionLabel="label"
+              optionValue="value"
+              (onChange)="filtrarFaturas()"
+            ></p-select>
+          </div>
+          <div class="input-group">
+            <label for="dataInicio">Data Início</label>
+            <p-datepicker
+              [(ngModel)]="filtros.dataInicio"
+              id="dataInicio"
+              placeholder="Data Início"
+              dateFormat="dd/mm/yy"
+              appendTo="body"
+              [showIcon]="true"
+              (onSelect)="filtrarFaturas()"
+              (onClear)="filtrarFaturas()"
+              [showClear]="true"
+            ></p-datepicker>
+          </div>
+          <div class="input-group">
+            <label for="dataFim">Data Fim</label>
+            <p-datepicker
+              [(ngModel)]="filtros.dataFim"
+              id="dataFim"
+              placeholder="Data Fim"
+              dateFormat="dd/mm/yy"
+              appendTo="body"
+              [showIcon]="true"
+              (onSelect)="filtrarFaturas()"
+              (onClear)="filtrarFaturas()"
+              [showClear]="true"
+            ></p-datepicker>
+          </div>
+        </div>
+        <div class="btns">
+          <p-button
+            label="Limpar Filtros"
+            icon="fa fa-eraser"
+            (click)="limparFiltros()"
+            severity="danger"
+          />
+          <p-button
+            label="Exportar"
+            icon="fa fa-file-export"
+            (click)="gerarRelatorio()"
+            severity="success"
+          />
+        </div>
+      </div>
+    </p-fieldset>
+
+    <p-fieldset legend="Faturas Recentes" [toggleable]="false">
+      <p-table
+        [value]="faturasFiltradas"
+        [loading]="carregandoFaturas"
+        [paginator]="true"
+        [rows]="5"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} registros"
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [stripedRows]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Fatura</th>
+            <th>Cliente</th>
+            <th pSortableColumn="valor">
+              <p-sortIcon field="valor"></p-sortIcon> Valor
+            </th>
+            <th>Status</th>
+            <th pSortableColumn="data">
+              <p-sortIcon field="data"></p-sortIcon> Data
+            </th>
+            <th>Forma de Pagamento</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-fatura>
+          <tr>
+            <td>{{ fatura.numero }}</td>
+            <td>{{ fatura.clienteNome }}</td>
+            <td>{{ fatura.valor | currency: "BRL" }}</td>
+            <td>
+              <span class="status-fatura" [ngClass]="classeStatus(fatura.status)">
+                {{ fatura.status | titlecase }}
+              </span>
+            </td>
+            <td>{{ fatura.data | date: "dd/MM/yyyy HH:mm" }}</td>
+            <td>{{ fatura.tipoPagamento }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">
+              <span class="sem-resultados">Nenhuma fatura encontrada!</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-fieldset>
+  </section>
+</main>

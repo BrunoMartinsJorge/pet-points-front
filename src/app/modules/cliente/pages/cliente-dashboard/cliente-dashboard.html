@@ -7,7 +7,12 @@
       [toggleable]="false"
       class="panel-consultas"
     >
-      <p-dataview #dv [value]="consultasAgendadas" [paginator]="true" [rows]="3">
+      <p-dataview
+        #dv
+        [value]="consultasAgendadas"
+        [paginator]="true"
+        [rows]="3"
+      >
         <ng-template #list let-consultas>
           <div class="lista-consultas">
             @for (consulta of consultas; track consulta.id) {
@@ -30,7 +35,8 @@
                   </div>
                   <div class="veterinario-pet">
                     <span class="veterinario">
-                      <i class="fa fa-user-doctor"></i>{{ consulta.veterinario }}
+                      <i class="fa fa-user-doctor"></i
+                      >{{ consulta.veterinario }}
                     </span>
                     <span class="pet">
                       <i class="fa fa-paw"></i> {{ consulta.pet }}
@@ -73,7 +79,12 @@
       [toggleable]="false"
       class="panel-pagamentos"
     >
-      <p-dataview #dv [value]="pagamentosPendentes" [paginator]="true" [rows]="5">
+      <p-dataview
+        #dv
+        [value]="pagamentosPendentes"
+        [paginator]="true"
+        [rows]="5"
+      >
         <ng-template #list let-pagamentos>
           <div class="lista-pagamentos">
             @for (pagamento of pagamentos; track pagamento.id) {
@@ -157,9 +168,6 @@
                   <div class="conteudo">
                     <div class="informacoes-status">
                       <p>{{ atendimento.mensagem }}</p>
-                      <span class="status">
-                        {{ atendimento.status | titlecase }}
-                      </span>
                     </div>
                     <span class="data-solicitacao">
                       <i class="fa far fa-clock"></i>
@@ -167,7 +175,9 @@
                     </span>
                   </div>
                 </div>
-                <p-button icon="fa fa-eye" severity="secondary" />
+                <span class="status">
+                  {{ atendimento.status | titlecase }}
+                </span>
               </div>
             }
           </div>
