@@ -32,7 +32,7 @@ export const responseApiInterceptor: HttpInterceptorFn = (req, next) => {
       });
 
       // Mostra o erro no console
-      console.error(error.error);
+      console.error(error.message);
 
       // Verifica o status do erro e toma as ações necessárias, caso seja um erro de autenticação ou autorização
       switch (erro.status) {
