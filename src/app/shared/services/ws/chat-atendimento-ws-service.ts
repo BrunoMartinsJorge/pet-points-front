@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { inject, Injectable, NgZone } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { TokenService } from '../../../core/services/token-service';
 import type { StompSubscription } from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';

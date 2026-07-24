@@ -32,7 +32,6 @@ main {
     overflow-y: auto;
 
     div.pet-card {
-      cursor: pointer;
       flex: 1 1 380px;
       display: flex;
       flex-direction: column;
@@ -106,7 +105,6 @@ main {
     gap: 1rem;
 
     div.consulta-card {
-      cursor: pointer;
       flex: 1 1 380px;
       display: flex;
       flex-direction: column;
@@ -152,7 +150,6 @@ main {
 
 :host ::ng-deep .p-fieldset {
   border: 1px solid var(--color-border);
-  border-radius: 16px;
   background-color: var(--card);
 
   .p-fieldset-legend {

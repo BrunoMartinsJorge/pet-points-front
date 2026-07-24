@@ -3,7 +3,7 @@ import { inject, Injectable, NgZone } from '@angular/core';
 import { Client, type StompSubscription } from '@stomp/stompjs';
 import { BehaviorSubject } from 'rxjs';
 import SockJS from 'sockjs-client';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { TokenService } from '../../../core/services/token-service';
 import type { MensagemInterna } from '../../models/ChatModels';
 

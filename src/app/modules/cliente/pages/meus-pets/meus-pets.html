@@ -9,7 +9,6 @@
             pInputText
             [(ngModel)]="termoBusca"
             (ngModelChange)="aplicarFiltros()"
-            fluid="true"
             placeholder="Buscar pet..."
           />
         </p-iconfield>
@@ -31,15 +30,24 @@
       </div>
 
       <div class="abas-filtro">
-        @for (filtro of filtros; track filtro.valor) {
-          <button
-            type="button"
-            [class.ativo]="filtroSelecionado === filtro.valor"
-            (click)="selecionarFiltro(filtro.valor)"
-          >
-            {{ filtro.label }}
-          </button>
-        }
+        <div class="filtros">
+          @for (filtro of filtros; track filtro.valor) {
+            <button
+              type="button"
+              [class.ativo]="filtroSelecionado === filtro.valor"
+              (click)="selecionarFiltro(filtro.valor)"
+            >
+              {{ filtro.label }}
+            </button>
+          }
+        </div>
+        <p-button
+          icon="fa fa-plus"
+          label="Novo Pet"
+          [style]="{ margin: '1rem 0' }"
+          severity="success"
+          (click)="adicionarNovoPet()"
+        ></p-button>
       </div>
 
       @if (petsFiltrados.length === 0) {
@@ -76,12 +84,5 @@
         </p-dataview>
       }
     </p-fieldset>
-    <p-button
-      icon="fa fa-plus"
-      label="Adicionar Novo Pet"
-      [style]="{ width: '100%', margin: '1rem 0' }"
-      severity="success"
-      (click)="adicionarNovoPet()"
-    ></p-button>
   </section>
 </main>

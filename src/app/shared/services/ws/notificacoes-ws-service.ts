@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { inject, Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import SockJS from 'sockjs-client';
 import { TokenService } from '../../../core/services/token-service';
 import { NotificacoesService } from '../notificacoes-service';

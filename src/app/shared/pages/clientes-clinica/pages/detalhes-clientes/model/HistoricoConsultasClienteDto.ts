@@ -11,4 +11,5 @@ export interface HistoricoConsultasClienteDto {
   veterinario: string;
   motivoIndeferimento: string;
   motivoCancelamento: string;
+  pet: string;
 }

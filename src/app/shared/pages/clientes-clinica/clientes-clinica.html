@@ -14,7 +14,7 @@
           />
         </div>
         <div class="input-group">
-          <label for="nome">Nome do Cliente</label>
+          <label for="genero">Genero do Cliente</label>
           <p-select
             [options]="generos"
             [(ngModel)]="filtros.genero"
@@ -24,15 +24,6 @@
             optionValue="value"
             placeholder="Selecione um tipo de movimentação"
             (onChange)="filtrarClientes()"
-          />
-        </div>
-        <div class="input-group">
-          <label for="nome">Ordenar por Data de Cadastro</label>
-          <p-togglebutton
-            [(ngModel)]="filtros.ordenarDataCrescente"
-            [onLabel]="'Crescente'"
-            [offLabel]="'Decrescente'"
-            (onChange)="ordenarDatas()"
           />
         </div>
       </div>
@@ -46,7 +37,9 @@
         <p-button
           label="Gerar Relatório"
           severity="success"
-          icon="fa fa-file"
+          [icon]="carregandoRelatorio ? 'fa fa-load' : 'fa fa-file'"
+          (click)="gerarRelatorioClientes()"
+          [disabled]="carregandoRelatorio"
         />
       </div>
     </div>
@@ -61,7 +54,7 @@
         [paginator]="true"
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords}"
-        [rowsPerPageOptions]="[10, 20, 30]"
+        [rowsPerPageOptions]="[5, 10, 20]"
       >
         <ng-template #list let-items>
           <section class="lista-clientes">

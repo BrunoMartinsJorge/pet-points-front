@@ -30,7 +30,6 @@ main {
 }
 
 :host ::ng-deep .p-fieldset {
-  height: 100%;
   overflow-y: auto;
 }
 
@@ -91,27 +90,36 @@ main {
   gap: 0.5rem;
   flex-wrap: wrap;
   margin-bottom: $gap;
+  align-items: center;
+  justify-content: space-between;
 
-  button {
-    padding: 0.35rem 0.9rem;
-    font-size: $fonte-texto;
-    font-family: inherit;
-    color: var(--color-text);
-    background-color: transparent;
-    border: $borda;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all 0.15s ease;
+  .filtros {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
 
-    &:hover {
-      background-color: var(--card-hover);
-    }
+    button {
+      padding: 0.35rem 0.9rem;
+      font-size: $fonte-texto;
+      font-family: inherit;
+      color: var(--color-text);
+      background-color: transparent;
+      border: $borda;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
 
-    &.ativo {
-      color: var(--color-card-primary);
-      border-color: var(--color-card-primary);
-      background-color: var(--color-card-primary-foreground);
-      font-weight: 600;
+      &:hover {
+        background-color: var(--card-hover);
+      }
+
+      &.ativo {
+        color: var(--color-card-primary);
+        border-color: var(--color-card-primary);
+        background-color: var(--color-card-primary-foreground);
+        font-weight: 600;
+      }
     }
   }
 }
