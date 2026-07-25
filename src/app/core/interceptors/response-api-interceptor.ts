@@ -26,13 +26,13 @@ export const responseApiInterceptor: HttpInterceptorFn = (req, next) => {
       // Exibe a mensagem de erro
       toast.add({
         severity: 'error',
-        summary: erro.error || 'Ocorreu um erro desconhecido!',
+        summary: erro.message || 'Ocorreu um erro desconhecido!',
         detail: erro.timestamp,
         life: 5000,
       });
 
       // Mostra o erro no console
-      console.error(error.error);
+      console.error(error.message);
 
       // Verifica o status do erro e toma as ações necessárias, caso seja um erro de autenticação ou autorização
       switch (erro.status) {

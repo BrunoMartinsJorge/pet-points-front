@@ -328,11 +328,8 @@ main {
             color: var(--color-text);
           }
 
-          .status {
-            @extend %status-badge;
-          }
         }
-
+        
         .data-solicitacao {
           display: flex;
           align-items: center;
@@ -341,6 +338,9 @@ main {
           color: var(--color-sub-text);
         }
       }
+    }
+    .status {
+      @extend %status-badge;
     }
   }
 }

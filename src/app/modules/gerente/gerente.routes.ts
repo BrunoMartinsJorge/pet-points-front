@@ -15,6 +15,7 @@ import { DetalhesPet } from '../../shared/pages/pets-clinica/pages/detalhes-pet/
 import { ChatInterno } from '../../shared/pages/chat-interno/chat-interno';
 import { DetalhesConsulta } from './pages/consultas-clinica/pages/detalhes-consulta/detalhes-consulta';
 import { DetalhesFuncionario } from './pages/funcionarios/pages/detalhes-funcionario/detalhes-funcionario';
+import { Financeiro } from './pages/financeiro/financeiro';
 
 export const ROTAS_GERENTE: Routes = [
   {
@@ -52,6 +53,20 @@ export const ROTAS_GERENTE: Routes = [
           icone: 'fa-solid fa-users-cog',
           group: 'INTERNO',
           descricao: 'Funcionarios da Clinica',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'financeiro',
+        title: 'Financeiro',
+        component: Financeiro,
+        data: {
+          RULE: 'GERENTE',
+          visible: true,
+          nome: 'Financeiro',
+          icone: 'fa fa-sack-dollar',
+          group: 'FINANCEIRO',
+          descricao: 'Registros Financeiros da Clinica',
         },
         canActivate: [authGuard],
       },
