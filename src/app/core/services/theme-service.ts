@@ -35,19 +35,17 @@ export class ThemeService {
    */
   public setTheme(theme: Theme): void {
     const html = document.documentElement;
+    const isDark = theme === 'dark';
 
-    document.documentElement.removeAttribute('data-theme');
-    if (theme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
+    // Paleta SCSS custom (html[data-theme="dark"])
+    if (isDark) {
+      html.setAttribute('data-theme', 'dark');
     } else {
-      document.documentElement.removeAttribute('data-theme');
+      html.removeAttribute('data-theme');
     }
 
-    if (html.classList.contains('dark')) {
-      html.classList.remove('dark');
-    } else {
-      html.classList.add('dark');
-    }
+    // Dark mode do PrimeNG (.dark no <html>, conforme darkModeSelector)
+    html.classList.toggle('dark', isDark);
 
     localStorage.setItem('theme', theme);
     this.themeSubject.next(theme);
