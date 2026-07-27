@@ -1,4 +1,4 @@
-<p-dialog
+<!-- <p-dialog
   header="Detalhes Consulta"
   [visible]="visible"
   (visibleChange)="onVisibleChange($event)"
@@ -16,7 +16,6 @@
     </p-tablist>
 
     <p-tabpanels>
-      <!-- Informações -->
       <p-tabpanel value="0">
         <div class="informacoes">
           <div class="bags">
@@ -81,7 +80,6 @@
         </div>
       </p-tabpanel>
 
-      <!-- Participantes -->
       <p-tabpanel value="1">
         <p-fieldset legend="Veterinário" [toggleable]="true">
           <div class="participante">
@@ -105,7 +103,6 @@
         </p-fieldset>
       </p-tabpanel>
 
-      <!-- Pagamento -->
       <p-tabpanel value="2">
         @if (pagamento) {
           @if (pagamento.atrasado) {
@@ -213,7 +210,6 @@
         }
       </p-tabpanel>
 
-      <!-- Avaliação -->
       <p-tabpanel value="3">
         <p class="legenda">Gostaria de avaliar o profissional que realizou a consulta?</p>
         <div class="formulario-avaliacao-consulta">
@@ -240,6 +236,259 @@
           icon="fa fa-send"
           severity="success"
           [style]="{ width: '100%' }"
+          [disabled]="!avaliacao.pontuacao || jaAvaliado"
+          (click)="avaliarConsulta()"
+        />
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</p-dialog> -->
+<p-dialog
+  [visible]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: '50vw' }"
+  (onHide)="fechar()"
+>
+  <ng-template #header>
+    <div class="header-dialog">
+      @if (!consulta) {
+      } @else {
+        <h2>Detalhes da Consulta</h2>
+        <div class="badges">
+          <app-bag-status-consulta
+            [status]="consulta.statusConsulta"
+          ></app-bag-status-consulta>
+          <span class="tipo-consulta">
+            {{ consulta.tipoConsulta }}
+          </span>
+        </div>
+      }
+    </div>
+  </ng-template>
+  <p-tabs value="2">
+    <p-tablist>
+      <p-tab value="0">Informações</p-tab>
+      <p-tab value="1">Participantes</p-tab>
+      <p-tab value="2">Pagamento</p-tab>
+      <p-tab value="3" [disabled]="!consultaPodeSerAvaliada">Avaliação</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        @if (!consulta || !detalhes) {
+        } @else {
+          <div class="lista-inputs">
+            <div class="input-group">
+              <label for="dataHoraConsulta">Data e Hora da Consulta</label>
+              <input
+                type="text"
+                disabled
+                pInputText
+                [value]="consulta.dataHoraConsulta | date: 'dd/MM/yyyy - HH:mm'"
+              />
+            </div>
+            <div class="input-group">
+              <label for="iniciadoEm">Iniciado em</label>
+              <input
+                type="text"
+                disabled
+                pInputText
+                [value]="detalhes.iniciadoEm"
+              />
+            </div>
+            <div class="input-group">
+              <label for="dataDeferimento">Data de Deferimento</label>
+              <input
+                type="text"
+                disabled
+                pInputText
+                [value]="detalhes.dataDeferimento"
+              />
+            </div>
+            <div class="input-group">
+              <label for="finalizadoEm">Finalizado em</label>
+              <input
+                type="text"
+                disabled
+                pInputText
+                [value]="detalhes.finalizadoEm"
+              />
+            </div>
+            <div class="input-group">
+              <label for="dataCancelamento">Data de Cancelamento</label>
+              <input
+                type="text"
+                disabled
+                pInputText
+                [value]="detalhes.dataCancelamento"
+              />
+            </div>
+          </div>
+          @if (consultaEstaFinalizada) {
+            <div class="duracao-consulta">
+              <div class="icon-time">
+                <i class="fa far fa-clock"></i>
+              </div>
+              <div class="info-duracao-consulta">
+                <span> Duração total </span>
+                <strong>
+                  {{
+                    calcularDuracao(detalhes.iniciadoEm, detalhes.finalizadoEm)
+                  }}
+                </strong>
+              </div>
+            </div>
+          }
+          <div class="input-group">
+            <br />
+            <label for="observacoes">Observações</label>
+            <textarea
+              id="observacoes"
+              disabled
+              rows="5"
+              pTextarea
+              [value]="detalhes.observacoes || 'Nenhuma observação registrada.'"
+            ></textarea>
+          </div>
+        }
+      </p-tabpanel>
+      <p-tabpanel value="1">
+        <div class="lista-participantes">
+          @if (!consulta || !detalhes) {
+          } @else {
+            <div class="card-participante">
+              <strong>VETERINARIO</strong>
+              <div class="card">
+                <app-imagem
+                  formato="circle"
+                  width="70px"
+                  height="70px"
+                ></app-imagem>
+                <span>
+                  {{ consulta.veterinarioConsulta }}
+                </span>
+              </div>
+            </div>
+            <div class="card-participante">
+              <strong>ATENDENTE</strong>
+              <div class="card">
+                <app-imagem
+                  formato="circle"
+                  width="70px"
+                  height="70px"
+                ></app-imagem>
+                <span>
+                  {{ detalhes.atendente }}
+                </span>
+              </div>
+            </div>
+            <div class="card-participante">
+              <strong>PET</strong>
+              <div class="card">
+                <app-imagem
+                  formato="circle"
+                  width="70px"
+                  height="70px"
+                ></app-imagem>
+                <span>
+                  {{ consulta.petConsulta }}
+                </span>
+              </div>
+            </div>
+          }
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="2">
+        @if (!pagamento) {
+        } @else {
+          <div class="card-valor-tipo-pagamento">
+            <div class="valor">
+              <span>Valor total</span>
+              <strong>
+                <span> R$ </span>
+                {{ pagamento.valor | currency: "BRL" }}
+              </strong>
+            </div>
+            <div class="tipo-pagamento">
+              <span
+                [ngClass]="
+                  'status-pagamento ' +
+                  (pagamento.atrasado
+                    ? 'atrasado'
+                    : pagamento.status.toLowerCase())
+                "
+              >
+                {{ pagamento.status.toString() | titlecase }}
+              </span>
+              <div class="input-group">
+                <p-select
+                  [options]="formasPagamento"
+                  [(ngModel)]="pagamento.forma"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Forma de Pagamento"
+                  appendTo="body"
+                  [disabled]="!podeAlterarFormaPagamento"
+                />
+              </div>
+            </div>
+          </div>
+        }
+      </p-tabpanel>
+      <p-tabpanel value="3">
+        <div class="card-pergunta-avaliacao">
+          @if (!consulta) {
+          } @else {
+            <app-imagem
+              formato="circle"
+              width="70px"
+              height="70px"
+            ></app-imagem>
+            <div class="infos">
+              <strong
+                >Como foi a consulta do(a) Dr(a)
+                {{ consulta.veterinarioConsulta }}?</strong
+              >
+              <span>
+                Sua avaliação pode ajudar outros tutores a escolher o melhor
+                profissional.
+              </span>
+            </div>
+          }
+        </div>
+        <div class="formulario-avaliacao-consulta">
+          <div class="input-group">
+            <label for="pontuacao">Pontuação</label>
+            <div class="pontuacao">
+              <p-rating
+                stars="5"
+                [(ngModel)]="avaliacao.pontuacao"
+                [disabled]="jaAvaliado"
+              />
+              <span [class.jaAvaliada]="jaAvaliado">
+                {{ mensagemPontuacao }}
+              </span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="observacoesAvaliacao">Observações</label>
+            <textarea
+              id="observacoesAvaliacao"
+              rows="5"
+              pTextarea
+              [(ngModel)]="avaliacao.observacoes"
+              [disabled]="jaAvaliado"
+              placeholder="Digite aqui suas observações caso tenha..."
+              style="max-height: 250px; resize: none"
+            ></textarea>
+          </div>
+        </div>
+        <p-button
+          label="Enviar Avaliação"
+          icon="fa fa-send"
+          severity="success"
+          fluid
           [disabled]="!avaliacao.pontuacao || jaAvaliado"
           (click)="avaliarConsulta()"
         />

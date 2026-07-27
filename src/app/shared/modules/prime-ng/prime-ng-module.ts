@@ -20,6 +20,7 @@ import { Popover } from 'primeng/popover';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectModule } from 'primeng/select';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
@@ -68,6 +69,7 @@ import { titlecasePipe } from '../../pipes/texto-format-pipe';
     PasswordModule,
     DataViewModule,
     ConfirmDialogModule,
+    SelectButtonModule,
     titlecasePipe,
   ],
   exports: [
@@ -103,6 +105,7 @@ import { titlecasePipe } from '../../pipes/texto-format-pipe';
     PasswordModule,
     DataViewModule,
     ConfirmDialogModule,
+    SelectButtonModule,
     titlecasePipe,
   ],
 })
