@@ -37,7 +37,7 @@ export class DetalhesConsulta implements OnInit {
 
   public habilitarBotao = true;
   public visibilidadeFinalizarConsulta = false;
-  public resumoConsulta = "";
+  public resumoConsulta = '';
 
   public ngOnInit(): void {
     this.pegarIdConsulta();
@@ -62,8 +62,8 @@ export class DetalhesConsulta implements OnInit {
           this.informacoesConsulta = response;
           this.carregandoInformacoesConsulta = false;
           this.habilitarBotao =
-            (response.status == StatusConsultaEnum.APROVADA ||
-            response.status == StatusConsultaEnum.INICIADO);
+            response.status == StatusConsultaEnum.APROVADA ||
+            response.status == StatusConsultaEnum.INICIADO;
         },
         error: () => (this.carregandoInformacoesConsulta = false),
       });
@@ -123,16 +123,19 @@ export class DetalhesConsulta implements OnInit {
             detail: 'A consulta foi iniciada!',
           });
           this.buscarInformacoesConsultaSelecionada();
+          this.visibilidadeFinalizarConsulta = false;
+          this.resumoConsulta = '';
         },
       });
     } else {
       this.visibilidadeFinalizarConsulta = true;
-      this.resumoConsulta = "";
+      this.resumoConsulta = '';
     }
   }
 
   public enviarFinalizarConsulta(): void {
-    if (!this.idConsultaSelecionada || this.resumoConsulta.trim().length == 0) return;
+    if (!this.idConsultaSelecionada || this.resumoConsulta.trim().length == 0)
+      return;
     this.service
       .finalizarConsulta(this.idConsultaSelecionada, this.resumoConsulta)
       .subscribe({
