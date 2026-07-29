@@ -106,7 +106,7 @@ export class DialogDetalhesConsulta {
     this.service.buscarPagamentoPorConsulta(this.consulta.id).subscribe({
       next: (pagamento) => {
         this.pagamento = pagamento;
-        this.formaPagamentoAtual = pagamento.forma;
+        this.formaPagamentoAtual = pagamento.formaPagamento;
       },
     });
   }
@@ -147,26 +147,30 @@ export class DialogDetalhesConsulta {
       });
   }
 
-  public baixarComprovante(): void {
-    if (!this.pagamento || this.pagamento.comprovante.length === 0) return;
-
-    const byteCharacters = atob(this.pagamento.comprovante);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const blob = new Blob([new Uint8Array(byteNumbers)], {
-      type: this.pagamento.tipoArquivo,
+  public copiarLinkQRCode(): void {
+    if (
+      !this.pagamento ||
+      !this.pagamento.pixPagamento ||
+      this.pagamento.formaPagamento != TipoPagamentoEnum.PIX
+    )
+      return;
+    navigator.clipboard.writeText(this.pagamento.pixPagamento.urlPagamento);
+    this.toast.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: 'Link copiado com sucesso!',
     });
-    window.open(URL.createObjectURL(blob), '_blank');
   }
 
   public alterarFormaPagamento(): void {
     if (!this.formaPagamentoAtual || !this.pagamento || !this.consulta) return;
-    if (this.pagamento.forma === this.formaPagamentoAtual) return;
+    if (this.pagamento.formaPagamento === this.formaPagamentoAtual) return;
 
     this.service
-      .alterarFormaPagamentoPorConsulta(this.consulta.id, this.pagamento.forma)
+      .alterarFormaPagamentoPorConsulta(
+        this.consulta.id,
+        this.pagamento.formaPagamento,
+      )
       .subscribe({
         next: () => {
           this.toast.add({
@@ -275,12 +279,11 @@ export class DialogDetalhesConsulta {
     return 'Toque para avaliar';
   }
 
-    public iconePagamento(tipoPagamento: TipoPagamentoEnum): string {
-      if (tipoPagamento === TipoPagamentoEnum.PIX)
-        return 'fa fas fas fas fa-qrcode';
-      else if (tipoPagamento === TipoPagamentoEnum.DINHEIRO)
-        return 'fa fas fa-money-bill';
-      else return 'fa fas fas fa-money-check';
-    }
-
+  public iconePagamento(tipoPagamento: TipoPagamentoEnum): string {
+    if (tipoPagamento === TipoPagamentoEnum.PIX)
+      return 'fa fas fas fas fa-qrcode';
+    else if (tipoPagamento === TipoPagamentoEnum.DINHEIRO)
+      return 'fa fas fa-money-bill';
+    else return 'fa fas fas fa-money-check';
+  }
 }

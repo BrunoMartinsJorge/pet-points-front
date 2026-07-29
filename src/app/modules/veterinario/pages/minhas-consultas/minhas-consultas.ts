@@ -104,6 +104,7 @@ export class MinhasConsultas implements OnInit {
         this.buscarConsultasDeHoje();
         this.buscarConsultaAtual();
         this.buscarHistoricoConsultas();
+        this.confirmService.close();
       },
       error: () => {
         this.confirmService.close();

@@ -265,13 +265,13 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 100px;
+  min-height: 150px;
   flex-wrap: wrap;
   border: 1px solid var(--color-card-primary);
   background-color: var(--color-card-primary-foreground);
   padding: 0.5rem 0.8rem;
   border-radius: 12px;
-  // color: var(--color-card-primary);
+  flex: 1;
 
   .valor {
     display: flex;
@@ -328,6 +328,31 @@ textarea {
 
     .input-group {
       margin: 0;
+    }
+  }
+}
+
+.pagamento-pix {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-radius: 8px;
+  padding: 1rem;
+
+  button.qr-code {
+    padding: 0;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    width: 150px;
+    height: 150px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 }
