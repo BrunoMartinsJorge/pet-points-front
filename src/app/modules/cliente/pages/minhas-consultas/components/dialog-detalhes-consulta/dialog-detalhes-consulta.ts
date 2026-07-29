@@ -7,17 +7,25 @@ import { PrimeNGModule } from '../../../../../../shared/modules/prime-ng/prime-n
 import { BagStatusConsulta } from '../../../../../../shared/components/bag-status-consulta/bag-status-consulta';
 import { StatusConsultaEnum } from '../../../../../../shared/models/enums/StatusConsultaEnum';
 import { StatusPagamentoEnum } from '../../../../../../shared/models/enums/StatusPagamentoEnum';
-import { TipoPagamentoEnum, TipoPagamentoOpcoes } from '../../../../../../shared/models/enums/TipoPagamentoEnum';
+import { TipoPagamentoEnum } from '../../../../../../shared/models/enums/TipoPagamentoEnum';
+import { TipoPagamentoOpcoes } from '../../../../../../shared/models/enums/TipoPagamentoEnum';
 import { MinhasConsultasService } from '../../services/minhas-consultas-service';
 import type { MinhasConsultasDto } from '../../models/MinhasConsultasDto';
 import type { DetalhesConsultaSelecionadaDto } from '../../models/DetalhesConsultaSelecionadaDto';
 import type { PagamentoDto } from '../../models/PagamentoDto';
 import type { AvaliacaoConsultaDto } from '../../models/AvaliacaoConsultaDto';
 import type { AvaliacaoConsultaForm } from '../../form/AvaliacaoConsultaForm';
+import { Imagem } from '../../../../../../shared/components/imagem/imagem';
 
 @Component({
   selector: 'app-dialog-detalhes-consulta',
-  imports: [PrimeNGModule, FormsModule, RatingModule, BagStatusConsulta],
+  imports: [
+    PrimeNGModule,
+    FormsModule,
+    RatingModule,
+    BagStatusConsulta,
+    Imagem,
+  ],
   templateUrl: './dialog-detalhes-consulta.html',
   styleUrl: './dialog-detalhes-consulta.scss',
 })
@@ -98,7 +106,7 @@ export class DialogDetalhesConsulta {
     this.service.buscarPagamentoPorConsulta(this.consulta.id).subscribe({
       next: (pagamento) => {
         this.pagamento = pagamento;
-        this.formaPagamentoAtual = pagamento.forma;
+        this.formaPagamentoAtual = pagamento.formaPagamento;
       },
     });
   }
@@ -139,26 +147,30 @@ export class DialogDetalhesConsulta {
       });
   }
 
-  public baixarComprovante(): void {
-    if (!this.pagamento || this.pagamento.comprovante.length === 0) return;
-
-    const byteCharacters = atob(this.pagamento.comprovante);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const blob = new Blob([new Uint8Array(byteNumbers)], {
-      type: this.pagamento.tipoArquivo,
+  public copiarLinkQRCode(): void {
+    if (
+      !this.pagamento ||
+      !this.pagamento.pixPagamento ||
+      this.pagamento.formaPagamento != TipoPagamentoEnum.PIX
+    )
+      return;
+    navigator.clipboard.writeText(this.pagamento.pixPagamento.urlPagamento);
+    this.toast.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: 'Link copiado com sucesso!',
     });
-    window.open(URL.createObjectURL(blob), '_blank');
   }
 
   public alterarFormaPagamento(): void {
     if (!this.formaPagamentoAtual || !this.pagamento || !this.consulta) return;
-    if (this.pagamento.forma === this.formaPagamentoAtual) return;
+    if (this.pagamento.formaPagamento === this.formaPagamentoAtual) return;
 
     this.service
-      .alterarFormaPagamentoPorConsulta(this.consulta.id, this.pagamento.forma)
+      .alterarFormaPagamentoPorConsulta(
+        this.consulta.id,
+        this.pagamento.formaPagamento,
+      )
       .subscribe({
         next: () => {
           this.toast.add({
@@ -208,5 +220,70 @@ export class DialogDetalhesConsulta {
     this.avaliacao = { pontuacao: 0, observacoes: '' };
     this.jaAvaliado = false;
     this.novoComprovante = null;
+  }
+
+  public etapa = 0;
+
+  public get consultaEstaFinalizada(): boolean {
+    if (!this.consulta || !this.detalhes) return false;
+    if (this.detalhes.finalizadoEm.toLowerCase().includes('não')) return false;
+    if (this.consulta.statusConsulta !== StatusConsultaEnum.FINALIZADO)
+      return false;
+    return true;
+  }
+
+  private converterData(data: string): Date {
+    const [dataParte, horaParte] = data.split(' - ');
+
+    const [dia, mes, ano] = dataParte.split('/').map(Number);
+    const [hora, minuto, segundo] = horaParte.split(':').map(Number);
+
+    return new Date(ano, mes - 1, dia, hora, minuto, segundo);
+  }
+
+  public calcularDuracao(inicio: string, fim: string): string {
+    const dataInicio = this.converterData(inicio);
+    const dataFim = this.converterData(fim);
+
+    const diferencaMs = dataFim.getTime() - dataInicio.getTime();
+
+    if (diferencaMs < 0) {
+      return 'Data final inválida';
+    }
+
+    const horas = Math.floor(diferencaMs / (1000 * 60 * 60));
+    const minutos = Math.floor((diferencaMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (horas == 0) return `${minutos} minutos`;
+
+    return `${horas} horas ${minutos} minutos`;
+  }
+
+  public get mensagemPontuacao(): string {
+    if (this.jaAvaliado) return 'Consulta avaliada';
+    if (this.avaliacao.pontuacao === 0) return 'Toque para avaliar';
+    const pontuacao =
+      this.avaliacao.pontuacao > 5 ? 5 : this.avaliacao.pontuacao;
+    switch (pontuacao) {
+      case 1:
+        return 'Ruim';
+      case 2:
+        return 'Regular';
+      case 3:
+        return 'Bom';
+      case 4:
+        return 'Muito bom';
+      case 5:
+        return 'Excelente';
+    }
+    return 'Toque para avaliar';
+  }
+
+  public iconePagamento(tipoPagamento: TipoPagamentoEnum): string {
+    if (tipoPagamento === TipoPagamentoEnum.PIX)
+      return 'fa fas fas fas fa-qrcode';
+    else if (tipoPagamento === TipoPagamentoEnum.DINHEIRO)
+      return 'fa fas fa-money-bill';
+    else return 'fa fas fas fa-money-check';
   }
 }

@@ -1,5 +1,14 @@
 .imagem-vazia {
-  background-color: var(--color-border);
+  background: linear-gradient(
+    45deg,
+    #999 5%,
+    #fff 10%,
+    #ccc 30%,
+    #ddd 50%,
+    #ccc 70%,
+    #fff 80%,
+    #999 95%
+  );
   width: 100px;
   height: 100px;
 
