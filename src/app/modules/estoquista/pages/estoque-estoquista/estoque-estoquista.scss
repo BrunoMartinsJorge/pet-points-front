@@ -97,3 +97,41 @@ main {
     font-size: 1.2em;
   }
 }
+
+.form-vazio {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  textarea {
+    max-height: 200px;
+  }
+  
+  .metade {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .input-group {
+      flex: 1 1 calc(50% - 0.5rem);
+    }
+  }
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+
+  p-button:first-child {
+    flex: 1;
+  }
+}

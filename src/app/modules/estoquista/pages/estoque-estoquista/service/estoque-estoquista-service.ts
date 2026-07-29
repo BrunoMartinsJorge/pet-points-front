@@ -5,6 +5,7 @@ import type { CardsEstoqueDto } from '../model/CardsEstoqueDto';
 import type { ProdutoEstoqueDto } from '../../../../../shared/models/ProdutoEstoqueDto';
 import type { FiltrosProdutosForm } from '../forms/FiltrosProdutosForm';
 import type { DetalhesProdutoDto } from '../model/DetalhesProdutoDto';
+import type { NovoProdutoForm } from '../forms/NovoProdutoForm';
 
 @Injectable({
   providedIn: 'root',
@@ -53,5 +54,14 @@ export class EstoqueEstoquistaService {
     return this.http.post(`${this.URL}/relatorio-produtos`, form, {
       responseType: 'blob',
     });
+  }
+  
+  /**
+   * 
+   * @param {NovoProdutoForm} form - O formulário contendo os dados do novo produto.
+   * @returns {Observable<void>} - Retorno normal de sucesso.
+   */
+  public registrarNovoProduto(form: NovoProdutoForm): Observable<void>{
+    return this.http.post<void>(`${this.URL}/adicionar-novo-produto`, form);
   }
 }
