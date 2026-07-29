@@ -146,6 +146,10 @@ export class DetalhesConsulta implements OnInit {
             detail: 'A consulta foi finalizada!',
           });
           this.buscarInformacoesConsultaSelecionada();
+          this.visibilidadeFinalizarConsulta = false;
+        },
+        error: () => {
+          this.visibilidadeFinalizarConsulta = false;
         },
       });
   }

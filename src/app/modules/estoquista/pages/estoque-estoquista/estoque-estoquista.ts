@@ -4,12 +4,19 @@ import { EstoqueEstoquistaService } from './service/estoque-estoquista-service';
 import type { CardsEstoqueDto } from './model/CardsEstoqueDto';
 import { PrimeNGModule } from '../../../../shared/modules/prime-ng/prime-ng-module';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { TipoProdutoOpcoes } from '../../../../shared/models/enums/TipoProdutoEnum';
+import {
+  TipoProdutoEnum,
+  TipoProdutoOpcoes,
+  TipoProdutoOpcoesFiltro,
+} from '../../../../shared/models/enums/TipoProdutoEnum';
 import type { OptionSelect } from '../../../../shared/models/OptionSelect';
 import type { ProdutoEstoqueDto } from '../../../../shared/models/ProdutoEstoqueDto';
 import type { FiltrosProdutosForm } from './forms/FiltrosProdutosForm';
 import { Router } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import type { NovoProdutoForm } from './forms/NovoProdutoForm';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-estoque-estoquista',
@@ -20,7 +27,10 @@ import { SkeletonModule } from 'primeng/skeleton';
 export class EstoqueEstoquista implements OnInit {
   private readonly service = inject(EstoqueEstoquistaService);
   private readonly route = inject(Router);
+  private readonly toast = inject(MessageService);
 
+  public readonly opcoesTipoProdutoFiltro: OptionSelect[] =
+    TipoProdutoOpcoesFiltro;
   public readonly opcoesTipoProduto: OptionSelect[] = TipoProdutoOpcoes;
 
   public carregandoCards = true;
@@ -38,14 +48,48 @@ export class EstoqueEstoquista implements OnInit {
     precoMax: null,
   };
 
+  public visibilidadeDialogAdicionarNovoProduto = false;
+  public novoProdutoForm!: FormGroup;
+
   ngOnInit(): void {
     this.buscarInformacoesCards();
     this.listarProdutosEstoque();
-    this.opcoesTipoProduto.push({ label: 'Todos os Tipos', value: '' });
+    this.novoProdutoForm = this.gerarFormularioNovoProduto();
+  }
+
+  private gerarFormularioNovoProduto(): FormGroup {
+    return new FormGroup({
+      nome: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(255),
+      ]),
+      descricao: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(255),
+      ]),
+      quantidade: new FormControl(1, [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(10000),
+      ]),
+      quantidadeMinima: new FormControl(0, [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(10000),
+      ]),
+      tipo: new FormControl(TipoProdutoEnum.BRINQUEDO, [Validators.required]),
+      valorUnitario: new FormControl(0.0, [
+        Validators.required,
+        Validators.min(0.1),
+        Validators.max(99999.99),
+      ]),
+    });
   }
 
   /**
-   * 
+   *
    * @description Busca as informações para os cards do estoque, como valor total, quantidade de produtos e produtos abaixo do estoque.
    */
   private buscarInformacoesCards(): void {
@@ -57,12 +101,12 @@ export class EstoqueEstoquista implements OnInit {
       },
       error: () => {
         this.carregandoCards = false;
-      }
+      },
     });
   }
 
   /**
-   * 
+   *
    * @description Filtra os produtos em estoque com base nos filtros definidos no formulário de filtros, como nome, tipo, preço mínimo e preço máximo, e se deve mostrar todos os produtos ou apenas os que estão abaixo do estoque mínimo.
    */
   public filtrarProdutos(): void {
@@ -89,7 +133,7 @@ export class EstoqueEstoquista implements OnInit {
   }
 
   /**
-   * 
+   *
    * @description Verifica se existem filtros ativos no formulário de filtros, ou seja, se algum dos campos de filtro foi preenchido ou se a opção de mostrar todos os produtos está desmarcada.
    * @returns {boolean} - Retorna true se existirem filtros ativos, ou seja, se algum dos campos de filtro foi preenchido ou se a opção de mostrar todos os produtos está desmarcada, e false caso contrário.
    */
@@ -104,7 +148,7 @@ export class EstoqueEstoquista implements OnInit {
   }
 
   /**
-   * 
+   *
    * @description Lista os produtos em estoque, com suas informações como id, nome, tipo, descrição, valor unitário, quantidade em estoque e se está abaixo do estoque mínimo.
    */
   private listarProdutosEstoque(): void {
@@ -123,7 +167,7 @@ export class EstoqueEstoquista implements OnInit {
   }
 
   /**
-   * 
+   *
    * @description Limpa os filtros do formulário de filtros.
    */
   public limparFiltros(): void {
@@ -138,7 +182,7 @@ export class EstoqueEstoquista implements OnInit {
   }
 
   /**
-   * 
+   *
    * @description Navega para a página de detalhes do produto, passando o id do produto como parâmetro na rota.
    */
   public verDetalhesProduto(idProduto: number): void {
@@ -146,7 +190,7 @@ export class EstoqueEstoquista implements OnInit {
   }
 
   /**
-   * 
+   *
    * @description Gera um relatório em PDF dos produtos em estoque, com base nos filtros definidos no formulário de filtros, e o abre em uma nova janela do navegador.
    */
   public gerarRelatorio(): void {
@@ -160,7 +204,33 @@ export class EstoqueEstoquista implements OnInit {
       },
       error: () => {
         this.carregandoRelatorio = false;
-      }
+      },
+    });
+  }
+
+  public fecharDialogNovoProduto(): void {
+    this.visibilidadeDialogAdicionarNovoProduto = false;
+    this.limparFormularioNovoProduto();
+  }
+
+  public limparFormularioNovoProduto(): void {
+    this.novoProdutoForm.reset();
+  }
+
+  public registrarNovoProduto(): void {
+    if (this.novoProdutoForm.invalid) return;
+    const payload: NovoProdutoForm = this.novoProdutoForm.value;
+    this.service.registrarNovoProduto(payload).subscribe({
+      next: () => {
+        this.toast.add({
+          severity: 'success',
+          summary: 'Registrado',
+          detail: `Novo produto ${payload.nome} registrado!`,
+        });
+        this.buscarInformacoesCards();
+        this.listarProdutosEstoque();
+        this.fecharDialogNovoProduto();
+      },
     });
   }
 }

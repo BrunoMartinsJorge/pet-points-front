@@ -45,6 +45,7 @@ section.sidebar-element {
     flex: 1;
     padding: 1em 1.3em;
     margin: 0;
+    overflow-y: auto;
 
     span.group-name {
       font-size: 0.9em;

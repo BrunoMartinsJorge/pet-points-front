@@ -74,7 +74,7 @@
               appendTo="body"
               [(ngModel)]="filtros.tipoProduto"
               placeholder="Selecione o tipo do produto"
-              [options]="opcoesTipoProduto"
+              [options]="opcoesTipoProdutoFiltro"
               optionLabel="label"
               optionValue="value"
               (onChange)="filtrarProdutos()"
@@ -224,5 +224,119 @@
         </td>
       </tr>
     </ng-template>
+    <ng-template #paginatorleft>
+      <p-button
+        label="Adicionar Novo Produto"
+        icon="fa fa-plus"
+        severity="success"
+        (click)="visibilidadeDialogAdicionarNovoProduto = true"
+      />
+    </ng-template>
   </p-table>
 </main>
+
+<p-dialog
+  header="Adicionar Novo Produto"
+  [(visible)]="visibilidadeDialogAdicionarNovoProduto"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ minWidth: '40vw' }"
+  (onHide)="fecharDialogNovoProduto()"
+>
+  @if (novoProdutoForm) {
+    <form [formGroup]="novoProdutoForm">
+      <div class="input-group">
+        <label for="nome">Nome do Produto</label>
+        <input
+          pInputText
+          formControlName="nome"
+          placeholder="Ração para gatos..."
+        />
+      </div>
+      <div class="metade">
+        <div class="input-group">
+          <label for="nome">Tipo do Produto</label>
+          <p-select
+            appendTo="body"
+            placeholder="Selecione o tipo do produto"
+            formControlName="tipo"
+            [options]="opcoesTipoProduto"
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="filtrarProdutos()"
+          >
+          </p-select>
+        </div>
+        <div class="input-group">
+          <label for="nome">Quantidade do Produto</label>
+          <p-inputnumber
+            formControlName="quantidade"
+            [max]="10000"
+            [min]="1"
+            suffix=" Unidade(s)"
+            placeholder="20 Unidade(s)"
+          />
+        </div>
+        <div class="input-group">
+          <label for="nome">Quantidade Mínima do Produto</label>
+          <p-inputnumber
+            formControlName="quantidadeMinima"
+            [max]="10000"
+            [min]="0"
+            suffix=" Unidade(s)"
+            placeholder="01 Unidade(s)"
+          />
+        </div>
+        <div class="input-group">
+          <label for="nome">Valor Unitário do Produto</label>
+          <p-inputnumber
+            formControlName="valorUnitario"
+            [max]="9999999"
+            [min]="1"
+            suffix=" a unidade(s)"
+            mode="decimal"
+            placeholder="R$ 12,59"
+            mode="currency"
+            currency="BRL"
+            locale="br"
+          />
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="nome">Descrição do Produto</label>
+        <textarea
+          pTextarea
+          formControlName="descricao"
+          placeholder="Ração para gatos com nutrientes..."
+        ></textarea>
+      </div>
+    </form>
+  } @else {
+    <div class="form-vazio">
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+    </div>
+  }
+  <div class="acoes">
+    <p-button
+      [disabled]="!novoProdutoForm || novoProdutoForm.invalid"
+      label="Registrar Novo Produto"
+      icon="fa fa-plus"
+      [style]="{ width: '100%' }"
+      severity="success"
+      fluid
+      (click)="registrarNovoProduto()"
+    />
+    <p-button
+      [disabled]="!novoProdutoForm"
+      label="Limpar Formulario"
+      icon="fa fa-refresh"
+      severity="danger"
+      (click)="limparFormularioNovoProduto()"
+    />
+  </div>
+</p-dialog>
