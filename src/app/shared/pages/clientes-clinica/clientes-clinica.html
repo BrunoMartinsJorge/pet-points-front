@@ -16,7 +16,7 @@
         <div class="input-group">
           <label for="genero">Genero do Cliente</label>
           <p-select
-            [options]="generos"
+            [options]="generosFiltros"
             [(ngModel)]="filtros.genero"
             appendTo="body"
             placeholder="Selecione um gênero"
@@ -91,6 +91,14 @@
         <ng-template #emptymessage>
           <span class="sem-resultados">Nenhum cliente encontrado!</span>
         </ng-template>
+        <ng-template #paginatorleft>
+          <p-button
+            label="Adicionar Novo Cliente"
+            icon="fa fa-user-plus"
+            severity="success"
+            (click)="visibilidadeDialogNovoCliente = true"
+          />
+        </ng-template>
       </p-dataview>
     } @else {
       @if (filtros.nome.trim() !== "" || filtros.genero !== "") {
@@ -101,3 +109,129 @@
     }
   </p-fieldset>
 </main>
+<p-dialog
+  header="Novo Cliente"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [(visible)]="visibilidadeDialogNovoCliente"
+  [style]="{ width: '40%' }"
+  (onHide)="fecharDialogNovoCliente()"
+>
+  <p-stepper [value]="2">
+    <p-step-list>
+      <p-step [value]="1">Informações Basicas</p-step>
+      <p-step [value]="2">Informações Adicionais</p-step>
+    </p-step-list>
+    <p-step-panels>
+      <form [formGroup]="novoClienteForm">
+        <p-step-panel [value]="1">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="input-group">
+              <label for="nome">Nome do Cliente</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="nome"
+                placeholder="Digite o nome do cliente"
+              />
+            </div>
+            <div class="input-group">
+              <label for="email">Email do Cliente</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="email"
+                placeholder="Digite o email do cliente"
+              />
+            </div>
+            <div class="input-group">
+              <label for="senha">Senha do Cliente</label>
+              <p-password
+                formControlName="senha"
+                [toggleMask]="true"
+                placeholder="Digite a senha do cliente"
+                appendTo="body"
+                promptLabel="Insira a Senha"
+                weakLabel="Muito Simples"
+                mediumLabel="Mediana"
+                strongLabel="Complexa"
+              />
+            </div>
+            <div class="acao">
+              <p-button
+                label="Avançar"
+                icon="fa fa-arrow-right"
+                iconPos="right"
+                (click)="activateCallback(2)"
+                severity="success"
+                [disabled]="!primeiraEtapaNovoClienteValida"
+              />
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="metade">
+              <div class="input-group">
+                <label for="dataNascimento"
+                  >Data de Nascimento do Cliente</label
+                >
+                <p-datepicker
+                  formControlName="dataNascimento"
+                  appendTo="body"
+                  dateFormat="dd/mm/yy"
+                  placeholder="dd/mm/aaaa"
+                  fluid
+                />
+              </div>
+              <div class="input-group">
+                <label for="genero">Gênero do Cliente</label>
+                <p-select
+                  [options]="generos"
+                  formControlName="genero"
+                  appendTo="body"
+                  fluid
+                >
+                </p-select>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="telefone">Telefone do Cliente</label>
+              <p-inputmask
+                formControlName="telefone"
+                mask="(999)99999-9999"
+                placeholder="(999)99999-9999"
+                fluid
+              />
+            </div>
+            <div class="input-group">
+              <label for="cpf">CPF do Cliente</label>
+              <p-inputmask
+                formControlName="cpf"
+                mask="999.999.999-99"
+                placeholder="(999)99999-9999"
+                fluid
+              />
+            </div>
+            <div class="acoes">
+              <p-button
+                label="Voltar"
+                icon="fa fa-arrow-left"
+                severity="secondary"
+                (click)="activateCallback(1)"
+              />
+              <p-button
+                label="Registrar Cliente"
+                icon="fa fa-user-plus"
+                severity="success"
+                [disabled]="!segundaEtapaNovoClienteValida"
+              />
+            </div>
+          </ng-template>
+        </p-step-panel>
+      </form>
+    </p-step-panels>
+  </p-stepper>
+</p-dialog>

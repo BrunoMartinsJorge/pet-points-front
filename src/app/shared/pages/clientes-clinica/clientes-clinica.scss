@@ -130,3 +130,27 @@ main {
     font-weight: 600;
   }
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .metade {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .input-group {
+      flex: 1 1 calc(50% - 0.5rem);
+    }
+  }
+
+  .acoes {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: space-between;
+  }
+}
