@@ -8,6 +8,7 @@ import type { DetalhesTutorPetDto } from '../model/DetalhesTutorPetDto';
 import type { HistoricoConsultasPetDto } from '../model/HistoricoConsultasPetDto';
 import type { RelatorioPetsClinicaForm } from '../form/RelatorioPetsClinicaForm';
 import type { CarteirinhaPetDto } from '../../../components/carteirinha-pet/dto/CarteirinhaPetDto';
+import type { NovoPetForm } from '../form/NovoPetForm';
 
 @Injectable({
   providedIn: 'root',
@@ -42,5 +43,9 @@ export class PetsClinicaService {
 
   public gerarRelatorioPets(form: RelatorioPetsClinicaForm): Observable<Blob> {
     return this.http.put(`${this.URL}/relatorio`, form, { responseType: 'blob' });
+  }
+
+  public registrarNovoPet(form: NovoPetForm): Observable<void> {
+    return this.http.post<void>(`${this.URL}/novo-pet`, form);
   }
 }

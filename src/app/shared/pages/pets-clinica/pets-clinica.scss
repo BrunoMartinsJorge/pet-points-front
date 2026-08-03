@@ -130,3 +130,24 @@ main {
     font-weight: 600;
   }
 }
+
+form .inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .input-group {
+    flex: 1 1 calc(50% - 0.5rem);
+  }
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+
+  &.multi {
+    gap: 0.5rem;
+    justify-content: space-between;
+  }
+}
