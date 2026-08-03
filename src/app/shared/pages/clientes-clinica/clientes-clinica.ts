@@ -16,6 +16,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StepperModule } from 'primeng/stepper';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputMaskModule } from 'primeng/inputmask';
+import type { FormRegistro } from '../../../modules/autenticacao/shared/forms/FormRegistro';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-clientes-clinica',
@@ -34,6 +36,7 @@ export class ClientesClinica implements OnInit {
   private readonly service = inject(ClientesClinicaService);
   private readonly router = inject(Router);
   private readonly tokenService = inject(TokenService);
+  private readonly toast = inject(MessageService);
 
   private clientes: ClienteDto[] = [];
   public clientesFiltrados: ClienteDto[] = [];
@@ -176,5 +179,25 @@ export class ClientesClinica implements OnInit {
     const dataNascimento = this.novoClienteForm.get('dataNascimento');
     if (!genero || !telefone || !cpf || !dataNascimento) return false;
     return genero.value && telefone.value && cpf.value && dataNascimento.value;
+  }
+
+  public registrarCliente(): void {
+    if (
+      !this.primeiraEtapaNovoClienteValida ||
+      !this.segundaEtapaNovoClienteValida
+    )
+      return;
+    const payload: FormRegistro = this.novoClienteForm.value;
+    this.service.registrarCliente(payload).subscribe({
+      next: () => {
+        this.toast.add({
+          severity: 'success',
+          summary: 'Registrado',
+          detail: 'Cliente ' + payload.nome + ' registrado com sucesso!',
+        });
+        this.fecharDialogNovoCliente();
+        this.buscarClientes();
+      },
+    });
   }
 }

@@ -226,7 +226,8 @@
                 label="Registrar Cliente"
                 icon="fa fa-user-plus"
                 severity="success"
-                [disabled]="!segundaEtapaNovoClienteValida"
+                [disabled]="!primeiraEtapaNovoClienteValida || !segundaEtapaNovoClienteValida"
+                (click)="registrarCliente()"
               />
             </div>
           </ng-template>

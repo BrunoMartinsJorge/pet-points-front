@@ -5,6 +5,7 @@ import type { ClienteDto } from '../model/ClienteDto';
 import type { ClientesDetalhesDto } from '../pages/detalhes-clientes/model/ClientesDetalhesDto';
 import type { PetsClienteDto } from '../pages/detalhes-clientes/model/PetsClienteDto';
 import type { HistoricoConsultasClienteDto } from '../pages/detalhes-clientes/model/HistoricoConsultasClienteDto';
+import type { FormRegistro } from '../../../../modules/autenticacao/shared/forms/FormRegistro';
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +49,9 @@ export class ClientesClinicaService {
     return this.http.post(`${this.URL}/relatorios`, form, {
       responseType: 'blob',
     });
+  }
+
+  public registrarCliente(payload: FormRegistro): Observable<void> {
+    return this.http.post<void>(`${this.URL}/registrar-cliente`, payload);
   }
 }
