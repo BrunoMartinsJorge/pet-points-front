@@ -106,11 +106,6 @@
                             : (pagamento.statusPagamento | titlecase)
                         }}
                       </span>
-                      <span
-                        [ngClass]="pagamento.atrasado ? 'atrasado' : 'em-tempo'"
-                      >
-                        {{ pagamento.atrasado ? "Atrasado" : "Em Tempo" }}
-                      </span>
                     </div>
                     <p-button
                       icon="fa fa-eye"

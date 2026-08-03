@@ -6,15 +6,19 @@ import type { PetsDto } from './model/PetsDto';
 import { GeneroBag } from '../../components/genero-bag/genero-bag';
 import { TipoPetBag } from '../../components/tipo-pet-bag/tipo-pet-bag';
 import type { TutorDto } from './model/TutorDto';
-import { GeneroEnumOpcoes } from '../../models/enums/GeneroEnum';
+import { GeneroEnum, GeneroEnumOpcoes } from '../../models/enums/GeneroEnum';
 import { PetOpcoes } from '../../models/PetOpcoes';
 import { Router } from '@angular/router';
 import type { RelatorioPetsClinicaForm } from './form/RelatorioPetsClinicaForm';
 import { TokenService } from '../../../core/services/token-service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Stepper, StepList, Step, StepPanel, StepPanels } from "primeng/stepper";
+import type { NovoPetForm } from './form/NovoPetForm';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-pets-clinica',
-  imports: [PrimeNGModule, GeneroBag, TipoPetBag],
+  imports: [PrimeNGModule, GeneroBag, TipoPetBag, Stepper, StepList, Step, StepPanel, StepPanels],
   templateUrl: './pets-clinica.html',
   styleUrl: './pets-clinica.scss',
 })
@@ -22,19 +26,26 @@ export class PetsClinica implements OnInit {
   private readonly service = inject(PetsClinicaService);
   private readonly router = inject(Router);
   private readonly tokenService = inject(TokenService);
+  private readonly toast = inject(MessageService);
 
   public tipoUsuario = '';
+
+  public novoPetForm!: FormGroup;
 
   private pets: PetsDto[] = [];
   public petsFiltrados: PetsDto[] = [];
   public tutores: TutorDto[] = [];
+  public tutoresForm: TutorDto[] = [];
+  public visibilidadeDialogNovoPet = false;
 
   public carregandoPets = false;
   public carregandoTutores = false;
   public carregandoRelatorio = false;
 
   public readonly generosOpcoes = GeneroEnumOpcoes;
+  public readonly generosOpcoesForm = GeneroEnumOpcoes;
   public readonly tipoAnimalOpcoes = PetOpcoes;
+  public readonly tipoAnimalOpcoesForm = PetOpcoes;
 
   public filtros: RelatorioPetsClinicaForm = {
     nome: '',
@@ -43,11 +54,44 @@ export class PetsClinica implements OnInit {
     idTutor: null as number | null,
   };
 
+  public readonly dataLimiteNascimento = new Date();
+
   ngOnInit(): void {
     this.buscarPets();
     const token = this.tokenService.getTokenPayload;
     if (!token) return;
     this.tipoUsuario = token.permissoes[0] == 'A' ? 'ATENDENTE' : 'GERENTE';
+    this.novoPetForm = this.criarFormularioNovoPet();
+  }
+
+  private criarFormularioNovoPet(): FormGroup {
+    return new FormGroup({
+      nome: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
+      tipo: new FormControl('CACHORRO', [Validators.required]),
+      genero: new FormControl(GeneroEnum.FEMININO, [Validators.required]),
+      idTutor: new FormControl(null, [Validators.required]),
+      raca: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
+      dataNascimento: new FormControl('', [Validators.required]),
+      observacoes: new FormControl(''),
+    });
+  }
+
+  public get primeiraEtapaNovoPetValida(): boolean {
+    if (!this.novoPetForm) return false;
+    const values = this.novoPetForm.value;
+    const nomeValido = values.nome && values.nome.trim().length >= 2 && values.nome.trim().length <= 50;
+    const racaValida = values.raca && values.raca.trim().length >= 2 && values.raca.trim().length <= 50;
+    const generoValido = values.genero && values.genero.trim() !== '';
+    const tipoValido = values.tipo && values.tipo.trim() !== '';
+    return nomeValido && racaValida && generoValido && tipoValido;
+  }
+
+  public get podeRegistrarNovoPet(): boolean {
+    if (!this.primeiraEtapaNovoPetValida) return false;
+    const values = this.novoPetForm.value;
+    const tutorValido = values.idTutor !== null && values.idTutor !== undefined;
+    const dataNascimentoValida = values.dataNascimento && values.dataNascimento.toString().trim() !== '';
+    return tutorValido && dataNascimentoValida;
   }
 
   private buscarPets(): void {
@@ -70,9 +114,11 @@ export class PetsClinica implements OnInit {
   private buscarTutores(): void {
     this.carregandoTutores = true;
     this.tutores = [];
+    this.tutoresForm = [];
     this.service.buscarTutoresFiltro().subscribe({
       next: (res: TutorDto[]) => {
         this.tutores = res;
+        this.tutoresForm = res;
         this.carregandoTutores = false;
         if (!this.tutores.find((tutor) => tutor.label === 'Todos')) {
           this.tutores.unshift({ label: 'Todos', value: null });
@@ -132,5 +178,19 @@ export class PetsClinica implements OnInit {
         this.carregandoRelatorio = false;
       }
     })
+  }
+
+  public registrarNovoPet(): void {
+    if (!this.podeRegistrarNovoPet) return;
+    const values = this.novoPetForm.value;
+    const payload: NovoPetForm = values;
+    this.service.registrarNovoPet(payload).subscribe({
+      next: () => {
+        this.toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Pet registrado com sucesso!' });
+        this.novoPetForm.reset();
+        this.visibilidadeDialogNovoPet = false;
+        this.buscarPets();
+      }
+    });
   }
 }

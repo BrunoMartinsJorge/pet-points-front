@@ -49,7 +49,7 @@ export class ClientesClinica implements OnInit {
   public tipoUsuario = '';
 
   public novoClienteForm!: FormGroup;
-  public visibilidadeDialogNovoCliente = true;
+  public visibilidadeDialogNovoCliente = false;
 
   ngOnInit(): void {
     this.buscarClientes();

@@ -22,7 +22,7 @@
       }
     </div>
   </ng-template>
-  <p-tabs value="2">
+  <p-tabs value="0">
     <p-tablist>
       <p-tab value="0">Informações</p-tab>
       <p-tab value="1">Participantes</p-tab>
@@ -195,6 +195,16 @@
               </div>
             </div>
           </div>
+          @if (getFormaPagamentoAtual !== pagamento.formaPagamento) {
+            <p-button
+              icon="pi pi-check"
+              (click)="alterarFormaPagamento()"
+              label="Alterar Forma de Pagamento"
+              fluid
+              outlined
+              severity="info"
+            ></p-button>
+          }
         }
       </p-tabpanel>
       <p-tabpanel value="3">
