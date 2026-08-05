@@ -21,7 +21,7 @@
           {{ consultaAtual.dataHoraConsulta | date: "HH:mm" }}
         </span>
       </div>
-      <button>
+      <button (click)="selecionarConsulta()">
         Acessar consulta
         <i class="fa fas fa-angle-right"></i>
       </button>

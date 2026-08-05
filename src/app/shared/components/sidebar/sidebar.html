@@ -63,19 +63,21 @@
   </ul>
 
   <div class="user-avatar">
-    <div class="imagem">
-      @if (urlImagem !== "") {
-        <img [src]="urlImagem" alt="Avatar do usuário" />
-      } @else {
-        <div class="sem-imagem">
-          <i class="pi pi-user"></i>
-        </div>
-      }
-    </div>
-    <div class="info-perfil" (click)="acessarPerfil()">
-      <span id="nome">{{ getNomeUsuario.nome }}</span>
-      <span id="tipo">{{ getNomeUsuario.tipo }}</span>
-    </div>
+    <button class="user-detail" (click)="acessarPerfil()" pTooltip="Perfil">
+      <div class="imagem">
+        @if (urlImagem !== "") {
+          <img [src]="urlImagem" alt="Avatar do usuário" />
+        } @else {
+          <div class="sem-imagem">
+            <i class="pi pi-user"></i>
+          </div>
+        }
+      </div>
+      <div class="info-perfil">
+        <span id="nome">{{ getNomeUsuario.nome }}</span>
+        <span id="tipo">{{ getNomeUsuario.tipo }}</span>
+      </div>
+    </button>
     <i class="pi pi-sign-out" id="sair-perfil" (click)="sairPerfil()"></i>
   </div>
 </section>

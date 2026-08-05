@@ -1,4 +1,8 @@
-<p-toast />
+<p-toast 
+    [showTransformOptions]="'translateY(100%)'" 
+    [showTransitionOptions]="'500ms'" 
+    [hideTransitionOptions]="'1000ms'" 
+    [showTransformOptions]="'translateX(100%)'" />
 <p-dialog
   header="Detalhes da Consulta"
   [(visible)]="visibilidade"
@@ -38,7 +42,7 @@
     <p-tabs [value]="etapa">
       <p-tablist>
         <p-tab [value]="0" (click)="etapa = 0">Detalhes</p-tab>
-        <p-tab [value]="1" (click)="etapa = 1">Pagamento</p-tab>
+        <p-tab [value]="1" (click)="etapa = 1" [disabled]="!possuiPagamento">Pagamento</p-tab>
         <p-tab [value]="2" (click)="etapa = 2" [disabled]="getConsultaFinalizada"
           >Avaliação</p-tab
         >
