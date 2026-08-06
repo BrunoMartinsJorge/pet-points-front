@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
 <main>
   <form [formGroup]="formulario">
     <section>
@@ -61,19 +62,6 @@
             </span>
             <i id="icon" class="fa fa-people-carry-box"></i>
           </div>
-          <div class="cargo">
-            <span>
-              <input
-                type="radio"
-                id="cliente"
-                name="permissao"
-                value="C"
-                formControlName="permissao"
-              />
-              <label for="cliente">Cliente</label>
-            </span>
-            <i id="icon" class="pi pi-user"></i>
-          </div>
         </div>
         <hr />
         <p class="legenda">
@@ -109,83 +97,232 @@
       >
         <div class="informacoes">
           <div class="input-group">
-            <label for="email">Email</label>
+            <label
+              for="email"
+              [class.invalid-data]="
+                formulario.get('email')?.invalid &&
+                formulario.get('email')?.touched
+              "
+            >
+              Email
+            </label>
             <input
               type="email"
               pInputText
               id="email"
               formControlName="email"
               placeholder="Email"
+              [invalid]="
+                formulario.get('email')?.invalid &&
+                formulario.get('email')?.touched
+              "
+              [class.ng-invalid]="
+                formulario.get('email')?.invalid &&
+                formulario.get('email')?.touched
+              "
             />
+            @if (
+              formulario.get("email")?.invalid &&
+              formulario.get("email")?.touched
+            ) {
+              <span class="invalid-data">Email inválido!</span>
+            }
           </div>
+
           <div class="input-group">
-            <label for="email">Senha</label>
+            <label
+              [class.invalid-data]="
+                formulario.get('senha')?.invalid &&
+                formulario.get('senha')?.touched
+              "
+            >
+              Senha
+            </label>
             <p-password
               [toggleMask]="true"
               placeholder="Senha"
               [feedback]="false"
               formControlName="senha"
+              [invalid]="
+                formulario.get('senha')?.invalid &&
+                formulario.get('senha')?.touched
+              "
             />
+            @if (
+              formulario.get("senha")?.invalid &&
+              formulario.get("senha")?.touched
+            ) {
+              <span class="invalid-data">Senha inválida!</span>
+            }
           </div>
+
           <div class="input-group">
-            <label for="nome">Nome</label>
+            <label
+              for="nome"
+              [class.invalid-data]="
+                formulario.get('nome')?.invalid &&
+                formulario.get('nome')?.touched
+              "
+            >
+              Nome
+            </label>
             <input
               type="text"
               pInputText
               id="nome"
               formControlName="nome"
               placeholder="Nome"
+              [invalid]="
+                formulario.get('nome')?.invalid &&
+                formulario.get('nome')?.touched
+              "
+              [class.ng-invalid]="
+                formulario.get('nome')?.invalid &&
+                formulario.get('nome')?.touched
+              "
             />
+            @if (
+              formulario.get("nome")?.invalid && formulario.get("nome")?.touched
+            ) {
+              <span class="invalid-data">Nome inválido!</span>
+            }
           </div>
+
           <div class="input-group">
-            <label for="cpf">CPF</label>
+            <label
+              for="cpf"
+              [class.invalid-data]="
+                formulario.get('cpf')?.invalid && formulario.get('cpf')?.touched
+              "
+            >
+              CPF
+            </label>
             <p-inputmask
               mask="999.999.999-99"
               placeholder="999.999.999-99"
               formControlName="cpf"
               id="cpf"
               [style]="{ width: '100%' }"
+              [invalid]="
+                formulario.get('cpf')?.invalid && formulario.get('cpf')?.touched
+              "
             />
+            @if (
+              formulario.get("cpf")?.invalid && formulario.get("cpf")?.touched
+            ) {
+              <span class="invalid-data">CPF inválido!</span>
+            }
           </div>
+
           <div class="input-group">
-            <label for="telefone">Telefone</label>
+            <label
+              for="telefone"
+              [class.invalid-data]="
+                formulario.get('telefone')?.invalid &&
+                formulario.get('telefone')?.touched
+              "
+            >
+              Telefone
+            </label>
             <p-inputmask
               mask="(999) 99999-9999"
               placeholder="(999) 99999-9999"
               formControlName="telefone"
               id="telefone"
               [style]="{ width: '100%' }"
+              [invalid]="
+                formulario.get('telefone')?.invalid &&
+                formulario.get('telefone')?.touched
+              "
             />
+            @if (
+              formulario.get("telefone")?.invalid &&
+              formulario.get("telefone")?.touched
+            ) {
+              <span class="invalid-data">Telefone inválido!</span>
+            }
           </div>
+
           <div class="input-group">
-            <label for="email">Gênero</label>
+            <label
+              [class.invalid-data]="
+                formulario.get('genero')?.invalid &&
+                formulario.get('genero')?.touched
+              "
+            >
+              Gênero
+            </label>
             <p-select
               [options]="generos"
               formControlName="genero"
               appendTo="body"
               placeholder="Selecione um gênero"
+              [invalid]="
+                formulario.get('genero')?.invalid &&
+                formulario.get('genero')?.touched
+              "
             ></p-select>
+            @if (
+              formulario.get("genero")?.invalid &&
+              formulario.get("genero")?.touched
+            ) {
+              <span class="invalid-data">Selecione um gênero!</span>
+            }
           </div>
+
           @if (veterinario) {
             <div class="input-group">
-              <label for="especializacao">Especialização</label>
+              <label
+                [class.invalid-data]="
+                  formulario.get('especializacao')?.invalid &&
+                  formulario.get('especializacao')?.touched
+                "
+              >
+                Especialização
+              </label>
               <p-select
                 [options]="especialziacoes"
                 formControlName="especializacao"
                 appendTo="body"
-                placeholder="Selecione um gênero"
+                placeholder="Selecione uma especialização"
+                [invalid]="
+                  formulario.get('especializacao')?.invalid &&
+                  formulario.get('especializacao')?.touched
+                "
               ></p-select>
+              @if (
+                formulario.get("especializacao")?.invalid &&
+                formulario.get("especializacao")?.touched
+              ) {
+                <span class="invalid-data">Selecione uma especialização!</span>
+              }
             </div>
           }
+
           <div class="input-group">
-            <label for="email">Data de Nascimento</label>
+            <label
+              [class.invalid-data]="
+                !maiorIdade && formulario.get('dataNascimento')?.touched
+              "
+            >
+              Data de Nascimento
+            </label>
             <p-datepicker
+              [invalid]="
+                !maiorIdade && formulario.get('dataNascimento')?.touched
+              "
               placeholder="Data de Nascimento"
               formControlName="dataNascimento"
               dateFormat="dd/mm/yy"
-              [style]="{ width: '100%' }"
+              fluid
+              [maxDate]="dataMaxima"
               appendTo="body"
             />
+            @if (!maiorIdade && formulario.get("dataNascimento")?.touched) {
+              <span class="invalid-data">
+                Valor inválido na data de nascimento!
+              </span>
+            }
           </div>
         </div>
       </p-fieldset>
