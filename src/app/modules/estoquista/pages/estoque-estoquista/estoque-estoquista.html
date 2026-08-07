@@ -205,6 +205,7 @@
             icon="fa fa-eye"
             severity="secondary"
             (click)="verDetalhesProduto(produto.id)"
+            fluid
           />
         </td>
       </tr>
@@ -246,49 +247,126 @@
   @if (novoProdutoForm) {
     <form [formGroup]="novoProdutoForm">
       <div class="input-group">
-        <label for="nome">Nome do Produto</label>
+        <label
+          for="nome"
+          [class.invalid-data]="
+            novoProdutoForm.get('nome')?.invalid &&
+            novoProdutoForm.get('nome')?.touched
+          "
+          >Nome do Produto</label
+        >
         <input
+          [invalid]="
+            novoProdutoForm.get('nome')?.invalid &&
+            novoProdutoForm.get('nome')?.touched
+          "
           pInputText
           formControlName="nome"
           placeholder="Ração para gatos..."
         />
+        @if (
+          novoProdutoForm.get("nome")?.invalid &&
+          novoProdutoForm.get("nome")?.touched
+        ) {
+          <span class="invalid-data">Nome inválido!</span>
+        }
       </div>
       <div class="metade">
-        <div class="input-group">
-          <label for="nome">Tipo do Produto</label>
+        <div
+          class="input-group"
+          [class.invalid-data]="
+            novoProdutoForm.get('tipo')?.invalid &&
+            novoProdutoForm.get('tipo')?.touched
+          "
+        >
+          <label for="tipo">Tipo do Produto</label>
           <p-select
+            inputId="tipo"
             appendTo="body"
             placeholder="Selecione o tipo do produto"
             formControlName="tipo"
             [options]="opcoesTipoProduto"
+            [invalid]="
+              novoProdutoForm.get('tipo')?.invalid &&
+              novoProdutoForm.get('tipo')?.touched
+            "
             optionLabel="label"
             optionValue="value"
             (onChange)="filtrarProdutos()"
           >
           </p-select>
+          @if (
+            novoProdutoForm.get("tipo")?.invalid &&
+            novoProdutoForm.get("tipo")?.touched
+          ) {
+            <span class="invalid-data">Tipo inválido!</span>
+          }
         </div>
         <div class="input-group">
-          <label for="nome">Quantidade do Produto</label>
+          <label
+            for="quantidade"
+            [class.invalid]="
+              novoProdutoForm.get('quantidade')?.invalid &&
+              novoProdutoForm.get('quantidade')?.touched
+            "
+            >Quantidade do Produto</label
+          >
           <p-inputnumber
             formControlName="quantidade"
             [max]="10000"
             [min]="1"
             suffix=" Unidade(s)"
             placeholder="20 Unidade(s)"
+            inputId="quantidade"
+            [invalid]="
+              novoProdutoForm.get('quantidade')?.invalid &&
+              novoProdutoForm.get('quantidade')?.touched
+            "
           />
+          @if (
+            novoProdutoForm.get("quantidade")?.invalid &&
+            novoProdutoForm.get("quantidade")?.touched
+          ) {
+            <span class="invalid-data">Tipo inválido!</span>
+          }
         </div>
         <div class="input-group">
-          <label for="nome">Quantidade Mínima do Produto</label>
+          <label
+            for="quantidadeMinima"
+            [class.invalid-data]="
+              novoProdutoForm.get('quantidadeMinima')?.invalid &&
+              novoProdutoForm.get('quantidadeMinima')?.touched
+            "
+            >Quantidade Mínima do Produto</label
+          >
           <p-inputnumber
             formControlName="quantidadeMinima"
             [max]="10000"
             [min]="0"
+            inputId="quantidadeMinima"
             suffix=" Unidade(s)"
             placeholder="01 Unidade(s)"
+            [invalid]="
+              novoProdutoForm.get('quantidadeMinima')?.invalid &&
+              novoProdutoForm.get('quantidadeMinima')?.touched
+            "
           />
+          @if (
+            novoProdutoForm.get("quantidadeMinima")?.invalid &&
+            novoProdutoForm.get("quantidadeMinima")?.touched
+          ) {
+            <span class="invalid-data">Tipo inválido!</span>
+          }
         </div>
         <div class="input-group">
-          <label for="nome">Valor Unitário do Produto</label>
+          <label
+            for="nome"
+            [class.invalid-data]="
+              novoProdutoForm.get('valorUnitario')?.invalid &&
+              novoProdutoForm.get('valorUnitario')?.touched
+            "
+            >Valor Unitário do Produto</label
+          >
           <p-inputnumber
             formControlName="valorUnitario"
             [max]="9999999"
@@ -299,16 +377,46 @@
             mode="currency"
             currency="BRL"
             locale="br"
+            [invalid]="
+              novoProdutoForm.get('valorUnitario')?.invalid &&
+              novoProdutoForm.get('valorUnitario')?.touched
+            "
           />
+          @if (
+            novoProdutoForm.get("valorUnitario")?.invalid &&
+            novoProdutoForm.get("valorUnitario")?.touched
+          ) {
+            <span class="invalid-data">Tipo inválido!</span>
+          }
         </div>
       </div>
       <div class="input-group">
-        <label for="nome">Descrição do Produto</label>
+        <label
+          for="descricao"
+          [class.invalid-data]="
+            novoProdutoForm.get('descricao')?.invalid &&
+            novoProdutoForm.get('descricao')?.touched
+          "
+          >Descrição do Produto</label
+        >
         <textarea
-          pTextarea
           formControlName="descricao"
           placeholder="Ração para gatos com nutrientes..."
+          rows="5"
+          cols="30"
+          inputId="descricao"
+          [invalid]="
+            novoProdutoForm.get('descricao')?.invalid &&
+            novoProdutoForm.get('descricao')?.touched
+          "
+          pInputTextarea
         ></textarea>
+        @if (
+          novoProdutoForm.get("descricao")?.invalid &&
+          novoProdutoForm.get("descricao")?.touched
+        ) {
+          <span class="invalid-data">Descrição inválida!</span>
+        }
       </div>
     </form>
   } @else {

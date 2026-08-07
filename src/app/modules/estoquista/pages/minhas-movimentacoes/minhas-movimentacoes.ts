@@ -6,10 +6,11 @@ import type { MinhasMovimentacoesDto } from './model/MinhasMovimentacoesDto';
 import type { RelatorioMovimentacoesForm } from './form/RelatorioMovimentacoesForm';
 import type { ProdutoFiltroDto } from './model/ProdutoFiltroDto';
 import { GerarNovaMovimentacao } from './components/gerar-nova-movimentacao/gerar-nova-movimentacao';
+import { BagTipoMovimentacao } from "../../../../shared/components/bag-tipo-movimentacao/bag-tipo-movimentacao";
 
 @Component({
   selector: 'app-minhas-movimentacoes',
-  imports: [PrimeNGModule, GerarNovaMovimentacao],
+  imports: [PrimeNGModule, GerarNovaMovimentacao, BagTipoMovimentacao],
   templateUrl: './minhas-movimentacoes.html',
   styleUrl: './minhas-movimentacoes.scss',
 })
