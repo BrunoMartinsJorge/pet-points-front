@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+<p-confirmdialog></p-confirmdialog>
 <main>
   <section class="cards">
     @if (cards === null) {
@@ -200,13 +202,37 @@
           {{ produto.quantidadeEstoque }} Unidades
         </td>
         <td>
-          <p-button
-            label="Ver Detalhes"
-            icon="fa fa-eye"
-            severity="secondary"
-            (click)="verDetalhesProduto(produto.id)"
-            fluid
-          />
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              flex-wrap: wrap;
+              gap: 0.5rem;
+              flex: 1;
+              justify-content: center;
+            "
+          >
+            <p-button
+              pTooltip="Ver Detalhes"
+              icon="fa fa-eye"
+              severity="secondary"
+              (click)="verDetalhesProduto(produto.id)"
+              fluid
+            />
+            <p-button
+              pTooltip="Editar"
+              severity="success"
+              icon="fa fa-edit"
+              styleClass="p-button-warning"
+              (click)="editarProduto(produto)"
+            ></p-button>
+            <p-button
+              pTooltip="Remover"
+              icon="fa fa-trash"
+              styleClass="p-button-danger"
+              (click)="removerProduto(produto)"
+            ></p-button>
+          </div>
         </td>
       </tr>
     </ng-template>
@@ -445,6 +471,190 @@
       icon="fa fa-refresh"
       severity="danger"
       (click)="limparFormularioNovoProduto()"
+    />
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="Editar Produto"
+  [(visible)]="visibilidadeEditarProduto"
+  [draggable]="false"
+  [modal]="true"
+  [style]="{ width: '40vw' }"
+>
+  @if (editarProdutoForm) {
+    <form [formGroup]="editarProdutoForm">
+      <div class="input-group">
+        <label
+          for="nome"
+          [class.invalid-data]="
+            editarProdutoForm.get('nome')?.invalid &&
+            editarProdutoForm.get('nome')?.touched
+          "
+          >Nome do Produto</label
+        >
+        <input
+          [invalid]="
+            editarProdutoForm.get('nome')?.invalid &&
+            editarProdutoForm.get('nome')?.touched
+          "
+          pInputText
+          formControlName="nome"
+          placeholder="Ração para gatos..."
+        />
+        @if (
+          editarProdutoForm.get("nome")?.invalid &&
+          editarProdutoForm.get("nome")?.touched
+        ) {
+          <span class="invalid-data">Nome inválido!</span>
+        }
+      </div>
+      <div class="metade">
+        <div
+          class="input-group"
+          [class.invalid-data]="
+            editarProdutoForm.get('tipo')?.invalid &&
+            editarProdutoForm.get('tipo')?.touched
+          "
+        >
+          <label for="tipo">Tipo do Produto</label>
+          <p-select
+            inputId="tipo"
+            appendTo="body"
+            placeholder="Selecione o tipo do produto"
+            formControlName="tipo"
+            [options]="opcoesTipoProduto"
+            [invalid]="
+              editarProdutoForm.get('tipo')?.invalid &&
+              editarProdutoForm.get('tipo')?.touched
+            "
+            optionLabel="label"
+            optionValue="value"
+            (onChange)="filtrarProdutos()"
+          >
+          </p-select>
+          @if (
+            editarProdutoForm.get("tipo")?.invalid &&
+            editarProdutoForm.get("tipo")?.touched
+          ) {
+            <span class="invalid-data">Tipo inválido!</span>
+          }
+        </div>
+        <div class="input-group">
+          <label
+            for="quantidadeMinima"
+            [class.invalid-data]="
+              editarProdutoForm.get('quantidadeAbaixoEstoque')?.invalid &&
+              editarProdutoForm.get('quantidadeAbaixoEstoque')?.touched
+            "
+            >Quantidade Mínima do Produto</label
+          >
+          <p-inputnumber
+            formControlName="quantidadeAbaixoEstoque"
+            [max]="10000"
+            [min]="0"
+            inputId="quantidadeMinima"
+            suffix=" Unidade(s)"
+            placeholder="01 Unidade(s)"
+            [invalid]="
+              editarProdutoForm.get('quantidadeAbaixoEstoque')?.invalid &&
+              editarProdutoForm.get('quantidadeAbaixoEstoque')?.touched
+            "
+          />
+          @if (
+            editarProdutoForm.get("quantidadeAbaixoEstoque")?.invalid &&
+            editarProdutoForm.get("quantidadeAbaixoEstoque")?.touched
+          ) {
+            <span class="invalid-data">Tipo inválido!</span>
+          }
+        </div>
+        <div class="input-group">
+          <label
+            for="nome"
+            [class.invalid-data]="
+              editarProdutoForm.get('valorUnitario')?.invalid &&
+              editarProdutoForm.get('valorUnitario')?.touched
+            "
+            >Valor Unitário do Produto</label
+          >
+          <p-inputnumber
+            formControlName="valorUnitario"
+            [max]="9999999"
+            [min]="1"
+            suffix=" a unidade(s)"
+            mode="decimal"
+            placeholder="R$ 12,59"
+            mode="currency"
+            currency="BRL"
+            locale="br"
+            [invalid]="
+              editarProdutoForm.get('valorUnitario')?.invalid &&
+              editarProdutoForm.get('valorUnitario')?.touched
+            "
+          />
+          @if (
+            editarProdutoForm.get("valorUnitario")?.invalid &&
+            editarProdutoForm.get("valorUnitario")?.touched
+          ) {
+            <span class="invalid-data">Tipo inválido!</span>
+          }
+        </div>
+      </div>
+      <div class="input-group">
+        <label
+          for="descricao"
+          [class.invalid-data]="
+            editarProdutoForm.get('descricao')?.invalid &&
+            editarProdutoForm.get('descricao')?.touched
+          "
+          >Descrição do Produto</label
+        >
+        <textarea
+          formControlName="descricao"
+          placeholder="Ração para gatos com nutrientes..."
+          rows="5"
+          cols="30"
+          inputId="descricao"
+          [invalid]="
+            editarProdutoForm.get('descricao')?.invalid &&
+            editarProdutoForm.get('descricao')?.touched
+          "
+          pInputTextarea
+        ></textarea>
+        @if (
+          editarProdutoForm.get("descricao")?.invalid &&
+          editarProdutoForm.get("descricao")?.touched
+        ) {
+          <span class="invalid-data">Descrição inválida!</span>
+        }
+      </div>
+    </form>
+  } @else {
+    <div class="form-vazio">
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+      <p-skeleton></p-skeleton>
+    </div>
+  }
+  <div class="acoes">
+    <p-button
+      [disabled]="!editarProdutoForm || editarProdutoForm.invalid"
+      label="Editar Produto"
+      icon="fa fa-pencil"
+      [style]="{ width: '100%' }"
+      severity="success"
+      fluid
+      (click)="enviarEdicaoProduto()"
+    />
+    <p-button
+      [disabled]="!editarProdutoForm"
+      label="Voltar Informações"
+      icon="fa fa-refresh"
+      severity="danger"
+      (click)="resetarFormularioEditarProduto()"
     />
   </div>
 </p-dialog>

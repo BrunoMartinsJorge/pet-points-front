@@ -1,43 +1,45 @@
 <main>
   <p-fieldset legend="Detalhes Produto" [toggleable]="false">
-    <div class="informacoes-produto">
-      <div class="input-group">
-        <label for="quantidadeEstoque">Nome do Produto</label>
-        <input type="text" pInputText [(ngModel)]="produto!.nome" disabled />
+    @if (produto) {
+      <div class="informacoes-produto">
+        <div class="input-group">
+          <label for="quantidadeEstoque">Nome do Produto</label>
+          <input type="text" pInputText [(ngModel)]="produto!.nome" disabled />
+        </div>
+        <div class="input-group">
+          <label for="quantidadeEstoque">Tipo do Produto</label>
+          <input type="text" pInputText [(ngModel)]="produto!.tipo" disabled />
+        </div>
+        <div class="input-group">
+          <label for="quantidadeEstoque">Quantidade em Estoque</label>
+          <input
+            type="text"
+            pInputText
+            [(ngModel)]="produto!.quantidadeEstoque"
+            disabled
+          />
+        </div>
+        <div class="input-group">
+          <label for="quantidadeEstoque">Valor Unitário</label>
+          <input
+            type="text"
+            pInputText
+            [(ngModel)]="produto!.valorUnitario"
+            disabled
+          />
+        </div>
       </div>
       <div class="input-group">
-        <label for="quantidadeEstoque">Tipo do Produto</label>
-        <input type="text" pInputText [(ngModel)]="produto!.tipo" disabled />
-      </div>
-      <div class="input-group">
-        <label for="quantidadeEstoque">Quantidade em Estoque</label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="produto!.quantidadeEstoque"
+        <label for="quantidadeEstoque">Descrição</label>
+        <textarea
+          name="descricao"
+          id=""
+          [(ngModel)]="produto!.descricao"
           disabled
-        />
+          pTextarea
+        ></textarea>
       </div>
-      <div class="input-group">
-        <label for="quantidadeEstoque">Valor Unitário</label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="produto!.valorUnitario"
-          disabled
-        />
-      </div>
-    </div>
-    <div class="input-group">
-      <label for="quantidadeEstoque">Descrição</label>
-      <textarea
-        name="descricao"
-        id=""
-        [(ngModel)]="produto!.descricao"
-        disabled
-        pTextarea
-      ></textarea>
-    </div>
+    }
   </p-fieldset>
   <hr />
   @if (produto === null) {

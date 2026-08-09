@@ -16,7 +16,8 @@ import { Router } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import type { NovoProdutoForm } from './forms/NovoProdutoForm';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import type { EditarProdutoForm } from './forms/EditarProdutoForm';
 
 @Component({
   selector: 'app-estoque-estoquista',
@@ -28,6 +29,7 @@ export class EstoqueEstoquista implements OnInit {
   private readonly service = inject(EstoqueEstoquistaService);
   private readonly route = inject(Router);
   private readonly toast = inject(MessageService);
+  private readonly confirmation = inject(ConfirmationService);
 
   public readonly opcoesTipoProdutoFiltro: OptionSelect[] =
     TipoProdutoOpcoesFiltro;
@@ -47,6 +49,11 @@ export class EstoqueEstoquista implements OnInit {
     precoMin: null,
     precoMax: null,
   };
+
+  public produtoSelecionado: ProdutoEstoqueDto | null = null;
+  public visibilidadeEditarProduto = false;
+
+  public editarProdutoForm!: FormGroup;
 
   public visibilidadeDialogAdicionarNovoProduto = false;
   public novoProdutoForm!: FormGroup;
@@ -230,6 +237,78 @@ export class EstoqueEstoquista implements OnInit {
         this.buscarInformacoesCards();
         this.listarProdutosEstoque();
         this.fecharDialogNovoProduto();
+      },
+    });
+  }
+
+  public editarProduto(prodtuo: ProdutoEstoqueDto): void {
+    this.produtoSelecionado = prodtuo;
+    this.visibilidadeEditarProduto = true;
+    this.iniciarFormEditarProduto();
+  }
+
+private iniciarFormEditarProduto(): void {
+    this.editarProdutoForm = new FormGroup({
+      nome: new FormControl(
+        this.produtoSelecionado != null ?
+        this.produtoSelecionado.nome :
+        '', [Validators.required]),
+      tipo: new FormControl(
+        this.produtoSelecionado != null ?
+        this.produtoSelecionado.tipo :
+        TipoProdutoEnum.BRINQUEDO, [Validators.required]),
+      descricao: new FormControl(
+        this.produtoSelecionado != null ?
+        this.produtoSelecionado.descricao :
+        '', [Validators.required]),
+      valorUnitario: new FormControl(
+        this.produtoSelecionado != null ?
+        this.produtoSelecionado.valorUnitario :
+        0, [Validators.required]),
+      quantidadeAbaixoEstoque: new FormControl(
+        this.produtoSelecionado != null ?
+        this.produtoSelecionado.quantidadeMinima :
+        0, [Validators.required]),
+    });
+  }
+
+  public enviarEdicaoProduto(): void {
+    if (this.editarProdutoForm.invalid || !this.produtoSelecionado) return;
+    const payload: EditarProdutoForm = this.editarProdutoForm.value;
+    this.service.editarProduto(payload, this.produtoSelecionado.id).subscribe({
+      next: () => {
+        this.toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Produto editado com sucesso!' });
+        this.listarProdutosEstoque();
+        this.visibilidadeEditarProduto = false;
+      },
+    });
+  }
+
+  public resetarFormularioEditarProduto(): void {
+    this.iniciarFormEditarProduto();
+  }
+
+  public removerProduto(produto: ProdutoEstoqueDto): void {
+    this.confirmation.confirm({
+      header: 'Excluir Produto',
+      message: `Tem certeza que deseja excluir o produto ${produto.nome}?`,
+      acceptButtonProps: {
+        label: 'Excluir',
+        severity: 'danger',
+        outlined: false,
+      },
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      accept: () => {
+        this.service.removerProduto(produto.id).subscribe({
+          next: () => {
+            this.listarProdutosEstoque();
+            this.toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Produto removido com sucesso!' });
+          },
+        });
       },
     });
   }
