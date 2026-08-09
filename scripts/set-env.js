@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const envConfigFile = `export const environment = {
   production: true,
-  urlBack: '${process.env['URL_BACK']}',
+  apiUrl: '${process.env['URL_BACK']}',
 };
 `;
 
