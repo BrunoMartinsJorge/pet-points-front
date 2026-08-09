@@ -6,6 +6,7 @@ import type { ProdutoEstoqueDto } from '../../../../../shared/models/ProdutoEsto
 import type { FiltrosProdutosForm } from '../forms/FiltrosProdutosForm';
 import type { DetalhesProdutoDto } from '../model/DetalhesProdutoDto';
 import type { NovoProdutoForm } from '../forms/NovoProdutoForm';
+import { EditarProdutoForm } from '../forms/EditarProdutoForm';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,7 @@ export class EstoqueEstoquistaService {
 
   /**
    *
+   * @description Busca os detalhes do produto com o id especificado.
    * @param {number} idProduto - O id do produto para o qual se deseja obter os detalhes.
    * @returns {Observable<DetalhesProdutoDto>} - Retorna um Observable contendo os detalhes do produto especificado.
    */
@@ -47,6 +49,7 @@ export class EstoqueEstoquistaService {
 
   /**
    * 
+   * @description Gera um relatório de produtos com base nos filtros fornecidos no formulário.
    * @param {FiltrosProdutosForm} form - O formulário contendo os filtros para a geração do relatório de produtos.
    * @returns {Observable<Blob>} - Retorna um Observable contendo o relatório de produtos gerado.
    */
@@ -58,10 +61,32 @@ export class EstoqueEstoquistaService {
   
   /**
    * 
+   * @description Registra um novo produto com base nos dados fornecidos no formulário.
    * @param {NovoProdutoForm} form - O formulário contendo os dados do novo produto.
    * @returns {Observable<void>} - Retorno normal de sucesso.
    */
   public registrarNovoProduto(form: NovoProdutoForm): Observable<void>{
     return this.http.post<void>(`${this.URL}/adicionar-novo-produto`, form);
+  }
+
+  /**
+   * 
+   * @description Edita um produto existente com base nos dados fornecidos no formulário.
+   * @param {EditarProdutoForm} form - Valores de edição para produto
+   * @param {number} idProduto - Id do produto para edição
+   * @returns {Observable<void>} - Retorno normal de sucesso
+   */
+  public editarProduto(form: EditarProdutoForm, idProduto: number): Observable<void> {
+    return this.http.put<void>(`${this.URL}/editar-produto/${idProduto}`, form);
+  }
+
+  /**
+   * 
+   * @description Remove um produto existente com base no id fornecido.
+   * @param {number} idProduto - Id do produto para remoção
+   * @returns {Observable<void>} - Retorno normal de sucesso
+   */
+  public removerProduto(idProduto: number): Observable<void> {
+    return this.http.delete<void>(`${this.URL}/remover-produto/${idProduto}`); 
   }
 }

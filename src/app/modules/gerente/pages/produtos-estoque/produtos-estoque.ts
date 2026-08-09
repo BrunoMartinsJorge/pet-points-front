@@ -20,6 +20,9 @@ export class ProdutosEstoque implements OnInit {
   private produtos: ProdutoDto[] = [];
   public produtosFiltrados: ProdutoDto[] = [];
 
+  public produtoSelecionado: ProdutoDto | null = null;
+  public visibilidadeEditarProduto = false;
+
   public readonly opcoesTipoProduto: OptionSelect[] = TipoProdutoOpcoes;
   public filtros: FiltrosProdutoForm = {
     nome: '',

@@ -28,6 +28,8 @@ export class RegistrarFuncionario implements OnInit {
     { label: 'Feminino', value: 'F' },
   ];
 
+  public readonly dataMaxima = new Date();
+
   public especialziacoes: OpcoesFiltro[] = [];
 
   public formulario: FormGroup = this.gerarRelatorio();
@@ -93,6 +95,19 @@ export class RegistrarFuncionario implements OnInit {
     });
   }
 
+  public get maiorIdade(): boolean {
+    const dataNascimento: Date = this.formulario.get('dataNascimento')?.value;
+    if (!dataNascimento) return false;
+    const hoje = new Date();
+    const limite = new Date(
+      hoje.getFullYear() - 18,
+      hoje.getMonth(),
+      hoje.getDate(),
+    );
+
+    return dataNascimento <= limite;
+  }
+
   public get getDescricaoCargo(): string {
     const permissao = this.formulario.get('permissao')?.value;
     switch (permissao) {
@@ -102,8 +117,6 @@ export class RegistrarFuncionario implements OnInit {
         return 'Atendente';
       case 'E':
         return 'Estoquista';
-      case 'C':
-        return 'Cliente';
       case 'V':
         return 'Veterinario';
     }

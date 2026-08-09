@@ -135,4 +135,12 @@ export class DetalhesConsulta implements OnChanges {
       }
     });
   }
+
+  public get possuiPagamento(): boolean {
+    return (
+      this.pagamento != null &&
+      this.consultaSelecionada != null &&
+      this.consultaSelecionada.status == StatusConsultaEnum.FINALIZADO
+    );
+  }
 }

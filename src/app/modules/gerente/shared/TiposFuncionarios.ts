@@ -75,13 +75,35 @@ export function getPermissoesPorUsuario(tipo: string): string[] {
         'Listar Clientes',
         'Listar e Adicionar Novos Tipos de Consultas',
         'Gerar Relatórios de Funcionários, Clientes, Logs, Pets e etc',
+        'etc...',
       ];
     case 'A':
-      return ['ATENDENTE'];
+      return [
+        'Listar e Visualizar Consultas',
+        'Listar, Cadastrar e Visualizar Pets',
+        'Listar, Cadastrar e Visualizar Clientes',
+        'Listar e Deferir/Indeferir Solicitações de Consultas',
+        'Interagir com os demais Funcionarios',
+        'Iniciar e Participar de Atendimentos',
+        'etc...',
+      ];
     case 'V':
-      return ['VETERINARIO'];
+      return [
+        'Listar e Acessar Suas Proprias Consultas',
+        'Interagir com os demais Funcionarios',
+        'Iniciar e Finalizar suas Consultas',
+        'Gerar Prescrições de suas Consultas',
+        'etc...',
+      ];
     case 'E':
-      return ['ESTOQUISTA'];
+      return [
+        'Realizar Movimentações de Entrada e Saída de Itens',
+        'Interagir com os demais Funcionarios',
+        'Atuar no Controle de Estoque da Clínica',
+        'Gerar Relatórios de Movimentações',
+        'Listar Suas Movimentações',
+        'etc...',
+      ];
     default:
       return [];
   }

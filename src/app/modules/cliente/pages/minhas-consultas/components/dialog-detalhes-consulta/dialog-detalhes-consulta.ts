@@ -106,7 +106,8 @@ export class DialogDetalhesConsulta {
     this.service.buscarPagamentoPorConsulta(this.consulta.id).subscribe({
       next: (pagamento) => {
         this.pagamento = pagamento;
-        this.formaPagamentoAtual = pagamento.formaPagamento;
+        if (pagamento != null)
+          this.formaPagamentoAtual = pagamento.formaPagamento;
       },
     });
   }

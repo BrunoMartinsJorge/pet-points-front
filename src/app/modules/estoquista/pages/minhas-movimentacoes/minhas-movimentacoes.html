@@ -103,7 +103,11 @@
         <td>
           {{ movimentacao.dataHora | date: "dd/MM/yyyy HH:mm" }}
         </td>
-        <td>{{ movimentacao.tipoMovimentacao }}</td>
+        <td>
+          <app-bag-tipo-movimentacao
+            [tipoMovimentacao]="movimentacao.tipoMovimentacao"
+          ></app-bag-tipo-movimentacao>
+        </td>
         <td>{{ movimentacao.produto.nome }}</td>
         <td>
           {{ movimentacao.quantidadeMovimentada }} Unidade(s)

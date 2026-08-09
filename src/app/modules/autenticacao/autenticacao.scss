@@ -4,49 +4,20 @@ main {
   overflow: hidden;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background-color: #0a0a0a;
+  background: linear-gradient(rgba(0, 188, 125, 0.12), #0a0a0a);
   color: #fff;
   position: relative;
 
-  /* Brilhos verdes de fundo */
-  &::before,
-  &::after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(120px);
-    pointer-events: none;
-  }
-
-  &::before {
-    width: 480px;
-    height: 480px;
-    top: -140px;
-    right: -80px;
-    background: rgba(0, 188, 125, 0.22);
-  }
-
-  &::after {
-    width: 420px;
-    height: 420px;
-    bottom: -160px;
-    left: 30%;
-    background: rgba(0, 188, 125, 0.12);
-  }
-
   section.form-container {
     position: relative;
-    // z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem;
   }
 
-  /* ---------- Painel de preview ---------- */
   section.preview {
     position: relative;
-    // z-index: 2;
     display: flex;
     align-items: center;
     padding: 3rem;

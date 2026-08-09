@@ -1,3 +1,16 @@
+.p-fieldset {
+  border: 1px solid var(--color-border) !important;
+  background-color: var(--card) !important;
+  display: flex;
+  gap: 1rem !important;
+
+  .p-fieldset-legend {
+    color: var(--color-title) !important;
+    font-weight: 600 !important;
+    display: none;
+  }
+}
+
 main {
   display: flex;
   flex-direction: column;

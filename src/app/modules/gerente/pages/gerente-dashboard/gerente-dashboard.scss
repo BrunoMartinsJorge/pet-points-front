@@ -5,7 +5,6 @@ main {
   padding: 1rem;
 }
 
-/* ---------- Cabeçalho ---------- */
 .dashboard-header {
   display: flex;
   flex-wrap: wrap;
@@ -39,7 +38,6 @@ main {
   }
 }
 
-/* ---------- Cards de resumo (KPIs) ---------- */
 .kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -115,7 +113,6 @@ main {
   }
 }
 
-/* ---------- Painel do gráfico ---------- */
 .grafico-stats {
   display: flex;
   gap: 2.5rem;
@@ -137,7 +134,6 @@ main {
   }
 }
 
-/* ---------- Painéis inferiores ---------- */
 .painel-inferior {
   display: flex;
   flex-wrap: wrap;
@@ -146,17 +142,5 @@ main {
   p-fieldset {
     flex: 1 1 calc(50% - 0.5rem);
     min-width: 340px;
-  }
-}
-
-/* Aparência de painel para os fieldsets */
-:host ::ng-deep .p-fieldset {
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  background-color: var(--card);
-
-  .p-fieldset-legend {
-    color: var(--color-title);
-    font-weight: 600;
   }
 }

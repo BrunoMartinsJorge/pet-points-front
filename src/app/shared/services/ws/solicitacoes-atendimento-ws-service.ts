@@ -29,7 +29,7 @@ export class SolicitacoesAtendimentoWsService {
   solicitacaoRemovida$ = this.solicitacaoRemovidaSubject.asObservable();
 
   connect(): void {
-    if (this.client) return; // já criado e ativo -> não recria (evita conexões duplicadas)
+    if (this.client) return;
 
     const token = this.tokenService.getToken;
 
@@ -79,8 +79,6 @@ export class SolicitacoesAtendimentoWsService {
     this.assinaturaRemovidas?.unsubscribe();
     this.client?.deactivate();
     this.conectado = false;
-    // Sem isso, connect() nunca recriava o client após um disconnect (guard
-    // "if (this.client) return"), obrigando a recarregar a aplicação.
     this.client = undefined;
   }
 }

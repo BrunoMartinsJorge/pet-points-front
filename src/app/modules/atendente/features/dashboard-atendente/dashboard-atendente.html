@@ -1,3 +1,9 @@
+<p-confirmdialog />
+<p-toast 
+    [showTransformOptions]="'translateY(100%)'" 
+    [showTransitionOptions]="'500ms'" 
+    [hideTransitionOptions]="'1000ms'" 
+    [showTransformOptions]="'translateX(100%)'" />
 <main>
   <section class="cards">
     <div class="card">
@@ -7,7 +13,7 @@
       <div class="infos">
         <span>Atendimentos Finalizados</span>
         <span>
-          <strong> 1 </strong>
+          <strong> {{ cards.atendimentosFinalizados }} </strong>
           Atendimento(s)
         </span>
       </div>
@@ -19,7 +25,7 @@
       <div class="infos">
         <span>Consultas Participadas</span>
         <span>
-          <strong> 1 </strong>
+          <strong> {{ cards.consultasParticipadas }} </strong>
           Atendimento(s)
         </span>
       </div>
@@ -31,7 +37,7 @@
       <div class="infos">
         <span>Ranking de Atendimento</span>
         <span>
-          <strong> 1 </strong>
+          <strong> {{ cards.rankingAvaliacao }} </strong>
           º Lugar
         </span>
       </div>
@@ -40,34 +46,225 @@
   <hr />
   <section class="informacoes">
     <p-fieldset legend="Consultas do Dia">
-      <p-dataview [paginator]="true">
-        <ng-template #list let-atendimentos>
-          <div class="lista-atendimentos">
-            <!-- @for (atendimento of atendimentos; track atendimento.id) {} -->
-            </div
-        ></ng-template>
+      <p-dataview #dv [value]="consultas" [paginator]="true" [rows]="6">
+        <ng-template #list let-consultas>
+          <div class="lista-consultas">
+            @for (consulta of consultas; track consulta.id) {
+              <div [ngClass]="'card-consulta ' + consulta.status.toLowerCase()">
+                <div class="badges">
+                  <span [ngClass]="'status ' + consulta.status.toLowerCase()">
+                    {{ consulta.status | titlecase }}
+                  </span>
+                  <span class="tipo-consulta">
+                    {{ consulta.tipoConsulta }}
+                  </span>
+                </div>
+                <div class="informacoes">
+                  <div>
+                    <span class="info">
+                      <i class="fa fas fa-user"></i>
+                      {{ consulta.solicitante }}
+                    </span>
+                    <span class="info">
+                      <i class="fa fas fa-paw"></i>
+                      {{ consulta.pet }}
+                    </span>
+                    <span class="info">
+                      <i class="fa fas fa-user-md"></i>
+                      {{ consulta.veterinario }}
+                    </span>
+                    <span class="data-consulta">
+                      <i class="fa fas fa-calendar"></i>
+                      {{ consulta.dataConsulta }}
+                    </span>
+                  </div>
+                  <p-button
+                    icon="fa fa-eye"
+                    severity="secondary"
+                    (click)="selecionarConsulta(consulta)"
+                  />
+                </div>
+                @if (
+                  consulta.status === "Cancelado" ||
+                  consulta.status === "Reprovada"
+                ) {
+                  <div class="cancelada-indeferida">
+                    <span>
+                      {{ gerarTextoCancelamentoIndeferimento(consulta) }}
+                    </span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </ng-template>
         <ng-template #emptymessage>
-          <span class="sem-resultados">Nenhuma consulta para hoje!</span>
+          <span class="sem-resultados">Nenhuma consulta encontrada!</span>
         </ng-template>
       </p-dataview>
     </p-fieldset>
     <p-fieldset legend="Solicitações de Atendimentos">
-      <p-dataview [paginator]="true">
+      <p-dataview
+        #dv
+        [value]="listaSolicitacoesAtendimentos"
+        [paginator]="true"
+        [rows]="6"
+      >
+        <ng-template #list let-solicitacoes>
+          <div class="lista-solicitacoes">
+            @for (solicitacao of solicitacoes; track solicitacao.id) {
+              <div class="card-solicitacao">
+                <div class="informacoes">
+                  <div class="info cliente">
+                    <i class="fa fas fa-user"></i>
+                    <span>
+                      {{ solicitacao.solicitante }}
+                    </span>
+                  </div>
+                  <hr />
+                  <div class="info">
+                    <i class="pi pi-comment"></i>
+                    <span>
+                      {{ solicitacao.mensagem || "Sem mensagem" }}
+                    </span>
+                  </div>
+                </div>
+                <hr />
+                <p-button
+                  label="Iniciar Atendimento"
+                  (click)="aceitarSolicitacaoAtendimento(solicitacao.id)"
+                  severity="success"
+                  icon="fa far fa-check-circle"
+                  fluid
+                />
+                <div class="data">
+                  <i class="pi pi-clock"></i>
+                  <span>
+                    {{ solicitacao.solicitadoEm | date: "dd/MM/yyyy HH:mm:ss" }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </ng-template>
         <ng-template #emptymessage>
-          <span class="sem-resultados"
-            >Nenhuma solicitação de atendimento registrada!</span
-          >
+          <span class="sem-resultados">Nenhuma consulta encontrada!</span>
         </ng-template>
       </p-dataview>
     </p-fieldset>
     <p-fieldset legend="Solicitações de Consultas">
-      <p-dataview [paginator]="true">
+      <p-dataview
+        #dv
+        [value]="solicitacoesConsultas"
+        [paginator]="true"
+        [rows]="6"
+      >
+        <ng-template #list let-solicitacoes>
+          <div class="lista-solicitacoes-consultas">
+            @for (solicitacao of solicitacoes; track solicitacao.id) {
+              <div
+                [ngClass]="
+                  'solicitacao-consulta-card ' +
+                  solicitacao.status.toLowerCase()
+                "
+              >
+                <div class="badges">
+                  <span
+                    [ngClass]="'status ' + solicitacao.status.toLowerCase()"
+                  >
+                    {{ solicitacao.status | titlecase }}
+                  </span>
+                  <span class="tipo-consulta">
+                    {{ solicitacao.tipoConsulta }}
+                  </span>
+                </div>
+                <div class="informacoes">
+                  <span class="info">
+                    <i class="fa fa-user"></i>
+                    {{ solicitacao.solicitante }}
+                  </span>
+                  <span class="info">
+                    <i class="fa fa-paw"></i>
+                    {{ solicitacao.pet }}
+                  </span>
+                  <span class="info">
+                    <i class="fa fa-user-md"></i>
+                    {{ solicitacao.veterinario }}
+                  </span>
+                  <span class="info">
+                    <i class="fa fa-calendar"></i>
+                    {{ solicitacao.dataConsulta }}
+                  </span>
+                </div>
+                <span class="data">
+                  <i class="fa fa-clock"></i>
+                  {{ solicitacao.solicitadoEm }}
+                </span>
+                <div class="acoes">
+                  <p-button
+                    label="Aprovar"
+                    severity="success"
+                    rounded="true"
+                    icon="pi pi-check"
+                    fluid="true"
+                    size="small"
+                    (click)="aprovarConsulta(solicitacao)"
+                  />
+                  <p-button
+                    label="Reprovar"
+                    severity="danger"
+                    rounded="true"
+                    icon="pi pi-trash"
+                    fluid="true"
+                    size="small"
+                    variant="outlined"
+                    (click)="selecionarSolicitacaoConsulta(solicitacao)"
+                  />
+                </div>
+              </div>
+            }
+          </div>
+        </ng-template>
         <ng-template #emptymessage>
           <span class="sem-resultados"
-            >Nenhuma solicitação de consulta registrada!
-          </span>
+            >Nenhuma solicitação de consulta encontrada!</span
+          >
         </ng-template>
       </p-dataview>
     </p-fieldset>
   </section>
 </main>
+
+<p-dialog
+  header="Reprovar Consulta"
+  [(visible)]="visibilidadeSolicitacaoConsulta"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: '50vw' }"
+>
+  <span class="motivo">
+    Informe o motivo do indeferimento da solicitação de consulta
+  </span>
+  <hr />
+  <div class="motivo-indeferimento">
+    <label for="motivoIndeferimento">Motivo do Indeferimento</label>
+    <textarea
+      name="motivoIndeferimento"
+      id="motivoIndeferimento"
+      pTextarea
+      [(ngModel)]="solicitacaoConsultaSelecionada.motivo"
+      [autoResize]="true"
+    ></textarea>
+  </div>
+  <br />
+  <p-button
+    label="Reprovar"
+    severity="danger"
+    [rounded]="true"
+    icon="pi pi-trash"
+    fluid="true"
+    size="small"
+    [disabled]="!habilitarBotaoEnviarReprova"
+    (click)="reprovarConsulta()"
+  />
+</p-dialog>

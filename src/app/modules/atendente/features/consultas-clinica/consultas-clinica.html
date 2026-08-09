@@ -1,5 +1,9 @@
 <p-confirmdialog />
-<p-toast />
+<p-toast 
+    [showTransformOptions]="'translateY(100%)'" 
+    [showTransitionOptions]="'500ms'" 
+    [hideTransitionOptions]="'1000ms'" 
+    [showTransformOptions]="'translateX(100%)'" />
 <main>
   <section>
     @if (carregandoConsultas) {

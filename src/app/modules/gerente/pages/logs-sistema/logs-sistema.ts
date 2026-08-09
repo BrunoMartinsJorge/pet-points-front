@@ -6,6 +6,11 @@ import { BagLog } from './components/bag-log/bag-log';
 import { TipoLogOpcoes } from './models/TipoLogOpcoes';
 import type { UsuarioLogDto } from './models/UsuarioLogDto';
 import { ChartModule } from 'primeng/chart';
+import { TipoLogEnum } from './models/TipoLogEnum';
+import {
+  CORES_GRAFICO_CICLICAS,
+  CORES_POR_TIPO_LOG,
+} from '../../../../shared/styles/cores-logs';
 
 @Component({
   selector: 'app-logs-sistema',
@@ -85,6 +90,62 @@ export class LogsSistema {
     });
   }
 
+  public formatarLabel(label: string): string {
+    let formatada = '';
+    const labelSplit: string[] = label.split('_');
+    if (labelSplit.length > 1) {
+      const primeiraParte =
+        labelSplit[0].charAt(0).toUpperCase() +
+        labelSplit[0].slice(1).toLocaleLowerCase();
+      const segundaParte =
+        labelSplit[1].charAt(0).toUpperCase() +
+        labelSplit[1].slice(1).toLocaleLowerCase();
+      formatada = `${primeiraParte} ${segundaParte}`;
+    } else {
+      const primeiro =
+        labelSplit[0].charAt(0).toUpperCase() +
+        labelSplit[0].slice(1).toLocaleLowerCase();
+      formatada = `${primeiro}`;
+    }
+    return formatada;
+  }
+
+  private readonly coresGrafico = [
+    '--p-cyan-500',
+    '--p-red-500',
+    '--p-orange-500',
+    '--p-green-500',
+    '--p-purple-500',
+    '--p-yellow-500',
+    '--p-blue-500',
+    '--p-pink-500',
+    '--p-teal-500',
+    '--p-indigo-500',
+    '--p-gray-500',
+  ];
+
+  private readonly coresPorTipoLog: Record<TipoLogEnum, string> = {
+    [TipoLogEnum.LOGIN]: '--color-card-primary',
+    [TipoLogEnum.REGISTRO]: '--color-card-primary',
+    [TipoLogEnum.ERRO]: '--bag-reprovado',
+    [TipoLogEnum.MOVIMENTACAO_ENTRADA]: '--p-green-500',
+    [TipoLogEnum.MOVIMENTACAO_SAIDA]: '--p-orange-500',
+    [TipoLogEnum.SE_DESATIVOU]: '--p-gray-500',
+    [TipoLogEnum.CANCELOU_CONSULTA]: '--p-red-500',
+    [TipoLogEnum.SOLICITOU_CONSULTA]: '--p-cyan-500',
+    [TipoLogEnum.DEFERIU_CONSULTA]: '--p-green-500',
+    [TipoLogEnum.CONSULTA_INICIADA]: '--p-blue-500',
+    [TipoLogEnum.CONSULTA_FINALIZADA]: '--p-indigo-500',
+    [TipoLogEnum.DESATIVOU_PERFIL]: '--p-gray-500',
+    [TipoLogEnum.INDEFERIU_CONSULTA]: '--p-red-500',
+    [TipoLogEnum.EDITOU_TIPO_CONSULTA]: '--p-purple-500',
+    [TipoLogEnum.ADICIONOU_CLIENTE]: '--p-teal-500',
+    [TipoLogEnum.REGISTROU_PRODUTO]: '--p-green-500',
+    [TipoLogEnum.REMOVEU_PRODUTO]: '--p-red-500',
+    [TipoLogEnum.EDITOU_PRODUTO]: '--p-yellow-500',
+    [TipoLogEnum.REGISTROU_PAGAMENTO_PRESENCIAL]: '--p-cyan-500',
+  };
+
   private formatarParaGrafico(): void {
     this.carregandoGrafico = true;
     const documentStyle = getComputedStyle(document.documentElement);
@@ -101,41 +162,36 @@ export class LogsSistema {
     this.basicData = {
       labels: chartData.labels,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      datasets: chartData.datasets.map((ds: any, index: number) => ({
-        ...ds,
-        borderColor: documentStyle.getPropertyValue(
-          index === 0
-            ? '--p-cyan-500'
-            : index === 1
-              ? '--p-red-500'
-              : '--p-gray-500',
-        ),
-      })),
+      datasets: chartData.datasets.map((ds: any, index: number) => {
+        const variavelCor =
+          this.tipoFiltro === 'tipo'
+            ? CORES_POR_TIPO_LOG[ds.label as TipoLogEnum]
+            : undefined;
+
+        const cor = documentStyle.getPropertyValue(
+          variavelCor ??
+            CORES_GRAFICO_CICLICAS[index % CORES_GRAFICO_CICLICAS.length],
+        );
+
+        return { ...ds, borderColor: cor, backgroundColor: cor };
+      }),
     };
 
     this.basicOptions = {
       maintainAspectRatio: false,
       aspectRatio: 0.6,
       plugins: {
-        legend: {
-          labels: { color: textColor },
-        },
+        legend: { labels: { color: textColor } },
       },
       scales: {
         x: {
           ticks: { color: textColorSecondary },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false,
-          },
+          grid: { color: surfaceBorder, drawBorder: false },
         },
         y: {
           beginAtZero: true,
           ticks: { color: textColorSecondary },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false,
-          },
+          grid: { color: surfaceBorder, drawBorder: false },
         },
       },
     };
@@ -164,8 +220,10 @@ export class LogsSistema {
 
     const labels = Array.from(datasSet).sort();
 
-    const datasets = Object.keys(mapa).map((tipo) => ({
-      label: tipo,
+    const chaves = Object.keys(mapa).sort(); // ordem estável para o mapeamento de cores
+
+    const datasets = chaves.map((tipo) => ({
+      label: this.formatarLabel(tipo),
       data: labels.map((data) => mapa[tipo][data] || 0),
       fill: false,
       tension: 0.4,
