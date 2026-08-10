@@ -47,6 +47,7 @@
               <a
                 [routerLink]="route.path"
                 [routerLinkActive]="['active']"
+                [tooltipPosition]="telaMenor ? 'top' : 'right'"
                 pTooltip="{{ route.data?.nome }}"
               >
                 <i [class]="route.data?.icone"></i>

@@ -1,0 +1,35 @@
+h2 {
+    margin: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        p-skeleton {
+            flex: 1 1 calc(33% - 1rem);
+            height: 175px;
+        }
+    }
+
+    .pagamentos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        p-fieldset {
+            flex: 1 1 calc(50% - 0.5rem);
+
+            &:last-child {
+            flex: 1 1 calc(20% - 0.5rem);
+            }
+        }
+    }
+}

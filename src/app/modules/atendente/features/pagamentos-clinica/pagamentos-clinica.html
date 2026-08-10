@@ -1,0 +1,91 @@
+<main>
+  <section class="cards">
+    @if (carregandoCards) {
+      <p-skeleton height="175px"></p-skeleton>
+      <p-skeleton height="175px"></p-skeleton>
+      <p-skeleton height="175px"></p-skeleton>
+    } @else {}
+  </section>
+  <hr />
+  <section class="pagamentos">
+    <p-fieldset legend="Histórico de Pagamentos">
+      <p-table
+        [paginator]="true"
+        [rows]="12"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} pagamentos"
+        [rowsPerPageOptions]="[12, 24, 36]"
+        [stripedRows]="true"
+        [showGridlines]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Cliente</th>
+            <th>Valor</th>
+            <th>Data</th>
+            <th>Forma de Pagamento</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pagamento>
+          <tr>
+            <td>{{ pagamento.cliente }}</td>
+            <td>{{ pagamento.cliente }}</td>
+            <td>{{ pagamento.cliente }}</td>
+            <td>{{ pagamento.cliente }}</td>
+            <td>{{ pagamento.valor | currency: "BRL" }}</td>
+            <td>{{ pagamento.data | date: "dd/MM/yyyy" }}</td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <td colspan="6">
+            <span class="sem-resultados">Nenhum pagamento registrado!</span>
+          </td>
+        </ng-template>
+      </p-table>
+    </p-fieldset>
+    <p-fieldset legend="Pagamentos Pendentes">
+      <p-table
+        [paginator]="true"
+        [rows]="12"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Exibindo {first} de {last} de {totalRecords} pagamentos"
+        [rowsPerPageOptions]="[12, 24, 36]"
+        [stripedRows]="true"
+        [showGridlines]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Cliente</th>
+            <th>Valor</th>
+            <th>Forma de Pagamento</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pagamento>
+          <tr>
+            <td>{{ pagamento.cliente }}</td>
+            <td>{{ pagamento.cliente }}</td>
+            <td>{{ pagamento.cliente }}</td>
+            <td>{{ pagamento.cliente }}</td>
+            <td>{{ pagamento.valor | currency: "BRL" }}</td>
+            <td>
+                
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <td colspan="6">
+            @if (carregandoPagamentosPendentes) {
+                <!-- <p-progressSpinner /> -->
+            } @else {
+                <span class="sem-resultados">Nenhum pagamento registrado!</span>
+            }
+          </td>
+        </ng-template>
+      </p-table>
+    </p-fieldset>
+  </section>
+</main>

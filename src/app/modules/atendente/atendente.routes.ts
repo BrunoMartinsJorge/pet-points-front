@@ -11,6 +11,7 @@ import { PetsClinica } from '../../shared/pages/pets-clinica/pets-clinica';
 import { ClientesClinica } from '../../shared/pages/clientes-clinica/clientes-clinica';
 import { DetalhesClientes } from '../../shared/pages/clientes-clinica/pages/detalhes-clientes/detalhes-clientes';
 import { DetalhesPet } from '../../shared/pages/pets-clinica/pages/detalhes-pet/detalhes-pet';
+import { PagamentosClinica } from './features/pagamentos-clinica/pagamentos-clinica';
 
 export const ROTAS_ATENDENETES: Routes = [
   {
@@ -149,6 +150,21 @@ export const ROTAS_ATENDENETES: Routes = [
           icone: '',
           group: 'CLIENTES E PETS',
           descricao: 'Detalhes do Pet Selecionado',
+        },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'pagamentos-clinica',
+        title: 'Pagamentos da Clínica',
+        component: PagamentosClinica,
+        data: {
+          RULE: 'ATENDENTE',
+          visible: true,
+          nome: 'Pagamentos',
+          voltar: true,
+          icone: 'fa fa-wallet',
+          group: 'CLIENTES E PETS',
+          descricao: 'Histórico de Pagamentos da Clínica',
         },
         canActivate: [authGuard],
       },
