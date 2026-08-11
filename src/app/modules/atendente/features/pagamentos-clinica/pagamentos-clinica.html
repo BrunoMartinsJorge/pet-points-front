@@ -1,15 +1,55 @@
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>
 <main>
   <section class="cards">
-    @if (carregandoCards) {
+    @if (!cards) {
       <p-skeleton height="175px"></p-skeleton>
       <p-skeleton height="175px"></p-skeleton>
       <p-skeleton height="175px"></p-skeleton>
-    } @else {}
+    } @else {
+      <div class="card">
+        <span class="icon efetuado">
+          <i class="fa fa-comment"></i>
+        </span>
+        <div class="infos">
+          <span>Total de Pagamentos</span>
+          <span>
+            <strong> {{ cards.totalPagamentosClinica }} </strong>
+            Pagamentos(s)
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="icon pendente">
+          <i class="fa fa-clipboard"></i>
+        </span>
+        <div class="infos">
+          <span>Pagamentos Pendentes/Atrasados</span>
+          <span>
+            <strong> {{ cards.pagamentosPendentesAtrasados }} </strong>
+            Pagamento(s)
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="icon iniciado">
+          <i class="fas fa-ranking-star"></i>
+        </span>
+        <div class="infos">
+          <span>Aprovados por Min</span>
+          <span>
+            <strong> {{ cards.meusPagamentosClinica }} </strong>
+            Pagamentos(s)
+          </span>
+        </div>
+      </div>
+    }
   </section>
   <hr />
   <section class="pagamentos">
     <p-fieldset legend="Histórico de Pagamentos">
       <p-table
+        [value]="pagamentos"
         [paginator]="true"
         [rows]="12"
         [showCurrentPageReport]="true"
@@ -31,11 +71,25 @@
         <ng-template pTemplate="body" let-pagamento>
           <tr>
             <td>{{ pagamento.cliente }}</td>
-            <td>{{ pagamento.cliente }}</td>
-            <td>{{ pagamento.cliente }}</td>
-            <td>{{ pagamento.cliente }}</td>
             <td>{{ pagamento.valor | currency: "BRL" }}</td>
-            <td>{{ pagamento.data | date: "dd/MM/yyyy" }}</td>
+            <td>
+              {{
+                pagamento.dataPagamento !== null
+                  ? (pagamento.dataPagamento | date: "dd/MM/yyyy - HH:mm")
+                  : "Não Pago!"
+              }}
+            </td>
+            <td>{{ pagamento.forma }}</td>
+            <td>{{ pagamento.status }}</td>
+            <td>
+              <p-button
+                icon="fa fa-eye"
+                severity="secondary"
+                label="Ver Detalhes"
+                (click)="selecionarPagamento(pagamento)"
+                fluid
+              />
+            </td>
           </tr>
         </ng-template>
         <ng-template #emptymessage>
@@ -47,6 +101,7 @@
     </p-fieldset>
     <p-fieldset legend="Pagamentos Pendentes">
       <p-table
+        [value]="pagamentosAtrasados"
         [paginator]="true"
         [rows]="12"
         [showCurrentPageReport]="true"
@@ -60,28 +115,44 @@
             <th>Cliente</th>
             <th>Valor</th>
             <th>Forma de Pagamento</th>
-            <th>Status</th>
             <th>Ações</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-pagamento>
           <tr>
             <td>{{ pagamento.cliente }}</td>
-            <td>{{ pagamento.cliente }}</td>
-            <td>{{ pagamento.cliente }}</td>
-            <td>{{ pagamento.cliente }}</td>
             <td>{{ pagamento.valor | currency: "BRL" }}</td>
+            <td>{{ pagamento.forma }}</td>
             <td>
-                
+              <div class="btns">
+                <p-button
+                  icon="fa fas fa-bookmark"
+                  severity="success"
+                  pTooltip="Registrar Pagamento"
+                  [disabled]="
+                    pagamento.status !== 'PENDENTE' ||
+                    pagamento.forma !== 'DINHEIRO'
+                  "
+                  fluid
+                  (click)="registrarPagamentoPresencial(pagamento)"
+                />
+                <p-button
+                  icon="fa fa-eye"
+                  severity="secondary"
+                  pTooltip="Ver Detalhes"
+                  (click)="selecionarPagamento(pagamento)"
+                  fluid
+                />
+              </div>
             </td>
           </tr>
         </ng-template>
         <ng-template #emptymessage>
           <td colspan="6">
             @if (carregandoPagamentosPendentes) {
-                <!-- <p-progressSpinner /> -->
+              <p-progressSpinner />
             } @else {
-                <span class="sem-resultados">Nenhum pagamento registrado!</span>
+              <span class="sem-resultados">Nenhum pagamento registrado!</span>
             }
           </td>
         </ng-template>
@@ -89,3 +160,406 @@
     </p-fieldset>
   </section>
 </main>
+
+<p-dialog
+  header="Detalhes do Pagamento"
+  [(visible)]="visibilidadeDialogDetalhesPagaemnto"
+  [draggable]="false"
+  [modal]="true"
+  [style]="{ maxWidth: '860px', width: '100%' }"
+  (onHide)="fecharDialogDetalhes()"
+>
+  @if (pagamentoSelecionado) {
+    <section class="detalhes-pagamento">
+      <div class="identificacao">
+        <span
+          class="bag-status"
+          [ngClass]="statusPagamento ? statusPagamento.toLowerCase() : ''"
+        >
+          <i class="fa fa-circle"></i>
+          {{ statusPagamento }}
+        </span>
+        <span class="bag-forma">
+          <i [ngClass]="iconePagamento(formaPagamento)"></i>
+          {{ formaPagamento }}
+        </span>
+        <span class="numero-pagamento">
+          Pagamento #{{ pagamentoSelecionado.id }}
+        </span>
+      </div>
+
+      <div class="resumo-valor">
+        <div class="valor">
+          <span>Valor do pagamento</span>
+          <strong>
+            <small>R$</small>
+            {{ valorPagamento | currency: "BRL" : "" }}
+          </strong>
+        </div>
+        @if (detalhesPagamento?.dataLimite) {
+          <div class="data-limite">
+            <i class="fa fa-clock"></i>
+            <div class="infos">
+              <span>Data limite</span>
+              <strong>
+                {{ detalhesPagamento?.dataLimite | date: "dd/MM/yyyy – HH:mm" }}
+              </strong>
+            </div>
+          </div>
+        }
+      </div>
+
+      <p-tabs [value]="etapaDetalhes">
+        <p-tablist>
+          <p-tab [value]="0">Resumo</p-tab>
+          <p-tab [value]="1">Transação</p-tab>
+          <p-tab [value]="2">Histórico</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+          <p-tabpanel [value]="0">
+            @if (carregandoDetalhes) {
+              <p-skeleton height="260px" />
+            } @else if (erroAoCarregarDetalhes) {
+              <span class="sem-resultados">
+                Não foi possível carregar os detalhes desse pagamento!
+              </span>
+            } @else {
+              <div class="campos">
+                <div class="campo">
+                  <label>Tipo de Pagamento</label>
+                  <div class="valor-campo">
+                    <i [ngClass]="iconePagamento(formaPagamento)"></i>
+                    <span>{{ (formaPagamento ?? "") | titlecase }}</span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Status</label>
+                  <div class="valor-campo">
+                    <span>{{ (statusPagamento ?? "") | titlecase }}</span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Criado em</label>
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!detalhesPagamento?.dataCriacao"
+                  >
+                    <i class="fa fa-calendar"></i>
+                    <span>
+                      {{
+                        detalhesPagamento?.dataCriacao
+                          ? (detalhesPagamento?.dataCriacao
+                            | date: "dd/MM/yyyy – HH:mm")
+                          : "Não informado"
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Data limite</label>
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!detalhesPagamento?.dataLimite"
+                  >
+                    <i class="fa fa-clock"></i>
+                    <span>
+                      {{
+                        detalhesPagamento?.dataLimite
+                          ? (detalhesPagamento?.dataLimite
+                            | date: "dd/MM/yyyy – HH:mm")
+                          : "Não informado"
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Data do pagamento</label>
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!detalhesPagamento?.dataPagamento"
+                  >
+                    <span>
+                      {{
+                        detalhesPagamento?.dataPagamento
+                          ? (detalhesPagamento?.dataPagamento
+                            | date: "dd/MM/yyyy – HH:mm")
+                          : "Não pago"
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Atualizado em</label>
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!detalhesPagamento?.dataAtualizacao"
+                  >
+                    <span>
+                      {{
+                        detalhesPagamento?.dataAtualizacao
+                          ? (detalhesPagamento?.dataAtualizacao
+                            | date: "dd/MM/yyyy – HH:mm")
+                          : "Não atualizado"
+                      }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="titulo-secao">Emitido por</h3>
+              @if (detalhesPagamento?.emitidoPor; as emitidoPor) {
+                <div class="responsavel">
+                  <span class="avatar">{{ iniciais(emitidoPor.nome) }}</span>
+                  <div class="infos">
+                    <strong>{{ emitidoPor.nome }}</strong>
+                    <span>{{ emitidoPor.cargo }} · {{ emitidoPor.email }}</span>
+                  </div>
+                  <span class="data">
+                    {{ emitidoPor.data | date: "dd/MM/yyyy" }}
+                  </span>
+                </div>
+              } @else {
+                <div class="responsavel vazio">
+                  <span>Nenhum responsável registrado pela emissão.</span>
+                </div>
+              }
+
+              <h3 class="titulo-secao" [class.reprovado]="pagamentoIndeferido">
+                {{ pagamentoIndeferido ? "Indeferido por" : "Aprovado por" }}
+              </h3>
+              @if (detalhesPagamento?.aprovadoPor; as aprovadoPor) {
+                <div class="responsavel">
+                  <span class="avatar">{{ iniciais(aprovadoPor.nome) }}</span>
+                  <div class="infos">
+                    <strong>{{ aprovadoPor.nome }}</strong>
+                    <span
+                      >{{ aprovadoPor.cargo }} · {{ aprovadoPor.email }}</span
+                    >
+                  </div>
+                  <span class="data">
+                    {{ aprovadoPor.data | date: "dd/MM/yyyy" }}
+                  </span>
+                </div>
+              } @else {
+                <div class="responsavel vazio">
+                  <span>
+                    Ainda não aprovado — aguardando confirmação do pagamento.
+                  </span>
+                </div>
+              }
+              @if (pagamentoIndeferido) {
+                <span class="aviso-avaliacao">
+                  O responsável acima indeferiu o pagamento.
+                </span>
+              }
+
+              @if (detalhesPagamento?.motivoIndeferimento) {
+                <h3 class="titulo-secao reprovado">Motivo do indeferimento</h3>
+                <div class="motivo-indeferimento">
+                  {{ detalhesPagamento?.motivoIndeferimento }}
+                </div>
+              }
+            }
+          </p-tabpanel>
+
+          <p-tabpanel [value]="1">
+            @if (carregandoDetalhes) {
+              <p-skeleton height="200px" />
+            } @else if (detalhesPagamento?.transacao; as transacao) {
+              <div class="campos">
+                <div class="campo full">
+                  <label>Identificador da transação</label>
+                  <div class="valor-campo">
+                    <i class="fa fa-hashtag"></i>
+                    <span>{{ transacao.identificador }}</span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Gateway</label>
+                  <div class="valor-campo">
+                    <span>{{ transacao.gateway }}</span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Método</label>
+                  <div class="valor-campo">
+                    <span>{{ transacao.metodo }}</span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Status no gateway</label>
+                  <div class="valor-campo" [class.vazio]="!transacao.statusGateway">
+                    <span>
+                      {{ transacao.statusGateway ?? "Não consultado" }}
+                    </span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Detalhe do status</label>
+                  <div class="valor-campo" [class.vazio]="!transacao.detalheStatus">
+                    <span>
+                      {{ transacao.detalheStatus ?? "Não consultado" }}
+                    </span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Valor total</label>
+                  <div class="valor-campo" [class.vazio]="!transacao.valorTotal">
+                    <span>
+                      {{
+                        transacao.valorTotal ? "R$ " + transacao.valorTotal : "Não informado"
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Valor pago</label>
+                  <div class="valor-campo" [class.vazio]="!transacao.valorPago">
+                    <span>
+                      {{
+                        transacao.valorPago ? "R$ " + transacao.valorPago : "Não consultado"
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Processado em</label>
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!transacao.dataProcessamento"
+                  >
+                    <span>
+                      {{
+                        transacao.dataProcessamento
+                          ? (transacao.dataProcessamento
+                            | date: "dd/MM/yyyy – HH:mm")
+                          : "Não processado"
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Última sincronização</label>
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!transacao.ultimaSincronizacao"
+                  >
+                    <span>
+                      {{
+                        transacao.ultimaSincronizacao
+                          ? (transacao.ultimaSincronizacao
+                            | date: "dd/MM/yyyy – HH:mm")
+                          : "Nunca sincronizado"
+                      }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <span class="sem-resultados">
+                {{
+                  permiteConsultarGateway
+                    ? "Nenhuma transação registrada para esse pagamento!"
+                    : "Pagamento presencial não possui transação no gateway."
+                }}
+              </span>
+            }
+          </p-tabpanel>
+
+          <p-tabpanel [value]="2">
+            @if (carregandoDetalhes) {
+              <p-skeleton height="200px" />
+            } @else if (detalhesPagamento?.historico?.length) {
+              <ul class="historico">
+                @for (evento of detalhesPagamento?.historico; track $index) {
+                  <li [ngClass]="evento.status.toLowerCase()">
+                    <div class="marcador"></div>
+                    <div class="conteudo">
+                      <div class="cabecalho">
+                        <strong>{{ evento.titulo }}</strong>
+                        <span class="data">
+                          {{ evento.data | date: "dd/MM/yyyy – HH:mm" }}
+                        </span>
+                      </div>
+                      <span class="descricao">{{ evento.descricao }}</span>
+                      <span class="responsavel-evento">
+                        {{ evento.responsavel }}
+                      </span>
+                    </div>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <span class="sem-resultados">
+                Nenhum evento registrado para esse pagamento!
+              </span>
+            }
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+
+      <div class="acoes">
+        <span class="aviso">
+          <i class="fa fa-info-circle"></i>
+          Status sincronizado via webhook do gateway de pagamento.
+        </span>
+        <div class="btns">
+          <p-button
+            label="Consultar status"
+            icon="fa fa-rotate-right"
+            severity="secondary"
+            [disabled]="!permiteConsultarGateway"
+            [loading]="consultandoStatus"
+            (click)="consultarStatusTransacao()"
+          />
+          <p-button
+            label="Indeferir"
+            icon="fa fa-xmark"
+            severity="danger"
+            outlined
+            [disabled]="!permiteAvaliarPagamento"
+            (click)="abrirDialogIndeferir()"
+          />
+          <p-button
+            label="Aprovar baixa"
+            icon="fa fa-check"
+            severity="success"
+            [disabled]="!permiteAvaliarPagamento"
+            (click)="aprovarBaixaPagamento()"
+          />
+        </div>
+      </div>
+    </section>
+  }
+</p-dialog>
+
+<p-dialog
+  header="Indeferir Pagamento"
+  [(visible)]="visibilidadeDialogIndeferir"
+  [draggable]="false"
+  [modal]="true"
+  [style]="{ maxWidth: '520px', width: '100%' }"
+>
+  <div class="input-group">
+    <label for="motivo_indeferimento">
+      Informe o motivo do indeferimento do pagamento
+    </label>
+    <textarea
+      pTextarea
+      rows="5"
+      name="motivo_indeferimento"
+      id="motivo_indeferimento"
+      placeholder="Digite o motivo do indeferimento do pagamento"
+      [(ngModel)]="motivoIndeferimento"
+    ></textarea>
+  </div>
+  <p-button
+    label="Indeferir Pagamento"
+    icon="fa fa-xmark"
+    severity="danger"
+    [style]="{ width: '100%' }"
+    [loading]="indeferindoPagamento"
+    [disabled]="motivoIndeferimento.trim() === ''"
+    (click)="indeferirPagamento()"
+  />
+</p-dialog>
