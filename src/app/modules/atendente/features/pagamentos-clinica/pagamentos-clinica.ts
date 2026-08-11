@@ -175,31 +175,20 @@ export class PagamentosClinica implements OnInit {
     this.visibilidadeDialogIndeferir = true;
   }
 
-  public indeferirPagamento(): void {
-    if (!this.pagamentoSelecionado || this.motivoIndeferimento.trim() === '') return;
+  public notificarCliente(): void {
+    if (!this.pagamentoSelecionado) return;
     this.indeferindoPagamento = true;
     this.service
-      .indeferirPagamento(this.pagamentoSelecionado.id, {
-        motivoIndeferimento: this.motivoIndeferimento.trim(),
-      })
+      .notificarPagamentoPendente(this.pagamentoSelecionado.id)
       .subscribe({
         next: () => {
-          this.indeferindoPagamento = false;
-          this.visibilidadeDialogIndeferir = false;
           this.visibilidadeDialogDetalhesPagaemnto = false;
           this.fecharDialogDetalhes();
           this.toast.add({
             severity: 'success',
-            detail: 'Pagamento indeferido com sucesso',
+            detail: 'Email notificando cliente enviado!',
           });
           this.atualizarListagens();
-        },
-        error: () => {
-          this.indeferindoPagamento = false;
-          this.toast.add({
-            severity: 'error',
-            detail: 'Não foi possível indeferir o pagamento',
-          });
         },
       });
   }

@@ -4,7 +4,6 @@ import type { PagamentosClinicaDto } from '../model/PagamentosClinicaDto';
 import type { Observable } from 'rxjs';
 import type { CardsPagamentosClinica } from '../model/CardsPagamentosClinica';
 import type { DetalhesPagamentoClinicaDto } from '../model/DetalhesPagamentoClinicaDto';
-import type { IndeferirPagamentoClinicaForm } from '../forms/IndeferirPagamentoClinicaForm';
 
 @Injectable({
   providedIn: 'root',
@@ -50,10 +49,9 @@ export class PagamentoClinicaService {
     );
   }
 
-  public indeferirPagamento(
-    idPagamento: number,
-    form: IndeferirPagamentoClinicaForm,
+  public notificarPagamentoPendente(
+    idPagamento: number
   ): Observable<void> {
-    return this.http.put<void>(`${this.URL}/indeferir/${idPagamento}`, form);
+    return this.http.post<void>(`${this.URL}/notificar-cliente/${idPagamento}`, {});
   }
 }

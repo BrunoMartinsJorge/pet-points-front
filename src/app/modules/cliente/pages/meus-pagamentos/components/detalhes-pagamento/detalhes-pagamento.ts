@@ -58,7 +58,7 @@ export class DetalhesPagamento implements OnChanges {
     if (changes['pagamentoSelecionado'] && this.pagamentoSelecionado) {
       this.novaFormaPagamento = this.pagamentoSelecionado.tipoPagamento;
       this.buscarInformacoesConsultaPagamento();
-      this.buscarInformacoesComprovante();
+      // this.buscarInformacoesComprovante();
     }
   }
 
@@ -82,20 +82,20 @@ export class DetalhesPagamento implements OnChanges {
       });
   }
 
-  private buscarInformacoesComprovante(): void {
-    if (!this.pagamentoSelecionado) return;
-    this.informacoesComprovante = null;
-    this.carregandoInformacoesComprovante = true;
-    this.service
-      .buscarComprovantePagamento(this.pagamentoSelecionado.id)
-      .subscribe({
-        next: (response: DetalhesPagamentoDto) => {
-          this.informacoesComprovante = response;
-          this.carregandoInformacoesComprovante = false;
-        },
-        error: () => (this.carregandoInformacoesComprovante = false),
-      });
-  }
+  // private buscarInformacoesComprovante(): void {
+  //   if (!this.pagamentoSelecionado) return;
+  //   this.informacoesComprovante = null;
+  //   this.carregandoInformacoesComprovante = true;
+  //   this.service
+  //     .buscarComprovantePagamento(this.pagamentoSelecionado.id)
+  //     .subscribe({
+  //       next: (response: DetalhesPagamentoDto) => {
+  //         this.informacoesComprovante = response;
+  //         this.carregandoInformacoesComprovante = false;
+  //       },
+  //       error: () => (this.carregandoInformacoesComprovante = false),
+  //     });
+  // }
 
   public baixarComprovante(): void {
     if (

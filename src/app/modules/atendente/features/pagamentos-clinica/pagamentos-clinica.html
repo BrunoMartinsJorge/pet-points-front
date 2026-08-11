@@ -226,20 +226,20 @@
             } @else {
               <div class="campos">
                 <div class="campo">
-                  <label>Tipo de Pagamento</label>
+                  <label for="tipo">Tipo de Pagamento</label>
                   <div class="valor-campo">
                     <i [ngClass]="iconePagamento(formaPagamento)"></i>
                     <span>{{ (formaPagamento ?? "") | titlecase }}</span>
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Status</label>
+                  <label for="status">Status</label>
                   <div class="valor-campo">
                     <span>{{ (statusPagamento ?? "") | titlecase }}</span>
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Criado em</label>
+                  <label for="criado_em">Criado em</label>
                   <div
                     class="valor-campo"
                     [class.vazio]="!detalhesPagamento?.dataCriacao"
@@ -256,7 +256,7 @@
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Data limite</label>
+                  <label for="data_limite">Data limite</label>
                   <div
                     class="valor-campo"
                     [class.vazio]="!detalhesPagamento?.dataLimite"
@@ -273,7 +273,7 @@
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Data do pagamento</label>
+                  <label for="pago_em">Data do pagamento</label>
                   <div
                     class="valor-campo"
                     [class.vazio]="!detalhesPagamento?.dataPagamento"
@@ -289,7 +289,7 @@
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Atualizado em</label>
+                  <label for="atiaçozadp_em">Atualizado em</label>
                   <div
                     class="valor-campo"
                     [class.vazio]="!detalhesPagamento?.dataAtualizacao"
@@ -368,26 +368,26 @@
             } @else if (detalhesPagamento?.transacao; as transacao) {
               <div class="campos">
                 <div class="campo full">
-                  <label>Identificador da transação</label>
+                  <label for="indentificador">Identificador da transação</label>
                   <div class="valor-campo">
                     <i class="fa fa-hashtag"></i>
                     <span>{{ transacao.identificador }}</span>
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Gateway</label>
+                  <label for="geteway">Gateway</label>
                   <div class="valor-campo">
                     <span>{{ transacao.gateway }}</span>
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Método</label>
+                  <label for="metodo">Método</label>
                   <div class="valor-campo">
                     <span>{{ transacao.metodo }}</span>
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Status no gateway</label>
+                  <label for="status">Status no gateway</label>
                   <div class="valor-campo" [class.vazio]="!transacao.statusGateway">
                     <span>
                       {{ transacao.statusGateway ?? "Não consultado" }}
@@ -395,7 +395,7 @@
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Detalhe do status</label>
+                  <label for="detalhes_status">Detalhe do status</label>
                   <div class="valor-campo" [class.vazio]="!transacao.detalheStatus">
                     <span>
                       {{ transacao.detalheStatus ?? "Não consultado" }}
@@ -403,7 +403,7 @@
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Valor total</label>
+                  <label for="valor">Valor total</label>
                   <div class="valor-campo" [class.vazio]="!transacao.valorTotal">
                     <span>
                       {{
@@ -413,7 +413,7 @@
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Valor pago</label>
+                  <label for="valor_pago">Valor pago</label>
                   <div class="valor-campo" [class.vazio]="!transacao.valorPago">
                     <span>
                       {{
@@ -423,7 +423,7 @@
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Processado em</label>
+                  <label for="processado_em">Processado em</label>
                   <div
                     class="valor-campo"
                     [class.vazio]="!transacao.dataProcessamento"
@@ -439,7 +439,7 @@
                   </div>
                 </div>
                 <div class="campo">
-                  <label>Última sincronização</label>
+                  <label for="ultima_atualizacao">Última sincronização</label>
                   <div
                     class="valor-campo"
                     [class.vazio]="!transacao.ultimaSincronizacao"
@@ -467,11 +467,13 @@
           </p-tabpanel>
 
           <p-tabpanel [value]="2">
-            @if (carregandoDetalhes) {
-              <p-skeleton height="200px" />
-            } @else if (detalhesPagamento?.historico?.length) {
+            @if (!detalhesPagamento) {
+              @if (carregandoDetalhes) {
+                <p-skeleton height="200px" />
+              }
+            } @else if (detalhesPagamento.historico.length) {
               <ul class="historico">
-                @for (evento of detalhesPagamento?.historico; track $index) {
+                @for (evento of detalhesPagamento.historico; track $index) {
                   <li [ngClass]="evento.status.toLowerCase()">
                     <div class="marcador"></div>
                     <div class="conteudo">
@@ -513,53 +515,13 @@
             (click)="consultarStatusTransacao()"
           />
           <p-button
-            label="Indeferir"
-            icon="fa fa-xmark"
-            severity="danger"
-            outlined
-            [disabled]="!permiteAvaliarPagamento"
-            (click)="abrirDialogIndeferir()"
-          />
-          <p-button
-            label="Aprovar baixa"
+            label="Notificar Cliente"
             icon="fa fa-check"
             severity="success"
-            [disabled]="!permiteAvaliarPagamento"
-            (click)="aprovarBaixaPagamento()"
+            (click)="notificarCliente()"
           />
         </div>
       </div>
     </section>
   }
-</p-dialog>
-
-<p-dialog
-  header="Indeferir Pagamento"
-  [(visible)]="visibilidadeDialogIndeferir"
-  [draggable]="false"
-  [modal]="true"
-  [style]="{ maxWidth: '520px', width: '100%' }"
->
-  <div class="input-group">
-    <label for="motivo_indeferimento">
-      Informe o motivo do indeferimento do pagamento
-    </label>
-    <textarea
-      pTextarea
-      rows="5"
-      name="motivo_indeferimento"
-      id="motivo_indeferimento"
-      placeholder="Digite o motivo do indeferimento do pagamento"
-      [(ngModel)]="motivoIndeferimento"
-    ></textarea>
-  </div>
-  <p-button
-    label="Indeferir Pagamento"
-    icon="fa fa-xmark"
-    severity="danger"
-    [style]="{ width: '100%' }"
-    [loading]="indeferindoPagamento"
-    [disabled]="motivoIndeferimento.trim() === ''"
-    (click)="indeferirPagamento()"
-  />
 </p-dialog>
