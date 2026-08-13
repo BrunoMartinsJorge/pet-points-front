@@ -8,7 +8,7 @@ import { ConfirmationService } from 'primeng/api';
 import type { ConsultaVeterinarioDto } from './model/ConsultaVeterinarioDto';
 import type { ConsultaAtualDto } from './model/ConsultaAtualDto';
 import { Router } from '@angular/router';
-import { ItensCobrancaConsulta } from './components/itens-cobranca-consulta/itens-cobranca-consulta';
+import { ItensCobrancaConsulta } from "./components/itens-cobranca-consulta/itens-cobranca-consulta";
 import type { ItemCobrancaForm } from './form/FinalizarConsultaForm';
 
 @Component({

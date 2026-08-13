@@ -24,5 +24,10 @@ section.body {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
-  padding-bottom: 80px;
+}
+
+@media (max-width: 768px) {
+  section.body {
+    padding-bottom: 80px;
+  }
 }
