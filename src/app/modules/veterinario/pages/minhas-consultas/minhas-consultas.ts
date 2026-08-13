@@ -8,10 +8,17 @@ import { ConfirmationService } from 'primeng/api';
 import type { ConsultaVeterinarioDto } from './model/ConsultaVeterinarioDto';
 import type { ConsultaAtualDto } from './model/ConsultaAtualDto';
 import { Router } from '@angular/router';
+import { ItensCobrancaConsulta } from "./components/itens-cobranca-consulta/itens-cobranca-consulta";
+import type { ItemCobrancaForm } from './form/FinalizarConsultaForm';
 
 @Component({
   selector: 'app-minhas-consultas',
-  imports: [PrimeNGModule, BagStatusConsulta, GeneroBag],
+  imports: [
+    PrimeNGModule,
+    BagStatusConsulta,
+    GeneroBag,
+    ItensCobrancaConsulta,
+  ],
   templateUrl: './minhas-consultas.html',
   styleUrl: './minhas-consultas.scss',
 })
@@ -21,6 +28,8 @@ export class MinhasConsultas implements OnInit {
   private readonly router = inject(Router);
 
   public resumoConsulta = '';
+  public itensCobranca: ItemCobrancaForm[] = [];
+  public finalizandoConsulta = false;
 
   public consultasDoDia: ConsultaVeterinarioDto[] = [
   ];
@@ -88,6 +97,8 @@ export class MinhasConsultas implements OnInit {
   }
 
   public finalizarConsulta(): void {
+    this.resumoConsulta = '';
+    this.itensCobranca = [];
     this.confirmService.confirm({
       header: 'Finalizar Consulta',
       acceptVisible: false,
@@ -96,17 +107,28 @@ export class MinhasConsultas implements OnInit {
   }
 
   public enviarFinalizarConsulta(): void {
-    if (!this.consultaAtual || this.resumoConsulta.trim().length == 0) return;
-    this.service.finalizarConsulta(this.consultaAtual.id, this.resumoConsulta).subscribe({
+    if (
+      !this.consultaAtual ||
+      this.resumoConsulta.trim().length == 0 ||
+      this.finalizandoConsulta
+    )
+      return;
+    this.finalizandoConsulta = true;
+    this.service.finalizarConsulta(this.consultaAtual.id, {
+      resumo: this.resumoConsulta,
+      itens: this.itensCobranca,
+    }).subscribe({
       next: () => {
         this.confirmService.close();
         this.resumoConsulta = "";
+        this.itensCobranca = [];
+        this.finalizandoConsulta = false;
         this.buscarConsultasDeHoje();
         this.buscarConsultaAtual();
         this.buscarHistoricoConsultas();
-        this.confirmService.close();
       },
       error: () => {
+        this.finalizandoConsulta = false;
         this.confirmService.close();
       }
     });

@@ -25,3 +25,9 @@ section.body {
   overflow-y: auto;
   min-height: 0;
 }
+
+@media (max-width: 768px) {
+  section.body {
+    padding-bottom: 80px;
+  }
+}

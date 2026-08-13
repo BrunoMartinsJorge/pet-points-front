@@ -23,6 +23,7 @@ export const CORES_POR_TIPO_LOG: Record<TipoLogEnum, string> = {
   [TipoLogEnum.REMOVEU_PRODUTO]: '--p-red-500',
   [TipoLogEnum.EDITOU_PRODUTO]: '--p-yellow-500',
   [TipoLogEnum.REGISTROU_PAGAMENTO_PRESENCIAL]: '--p-cyan-500',
+  [TipoLogEnum.INDEFERIU_PAGAMENTO]: '--p-red-500',
 };
 
 // Array cíclico usado quando não há cor fixa aplicável (ex: agrupamento por usuário no gráfico)

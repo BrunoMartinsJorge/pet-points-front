@@ -82,6 +82,10 @@
               </div>
 
               <div class="acoes">
+                <button (click)="reagendar.emit(consulta)" class="reagendar">
+                  Reagendar
+                  <i class="fa fas fa-calendar"></i>
+                </button>
                 <button (click)="selecionar.emit(consulta)">
                   Acessar consulta
                   <i class="fa fas fa-angle-right"></i>

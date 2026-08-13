@@ -86,6 +86,7 @@
     (selecionar)="selecionarConsulta($event)"
     (cancelar)="abrirCancelamento($event)"
     (solicitar)="abrirAgendamento()"
+    (reagendar)="abrirReagendamento($event)"
   ></app-historico-consultas>
 </main>
 
@@ -105,3 +106,9 @@
   [consulta]="consultaSelecionada"
   (cancelado)="aoAtualizarConsultas()"
 ></app-dialog-cancelar-consulta>
+
+<app-reagendar-consulta
+  [(visible)]="visibilidadeReagendamento"
+  [consulta]="consultaSelecionada"
+  (reagendado)="aoAtualizarConsultas()"
+></app-reagendar-consulta>

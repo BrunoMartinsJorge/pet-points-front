@@ -27,6 +27,7 @@ export class HistoricoConsultas {
   @Input() carregando = false;
 
   @Output() selecionar = new EventEmitter<MinhasConsultasDto>();
+  @Output() reagendar = new EventEmitter<MinhasConsultasDto>();
   @Output() cancelar = new EventEmitter<MinhasConsultasDto>();
   @Output() solicitar = new EventEmitter<void>();
 

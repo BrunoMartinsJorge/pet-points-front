@@ -54,4 +54,8 @@ export const TipoLogOpcoes: OptionSelect[] = [
         label: 'Indeferiu a consulta',
         value: TipoLogEnum.INDEFERIU_CONSULTA
     },
+    {
+        label: 'Indeferiu o pagamento',
+        value: TipoLogEnum.INDEFERIU_PAGAMENTO
+    },
 ];

@@ -4,6 +4,8 @@ export enum TipoProdutoEnum {
   COSMETICO = 'Cosmético',
   ROUPA = 'Roupa',
   HIGIENE = 'Higiene',
+  MEDICAMENTO = 'Medicamento',
+  VACINA = 'Vacina',
 }
 
 export const TipoProdutoOpcoesFiltro = [
@@ -30,6 +32,14 @@ export const TipoProdutoOpcoesFiltro = [
     {
         label: 'Higiene',
         value: 'HIGIENE'
+    },
+    {
+        label: 'Medicamento',
+        value: 'MEDICAMENTO'
+    },
+    {
+        label: 'Vacina',
+        value: 'VACINA'
     }
 ];
 
@@ -53,5 +63,13 @@ export const TipoProdutoOpcoes = [
     {
         label: 'Higiene',
         value: 'HIGIENE'
+    },
+    {
+        label: 'Medicamento',
+        value: 'MEDICAMENTO'
+    },
+    {
+        label: 'Vacina',
+        value: 'VACINA'
     }
 ];

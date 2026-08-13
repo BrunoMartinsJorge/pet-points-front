@@ -46,7 +46,7 @@
     padding: 0.5rem;
 
     .consulta-card {
-      width: calc(50% - 0.5rem);
+      flex: 1 1 calc(50% - 0.5rem);
       background-color: var(--card);
       border: 1px solid var(--color-border);
       border-radius: 4px;
@@ -54,6 +54,7 @@
       min-height: 200px;
       display: flex;
       flex-direction: column;
+      min-width: 250px;
       gap: 0.5rem;
 
       .header-card {
@@ -141,6 +142,10 @@
 
           &.cancelar-consulta {
             background-color: var(--bag-reprovado);
+          }
+
+          &.reagendar {
+            background-color: var(--bag-iniciado);
           }
         }
       }

@@ -173,4 +173,9 @@ export class Sidebar {
     const key = `${i}-${j}`;
     return !!this.subMenuStates[key];
   }
+
+  public get telaMenor(): boolean {
+    const largura = window.innerWidth || document.documentElement.clientWidth;
+    return largura <= 768;
+  }
 }

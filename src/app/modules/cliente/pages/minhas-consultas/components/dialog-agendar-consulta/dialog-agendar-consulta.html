@@ -14,7 +14,6 @@
     </p-step-list>
 
     <p-step-panels>
-      <!-- Etapa 1: tipo de consulta -->
       <p-step-panel [value]="1">
         <ng-template #content let-activateCallback="activateCallback">
           <div class="informacoes-tipo-consulta">
@@ -51,7 +50,6 @@
         </ng-template>
       </p-step-panel>
 
-      <!-- Etapa 2: veterinário + data/hora -->
       <p-step-panel [value]="2">
         <ng-template #content let-activateCallback="activateCallback">
           <div class="informacoes-veterinarios">
@@ -127,7 +125,6 @@
         </ng-template>
       </p-step-panel>
 
-      <!-- Etapa 3: pet + pagamento + resumo -->
       <p-step-panel [value]="3">
         <ng-template #content let-activateCallback="activateCallback">
           <div class="etapa-final">

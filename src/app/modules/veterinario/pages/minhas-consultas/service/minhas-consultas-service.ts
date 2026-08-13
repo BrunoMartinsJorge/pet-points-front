@@ -4,6 +4,8 @@ import type { Observable } from 'rxjs';
 import type { ConsultaVeterinarioDto } from '../model/ConsultaVeterinarioDto';
 import type { ConsultaAtualDto } from '../model/ConsultaAtualDto';
 import type { InformacoesConsultaSelecionadaDto } from '../pages/detalhes-consulta/model/InformacoesConsultaSelecionadaDto';
+import type { ProdutoCobrancaDto } from '../model/ProdutoCobrancaDto';
+import type { FinalizarConsultaForm } from '../form/FinalizarConsultaForm';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +38,14 @@ export class MinhasConsultasService {
     return this.http.put<void>(`${this.URL}/iniciar/${idConsulta}`, {});
   }
 
-  public finalizarConsulta(idConsulta: number, resumo: string): Observable<void> {
-    return this.http.put<void>(`${this.URL}/finalizar/${idConsulta}`, resumo);
+  public buscarProdutosParaCobranca(): Observable<ProdutoCobrancaDto[]> {
+    return this.http.get<ProdutoCobrancaDto[]>(`${this.URL}/produtos-cobranca`);
+  }
+
+  public finalizarConsulta(
+    idConsulta: number,
+    form: FinalizarConsultaForm,
+  ): Observable<void> {
+    return this.http.put<void>(`${this.URL}/finalizar/${idConsulta}`, form);
   }
 }

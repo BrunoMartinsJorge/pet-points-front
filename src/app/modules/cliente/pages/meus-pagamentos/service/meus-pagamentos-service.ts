@@ -5,7 +5,6 @@ import type { CardsPagamentoDto } from '../models/CardsPagamentoDto';
 import type { PagamentosDto } from '../models/PagamentosDto';
 import type { TipoPagamentoEnum } from '../../../../../shared/models/enums/TipoPagamentoEnum';
 import type { MinhasConsultasDto } from '../../minhas-consultas/models/MinhasConsultasDto';
-import type { DetalhesPagamentoDto } from '../models/DetalhesPagamentoDto';
 
 @Injectable({
   providedIn: 'root',
@@ -35,10 +34,6 @@ export class MeusPagamentosService {
 
   public buscarConsultaPagamento(idConsulta: number): Observable<MinhasConsultasDto> {
     return this.http.get<MinhasConsultasDto>(`${this.URL}/consulta-pagamento/${idConsulta}`);
-  }
-
-  public buscarComprovantePagamento(idPagamento: number): Observable<DetalhesPagamentoDto> {
-    return this.http.get<DetalhesPagamentoDto>(`${this.URL}/detalhes-pagamento/${idPagamento}`);
   }
 
   public baixarArquivoComprovante(uuid: string): Observable<Blob> {

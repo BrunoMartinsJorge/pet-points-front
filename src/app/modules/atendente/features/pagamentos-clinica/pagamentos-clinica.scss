@@ -1,0 +1,450 @@
+h2 {
+  margin: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    p-skeleton {
+      flex: 1 1 calc(33% - 1rem);
+      height: 175px;
+    }
+
+    .card {
+      flex: 1 1 calc(33% - 0.5rem);
+      min-width: 200px;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 2rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--card);
+      gap: 1rem;
+
+      .icon {
+        font-size: 2em;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        background-color: var(--color-border);
+
+        &.efetuado {
+          color: var(--aprovado);
+          border: 1px solid var(--aprovado);
+          background-color: var(--aprovado-foreground);
+        }
+
+        &.pendente {
+          color: var(--bag-pendente);
+          border: 1px solid var(--bag-pendente);
+          background-color: var(--bag-pendente-foreground);
+        }
+
+        &.iniciado {
+          color: var(--bag-iniciado);
+          border: 1px solid var(--bag-iniciado);
+          background-color: var(--bag-iniciado-foreground);
+        }
+      }
+      .infos {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        span {
+          color: var(--color-text);
+        }
+        strong {
+          color: var(--color-title);
+        }
+      }
+    }
+  }
+
+  .pagamentos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    p-fieldset {
+      flex: 1 1 calc(50% - 0.5rem);
+
+      &:last-child {
+        flex: 1 1 calc(40% - 0.5rem);
+
+        .btns {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+        }
+      }
+    }
+  }
+}
+
+.detalhes-pagamento {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .identificacao {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .bag-status,
+    .bag-forma {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+
+    .bag-status {
+      i {
+        font-size: 0.5rem;
+      }
+
+      &.pendente {
+        color: var(--bag-pendente);
+        border-color: var(--bag-pendente);
+        background-color: var(--bag-pendente-foreground);
+      }
+
+      &.enviado {
+        color: var(--bag-iniciado);
+        border-color: var(--bag-iniciado);
+        background-color: var(--bag-iniciado-foreground);
+      }
+
+      &.aprovado {
+        color: var(--aprovado);
+        border-color: var(--aprovado);
+        background-color: var(--aprovado-foreground);
+      }
+
+      &.reprovado,
+      &.recusado,
+      &.cancelado,
+      &.devolvido {
+        color: var(--bag-reprovado);
+        border-color: var(--bag-reprovado);
+        background-color: var(--bag-reprovado-foreground);
+      }
+    }
+
+    .numero-pagamento {
+      color: var(--color-sub-text);
+      font-size: 0.85rem;
+    }
+  }
+
+  .resumo-valor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background-color: var(--card);
+
+    .valor {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      span {
+        color: var(--color-sub-text);
+        font-size: 0.85rem;
+      }
+
+      strong {
+        color: var(--color-title);
+        font-size: 2rem;
+        line-height: 1;
+
+        small {
+          font-size: 1rem;
+          color: var(--color-text);
+          margin-right: 0.25rem;
+        }
+      }
+    }
+
+    .data-limite {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--bag-pendente);
+      border-radius: 10px;
+      background-color: var(--bag-pendente-foreground);
+      color: var(--bag-pendente);
+
+      .infos {
+        display: flex;
+        flex-direction: column;
+
+        span {
+          font-size: 0.8rem;
+        }
+
+        strong {
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
+
+  .campos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .campo {
+      flex: 1 1 calc(33% - 0.75rem);
+      min-width: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+
+      &.full {
+        flex: 1 1 100%;
+      }
+
+      label {
+        color: var(--color-sub-text);
+        font-size: 0.8rem;
+      }
+
+      .valor-campo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        background-color: var(--card);
+        color: var(--color-title);
+        font-size: 0.9rem;
+        min-height: 45px;
+        overflow-wrap: anywhere;
+
+        &.vazio {
+          color: var(--color-sub-text);
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  .titulo-secao {
+    margin: 1rem 0 0 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-card-primary);
+
+    &.reprovado {
+      color: var(--bag-reprovado);
+    }
+  }
+
+  .responsavel {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background-color: var(--card);
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 600;
+      color: var(--color-card-primary);
+      border: 1px solid var(--color-card-primary);
+      background-color: var(--color-card-primary-foreground);
+    }
+
+    .infos {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow-wrap: anywhere;
+
+      strong {
+        color: var(--color-title);
+      }
+
+      span {
+        color: var(--color-sub-text);
+        font-size: 0.85rem;
+      }
+    }
+
+    .data {
+      font-size: 0.8rem;
+      color: var(--color-text);
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+    }
+
+    &.vazio {
+      color: var(--color-sub-text);
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+  }
+
+  .aviso-avaliacao {
+    color: var(--color-sub-text);
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  .motivo-indeferimento {
+    padding: 1rem;
+    border: 1px solid var(--bag-reprovado);
+    border-radius: 12px;
+    background-color: var(--bag-reprovado-foreground);
+    color: var(--color-text);
+    font-size: 0.9rem;
+  }
+
+  .historico {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    li {
+      display: flex;
+      gap: 0.75rem;
+
+      .marcador {
+        width: 10px;
+        height: 10px;
+        margin-top: 0.4rem;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background-color: var(--color-sub-text);
+      }
+
+      &.aprovado .marcador {
+        background-color: var(--aprovado);
+      }
+
+      &.pendente .marcador {
+        background-color: var(--bag-pendente);
+      }
+
+      &.enviado .marcador {
+        background-color: var(--bag-iniciado);
+      }
+
+      &.reprovado .marcador,
+      &.recusado .marcador,
+      &.cancelado .marcador,
+      &.devolvido .marcador {
+        background-color: var(--bag-reprovado);
+      }
+
+      .conteudo {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        background-color: var(--card);
+
+        .cabecalho {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          strong {
+            color: var(--color-title);
+          }
+
+          .data {
+            font-size: 0.8rem;
+            color: var(--color-sub-text);
+          }
+        }
+
+        .descricao {
+          color: var(--color-text);
+          font-size: 0.9rem;
+        }
+
+        .responsavel-evento {
+          color: var(--color-sub-text);
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+
+  .acoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+
+    .aviso {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      max-width: 260px;
+      color: var(--color-sub-text);
+      font-size: 0.8rem;
+    }
+
+    .btns {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+}
