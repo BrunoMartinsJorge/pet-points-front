@@ -342,5 +342,13 @@ section.sidebar-element {
     .user-avatar {
       border: none;
     }
+
+    &.open {
+      width: 100vw;
+
+      li a span {
+        display: none;
+      }
+    }
   }
 }

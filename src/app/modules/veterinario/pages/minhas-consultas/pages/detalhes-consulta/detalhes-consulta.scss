@@ -107,6 +107,10 @@ main {
           }
         }
 
+        &.cobranca {
+          gap: 1rem;
+        }
+
         &.consulta {
           .status {
             display: flex;
@@ -137,4 +141,41 @@ main {
 textarea {
   min-height: 150px;
   max-height: 200px;
+}
+
+.cobranca {
+  color: var(--color-text);
+
+  .totais {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.9em;
+
+      &.total {
+        font-weight: bold;
+        border-top: 1px solid var(--color-border);
+        padding-top: 0.25rem;
+      }
+    }
+  }
+}
+
+.botoes-dialog {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  p-button {
+    flex: 1 1 150px;
+  }
 }

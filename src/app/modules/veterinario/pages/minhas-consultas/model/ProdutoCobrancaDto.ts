@@ -1,0 +1,10 @@
+import type { TipoProdutoEnum } from '../../../../../shared/models/enums/TipoProdutoEnum';
+
+export interface ProdutoCobrancaDto {
+  id: number;
+  nome: string;
+  tipo: TipoProdutoEnum;
+  descricao: string;
+  valorUnitario: number;
+  quantidadeEstoque: number;
+}

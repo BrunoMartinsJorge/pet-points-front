@@ -7,4 +7,5 @@ export interface MinhasConsultasDto {
   dataHoraConsulta: string;
   statusConsulta: StatusConsultaEnum;
   tipoConsulta: string;
+  idVeterinario: number;
 }

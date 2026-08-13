@@ -1,0 +1,48 @@
+<p-confirmDialog></p-confirmDialog>
+<p-dialog
+  header="Reagendar Consulta"
+  [visible]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: '35vw' }"
+>
+  <hr />
+  @if (!consulta) {
+  } @else {
+    <div class="data-horario">
+      <div class="input-group">
+        <label for="data">Data da Consulta</label>
+        <p-datepicker
+          appendTo="body"
+          placeholder="Selecione a data da consulta"
+          dateFormat="dd/mm/yy"
+          [minDate]="dataMinima"
+          [(ngModel)]="dataConsulta"
+          (ngModelChange)="selecionarData($event)"
+          fluid
+        ></p-datepicker>
+      </div>
+      <div class="input-group">
+        <label for="horario">Horários Disponíveis</label>
+        <p-select
+          [options]="horariosDisponiveis"
+          [(ngModel)]="horarioConsulta"
+          placeholder="Selecione o horário"
+          appendTo="body"
+          [disabled]="!dataConsulta || horariosDisponiveis.length === 0"
+          fluid
+        />
+      </div>
+      <hr />
+      <p-button
+        label="Reagendar"
+        icon="pi pi-check"
+        severity="success"
+        fluid
+        [disabled]="!dataDiferente"
+        (click)="reagendarConsulta()"
+      />
+    </div>
+  }
+</p-dialog>

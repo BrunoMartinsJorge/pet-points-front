@@ -12,6 +12,8 @@ import { BagStatusConsulta } from '../../../../../../shared/components/bag-statu
 import { MinhasConsultasService } from '../../service/minhas-consultas-service';
 import type { ButtonSeverity } from 'primeng/button';
 import { MessageService } from 'primeng/api';
+import { ItensCobrancaConsulta } from '../../components/itens-cobranca-consulta/itens-cobranca-consulta';
+import type { ItemCobrancaForm } from '../../form/FinalizarConsultaForm';
 
 @Component({
   selector: 'app-detalhes-consulta',
@@ -22,6 +24,7 @@ import { MessageService } from 'primeng/api';
     Imagem,
     RatingModule,
     BagStatusConsulta,
+    ItensCobrancaConsulta,
   ],
   templateUrl: './detalhes-consulta.html',
   styleUrl: './detalhes-consulta.scss',
@@ -38,6 +41,9 @@ export class DetalhesConsulta implements OnInit {
   public habilitarBotao = true;
   public visibilidadeFinalizarConsulta = false;
   public resumoConsulta = '';
+
+  public itensCobranca: ItemCobrancaForm[] = [];
+  public finalizandoConsulta = false;
 
   public ngOnInit(): void {
     this.pegarIdConsulta();
@@ -128,16 +134,38 @@ export class DetalhesConsulta implements OnInit {
         },
       });
     } else {
-      this.visibilidadeFinalizarConsulta = true;
-      this.resumoConsulta = '';
+      this.abrirDialogFinalizarConsulta();
     }
   }
 
+  private abrirDialogFinalizarConsulta(): void {
+    this.visibilidadeFinalizarConsulta = true;
+    this.resumoConsulta = '';
+    this.itensCobranca = [];
+  }
+
+  public fecharDialogFinalizarConsulta(): void {
+    this.visibilidadeFinalizarConsulta = false;
+    this.itensCobranca = [];
+  }
+
+  public get valorConsulta(): number {
+    return this.informacoesConsulta?.valorConsulta ?? 0;
+  }
+
   public enviarFinalizarConsulta(): void {
-    if (!this.idConsultaSelecionada || this.resumoConsulta.trim().length == 0)
+    if (
+      !this.idConsultaSelecionada ||
+      this.resumoConsulta.trim().length == 0 ||
+      this.finalizandoConsulta
+    )
       return;
+    this.finalizandoConsulta = true;
     this.service
-      .finalizarConsulta(this.idConsultaSelecionada, this.resumoConsulta)
+      .finalizarConsulta(this.idConsultaSelecionada, {
+        resumo: this.resumoConsulta,
+        itens: this.itensCobranca,
+      })
       .subscribe({
         next: () => {
           this.toast.add({
@@ -146,9 +174,11 @@ export class DetalhesConsulta implements OnInit {
             detail: 'A consulta foi finalizada!',
           });
           this.buscarInformacoesConsultaSelecionada();
-          this.visibilidadeFinalizarConsulta = false;
+          this.finalizandoConsulta = false;
+          this.fecharDialogFinalizarConsulta();
         },
         error: () => {
+          this.finalizandoConsulta = false;
           this.visibilidadeFinalizarConsulta = false;
         },
       });

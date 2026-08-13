@@ -12,6 +12,7 @@ import { HistoricoConsultas } from './components/historico-consultas/historico-c
 import { DialogAgendarConsulta } from './components/dialog-agendar-consulta/dialog-agendar-consulta';
 import { DialogDetalhesConsulta } from './components/dialog-detalhes-consulta/dialog-detalhes-consulta';
 import { DialogCancelarConsulta } from './components/dialog-cancelar-consulta/dialog-cancelar-consulta';
+import { ReagendarConsulta } from './components/reagendar-consulta/reagendar-consulta';
 
 @Component({
   selector: 'app-minhas-consultas',
@@ -24,6 +25,7 @@ import { DialogCancelarConsulta } from './components/dialog-cancelar-consulta/di
     DialogAgendarConsulta,
     DialogDetalhesConsulta,
     DialogCancelarConsulta,
+    ReagendarConsulta,
   ],
   providers: [MessageService],
   templateUrl: './minhas-consultas.html',
@@ -47,6 +49,7 @@ export class MinhasConsultas implements OnInit {
   public visibilidadeAgendamento = false;
   public visibilidadeDetalhes = false;
   public visibilidadeCancelamento = false;
+  public visibilidadeReagendamento = false;
 
   ngOnInit(): void {
     this.buscarConsultaAtual();
@@ -88,6 +91,11 @@ export class MinhasConsultas implements OnInit {
       },
       error: () => (this.carregandoConsultaAtual = false),
     });
+  }
+
+  public abrirReagendamento(consulta: MinhasConsultasDto): void {
+    this.consultaSelecionada = consulta;
+    this.visibilidadeReagendamento = true;
   }
 
   private buscarProximaConsulta(): void {

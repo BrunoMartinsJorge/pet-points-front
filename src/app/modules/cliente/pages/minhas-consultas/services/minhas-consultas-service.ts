@@ -14,6 +14,7 @@ import type { TipoPagamentoEnum } from '../../../../../shared/models/enums/TipoP
 import type { AvaliacaoConsultaForm } from '../form/AvaliacaoConsultaForm';
 import type { AvaliacaoConsultaDto } from '../models/AvaliacaoConsultaDto';
 import type { InformacoesCardsConsultasClienteDto } from '../models/InformacoesCardsConsultasClienteDto';
+import type { ReagendarConsultaForm } from '../components/reagendar-consulta/form/ReagendarConsultaForm';
 
 @Injectable({
   providedIn: 'root',
@@ -149,5 +150,9 @@ export class MinhasConsultasService {
       `${this.URL}/avaliar-consulta/${idConsulta}`,
       avaliacao,
     );
+  }
+
+  public reagendarConsulta(form: ReagendarConsultaForm): Observable<void> {
+    return this.http.put<void>(`${this.URL}/reagendar-consulta`, form);
   }
 }

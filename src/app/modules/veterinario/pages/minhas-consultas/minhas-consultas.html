@@ -2,7 +2,7 @@
   [modal]="true"
   [closable]="false"
   [draggable]="false"
-  [style]="{ minWidth: '300px' }"
+  [style]="{ minWidth: '300px', maxWidth: '700px', width: '100%' }"
 >
   <ng-template pTemplate="message">
     <div class="finalizar-consulta">
@@ -18,6 +18,11 @@
           [(ngModel)]="resumoConsulta"
         ></textarea>
       </div>
+      <hr />
+      <app-itens-cobranca-consulta
+        [valorConsulta]="consultaAtual?.valorConsulta ?? null"
+        (itensAlterados)="itensCobranca = $event"
+      ></app-itens-cobranca-consulta>
       <p-button
         label="Finalizar Consulta"
         fluid
@@ -25,7 +30,7 @@
         severity="danger"
         size="small"
         (click)="enviarFinalizarConsulta()"
-        [disabled]="resumoConsulta.trim().length === 0"
+        [disabled]="resumoConsulta.trim().length === 0 || finalizandoConsulta"
       />
     </div>
   </ng-template>

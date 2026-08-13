@@ -11,4 +11,5 @@ export interface ConsultaAtualDto {
   observacoes: string;
   iniciadoEm: Date;
   finalizadoEm: Date | null;
+  valorConsulta: number | null;
 }
