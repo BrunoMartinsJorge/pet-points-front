@@ -33,6 +33,7 @@ import { PasswordModule } from 'primeng/password';
 import { DataViewModule } from 'primeng/dataview';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { titlecasePipe } from '../../pipes/texto-format-pipe';
+import { DividerModule } from 'primeng/divider';
 
 @NgModule({
   providers: [MessageService, ConfirmationService],
@@ -71,6 +72,7 @@ import { titlecasePipe } from '../../pipes/texto-format-pipe';
     ConfirmDialogModule,
     SelectButtonModule,
     titlecasePipe,
+    DividerModule,
   ],
   exports: [
     CommonModule,
@@ -107,6 +109,7 @@ import { titlecasePipe } from '../../pipes/texto-format-pipe';
     ConfirmDialogModule,
     SelectButtonModule,
     titlecasePipe,
+    DividerModule,
   ],
 })
 export class PrimeNGModule {}

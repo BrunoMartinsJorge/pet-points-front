@@ -526,3 +526,8 @@
     "
   />
 </p-dialog>
+
+<app-detalhes-consulta
+  [idConsulta]="idConsultaSelecionada"
+  (fechado)="idConsultaSelecionada = null"
+></app-detalhes-consulta>

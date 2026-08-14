@@ -17,6 +17,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FuncionariosOpcoesForm } from '../../../../shared/TiposFuncionarios';
 import type { FileSelectEvent } from 'primeng/fileupload';
 import type { NovoFuncionarioForm } from '../registrar-funcionario/forms/NovoFuncionarioForm';
+import { DetalhesConsulta } from "../../../consultas-clinica/pages/detalhes-consulta/detalhes-consulta";
 
 @Component({
   selector: 'app-detalhes-funcionario',
@@ -27,7 +28,8 @@ import type { NovoFuncionarioForm } from '../registrar-funcionario/forms/NovoFun
     BagStatusConsulta,
     BagTipoMovimentacao,
     ConfirmDialogModule,
-  ],
+    DetalhesConsulta
+],
   providers: [ConfirmationService],
   templateUrl: './detalhes-funcionario.html',
   styleUrl: './detalhes-funcionario.scss',
@@ -63,6 +65,8 @@ export class DetalhesFuncionario implements OnInit {
   //   dataNascimento: new Date(),
   //   permissao: TiposFuncionarios.A,
   // };
+
+  public idConsultaSelecionada: number | null = null;
 
   public readonly generos = [
     { label: 'Masculino', value: 'M' },
@@ -168,7 +172,7 @@ export class DetalhesFuncionario implements OnInit {
   }
 
   public verDetalhesConsulta(id: number): void {
-    this.routerNavigate.navigate(['gerente/detalhes-consulta', id]);
+    this.idConsultaSelecionada = id;
   }
 
   public ativarConfirmDialog(): void {

@@ -6,7 +6,6 @@ import type { ConsultaClinicaDto } from './model/ConsultaClinicaDto';
 import type { TiposConsultaDto } from './model/TiposConsultaDto';
 import type { OpcoesFiltro } from './model/OpcoesFiltro';
 import { BagStatusConsulta } from '../../../../shared/components/bag-status-consulta/bag-status-consulta';
-import { Router } from '@angular/router';
 import type { DetalhesTipoConsultaDto } from './model/DetalhesTipoConsultaDto';
 import { TabsModule } from 'primeng/tabs';
 import type { TipoConsultaForm } from './form/TipoConsultaForm';
@@ -17,22 +16,29 @@ import type { FiltroConsultaForm } from './form/FiltroConsultaForm';
 import type { EspecializacaoDto } from './model/EspecializacaoDto';
 import type { EspecializacaoForm } from './form/EspecializacaoForm';
 import type { DetalhesEspecializacaoDto } from './model/DetalhesEspecializacaoDto';
+import { DetalhesConsulta } from './pages/detalhes-consulta/detalhes-consulta';
 
 @Component({
   selector: 'app-consultas-clinica',
-  imports: [PrimeNGModule, BagStatusConsulta, TabsModule, AccordionModule],
+  imports: [
+    PrimeNGModule,
+    BagStatusConsulta,
+    TabsModule,
+    AccordionModule,
+    DetalhesConsulta,
+  ],
   templateUrl: './consultas-clinica.html',
   styleUrl: './consultas-clinica.scss',
 })
 export class ConsultasClinica implements OnInit {
   private readonly service = inject(ConsultasClinicaService);
-  private readonly router = inject(Router);
   private readonly toast = inject(MessageService);
 
   private consultas: ConsultaClinicaDto[] = [];
 
   public carregandoConsultas = false;
   public consultasFiltradas: ConsultaClinicaDto[] = [];
+  public idConsultaSelecionada: number | null = null;
 
   public carregandoTiposConsultas = false;
   public tiposConsultas: TiposConsultaDto[] = [];
@@ -275,7 +281,7 @@ export class ConsultasClinica implements OnInit {
   }
 
   public verDetalhesConsulta(idConsulta: number): void {
-    this.router.navigate(['gerente/detalhes-consulta', idConsulta]);
+    this.idConsultaSelecionada = idConsulta;
   }
 
   public verDetalhesTipoConsulta(idTipoConsulta: number): void {

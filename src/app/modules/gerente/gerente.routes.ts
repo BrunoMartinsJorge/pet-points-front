@@ -13,7 +13,7 @@ import { ConsultasClinica } from './pages/consultas-clinica/consultas-clinica';
 import { DetalhesClientes } from '../../shared/pages/clientes-clinica/pages/detalhes-clientes/detalhes-clientes';
 import { DetalhesPet } from '../../shared/pages/pets-clinica/pages/detalhes-pet/detalhes-pet';
 import { ChatInterno } from '../../shared/pages/chat-interno/chat-interno';
-import { DetalhesConsulta } from './pages/consultas-clinica/pages/detalhes-consulta/detalhes-consulta';
+// import { DetalhesConsulta } from './pages/consultas-clinica/pages/detalhes-consulta/detalhes-consulta';
 import { DetalhesFuncionario } from './pages/funcionarios/pages/detalhes-funcionario/detalhes-funcionario';
 import { Financeiro } from './pages/financeiro/financeiro';
 
@@ -229,21 +229,21 @@ export const ROTAS_GERENTE: Routes = [
         },
         canActivate: [authGuard],
       },
-      {
-        path: 'detalhes-consulta/:id',
-        title: 'Detalhes da Consulta',
-        component: DetalhesConsulta,
-        data: {
-          RULE: 'GERENTE',
-          visible: false,
-          nome: 'Consultas',
-          voltar: true,
-          icone: '',
-          group: 'CLÍNICA',
-          descricao: 'Detalhes da Consulta Selecionada',
-        },
-        canActivate: [authGuard],
-      },
+      // {
+      //   path: 'detalhes-consulta/:id',
+      //   title: 'Detalhes da Consulta',
+      //   component: DetalhesConsulta,
+      //   data: {
+      //     RULE: 'GERENTE',
+      //     visible: false,
+      //     nome: 'Consultas',
+      //     voltar: true,
+      //     icone: '',
+      //     group: 'CLÍNICA',
+      //     descricao: 'Detalhes da Consulta Selecionada',
+      //   },
+      //   canActivate: [authGuard],
+      // },
       {
         path: 'perfil',
         title: 'Perfil',

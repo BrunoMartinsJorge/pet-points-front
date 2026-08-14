@@ -1,176 +1,77 @@
-<main>
-  <p-fieldset legend="Membros Participantes" [toggleable]="false">
-    @if (detalhesConsulta === null) {
-    } @else {
-      <section class="participantes">
-        <div class="input-group">
-          <label for="cliente">Cliente</label>
-          <input
-            type="text"
-            pInputText
-            [(ngModel)]="detalhesConsulta.cliente.nome"
-            disabled
-          />
+<p-dialog
+  [(visible)]="visibilidadeDialogDetalhesConsulta"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ minWidth: '320px', width: '55vw', maxWidth: '900px' }"
+  (onHide)="aoFechar()"
+>
+  <ng-template #header>
+    @if (detalhesConsulta !== null) {
+      <div class="cabecalho">
+        <div class="identificacao">
+          <span class="referencia">
+            <span class="numero">Consulta #{{ detalhesConsulta.id }}</span>
+            <span class="separador">|</span>
+            <span class="tipo">{{ detalhesConsulta.tipo }}</span>
+          </span>
+          <h2>{{ detalhesConsulta.pet }}</h2>
         </div>
-        <div class="input-group">
-          <label for="cliente">Veterinário</label>
-          <input
-            type="text"
-            pInputText
-            [(ngModel)]="detalhesConsulta.veterinario.nome"
-            disabled
-          />
-        </div>
-        <div class="input-group">
-          <label for="cliente">Atendente</label>
-          <input
-            type="text"
-            pInputText
-            [value]="detalhesConsulta.atendente ? detalhesConsulta.atendente.nome : 'Não Possui Atendente'"
-            disabled
-          />
-        </div>
-      </section>
+        <app-bag-status-consulta
+          [status]="detalhesConsulta.status"
+        ></app-bag-status-consulta>
+      </div>
     }
-  </p-fieldset>
-  <hr />
-  <section class="detalhes-consulta">
-    @if (detalhesConsulta === null) {
-    } @else {
-      <p-fieldset legend="Datas Importantes" [toggleable]="false">
-        <div class="datas">
-          <div class="input-group">
-            <label for="cliente">Data da Solicitação</label>
-            <input
-              type="text"
-              pInputText
-              [value]="
-                detalhesConsulta.dataSolicitacao | date: 'dd/MM/yyyy - HH:mm'
-              "
-              disabled
-            />
-          </div>
-          <div class="input-group">
-            <label for="cliente">Data da Consulta</label>
-            <input
-              type="text"
-              pInputText
-              [value]="
-                detalhesConsulta.dataConsulta | date: 'dd/MM/yyyy - HH:mm'
-              "
-              disabled
-            />
-          </div>
-          <div class="input-group">
-            <label for="cliente">Data Atendimento</label>
-            <input
-              type="text"
-              pInputText
-              [value]="
-                (detalhesConsulta.dataAtendimento | date: 'dd/MM/yyyy - HH:mm') || 'Não Atendida'
-              "
-              disabled
-            />
-          </div>
-          <div class="input-group">
-            <label for="cliente">Data Cancelamento</label>
-            <input
-              type="text"
-              pInputText
-              [value]="
-                detalhesConsulta.dataCancelamento
-                  ? (detalhesConsulta.dataCancelamento
-                    | date: 'dd/MM/yyyy - HH:mm')
-                  : 'Não Cancelada'
-              "
-              disabled
-            />
-          </div>
-          <div class="input-group">
-            <label for="cliente">Iniciada Em</label>
-            <input
-              type="text"
-              pInputText
-              [value]="
-                detalhesConsulta.dataIniciado
-                  ? (detalhesConsulta.dataIniciado | date: 'dd/MM/yyyy - HH:mm')
-                  : 'Não Iniciada'
-              "
-              disabled
-            />
-          </div>
-          <div class="input-group">
-            <label for="cliente">Finalizado Em</label>
-            <input
-              type="text"
-              pInputText
-              [value]="
-                detalhesConsulta.dataFinalizado
-                  ? (detalhesConsulta.dataFinalizado
-                    | date: 'dd/MM/yyyy - HH:mm')
-                  : 'Não Finalizada'
-              "
-              disabled
-            />
-          </div>
-          <div class="input-group">
-            <label for="cliente">Indeferido</label>
-            <textarea
-              type="text"
-              [value]="detalhesConsulta.motivoIndeferimento || 'Não Indeferido'"
-              disabled
-              pTextarea
-              style="resize: none; overflow-y: auto"
-            ></textarea>
-          </div>
-          <div class="input-group">
-            <label for="cliente">Cancelado</label>
-            <textarea
-              type="text"
-              [value]="detalhesConsulta.motivoCancelamento || 'Não Cancelado'"
-              disabled
-              pTextarea
-              style="resize: none; overflow-y: auto"
-            ></textarea>
-          </div>
-        </div>
-      </p-fieldset>
-    }
-    @if (detalhesConsulta === null) {
-    } @else {
-      <p-fieldset legend="Informações Gerais" [toggleable]="false">
-        <div class="informacoes-gerais">
-          <div class="principal">
-            <div class="input-group">
-              <label for="cliente">Pet/Paciente da Consulta</label>
-              <input
-                type="text"
-                pInputText
-                [value]="detalhesConsulta.pet"
-                disabled
-              />
-            </div>
-            <div class="status-tipo">
-              <app-bag-status-consulta
-                [status]="detalhesConsulta.status"
-              ></app-bag-status-consulta>
-              <span class="tipo">
-                {{ detalhesConsulta.tipo }}
-              </span>
-            </div>
-          </div>
-          <hr />
-          <div class="input-group">
-            <label for="obs">Observações</label>
-            <textarea
-              type="text"
-              [value]="detalhesConsulta.observacoes || 'Sem Observações'"
-              disabled
-              pTextarea
-            ></textarea>
-          </div>
-        </div>
-      </p-fieldset>
-    }
-  </section>
-</main>
+  </ng-template>
+  @if (detalhesConsulta !== null) {
+    <section class="detalhes">
+      <div class="coluna">
+        <span class="titulo-secao">Participantes</span>
+        <ul class="lista-participantes">
+          @for (participante of participantes; track participante.papel) {
+            <li>
+              <span class="avatar">{{ participante.iniciais }}</span>
+              <div class="dados">
+                <strong>{{ participante.nome }}</strong>
+                <span class="papel">{{ participante.papel }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+        <span class="titulo-secao">Observações</span>
+        @if (detalhesConsulta.observacoes) {
+          <p class="observacoes">{{ detalhesConsulta.observacoes }}</p>
+        } @else {
+          <p class="observacoes vazia">Sem observações registradas.</p>
+        }
+      </div>
+      <p-divider
+        layout="vertical"
+        [style]="{ padding: '0', margin: '0' }"
+      ></p-divider>
+      <div class="coluna">
+        <span class="titulo-secao">Linha do Tempo</span>
+        <ul class="linha-tempo">
+          @for (evento of linhaDoTempo; track evento.titulo) {
+            <li
+              [class.concluido]="evento.concluido"
+              [class.pendente]="!evento.concluido"
+              [class.atual]="evento.atual"
+              [class.conectado]="evento.conectado"
+            >
+              <span class="marcador"></span>
+              <div class="conteudo">
+                <span class="titulo">{{ evento.titulo }}</span>
+                @if (evento.detalhe !== null) {
+                  <span class="detalhe">{{ evento.detalhe }}</span>
+                }
+              </div>
+              @if (evento.data !== null) {
+                <span class="data">{{ evento.data | date: "dd/MM HH:mm" }}</span>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    </section>
+  }
+</p-dialog>

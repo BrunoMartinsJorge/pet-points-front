@@ -18,7 +18,6 @@
               <h3>{{ funcionario.nome }}</h3>
               <span>{{ funcionario.permissao }}</span>
             </div>
-            <hr />
             <div class="outras">
               <span>Email: {{ funcionario.email }}</span>
               <span>CPF: {{ funcionario.cpf | converterCpf }}</span>
@@ -245,6 +244,7 @@
           placeholder="Data de Nascimento"
           formControlName="dataNascimento"
           dateFormat="dd/mm/yy"
+          fluid
           appendTo="body"
         />
       </div>
@@ -280,3 +280,8 @@
     ></p-button>
   }
 </p-dialog>
+
+<app-detalhes-consulta
+  [idConsulta]="idConsultaSelecionada"
+  (fechado)="idConsultaSelecionada = null"
+></app-detalhes-consulta>
