@@ -10,6 +10,7 @@ import { ThemeService } from '../../../core/services/theme-service';
 import { RotasService } from '../../../core/services/rotas-service';
 import type { ListOfRoutes, RoutesModel } from '../../models/RoutesModel';
 import { NotificacoesWsService } from '../../services/ws/notificacoes-ws-service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -129,7 +130,7 @@ export class Sidebar {
     if (imagem == '') return '';
     const idUsuario = this.tokenService.decodeToken(token).id_usuario;
     return idUsuario !== ''
-      ? 'http://localhost:8080/arquivos/usuario/' + idUsuario
+      ? environment.apiUrl + '/arquivos/usuario/' + idUsuario
       : '';
   }
 

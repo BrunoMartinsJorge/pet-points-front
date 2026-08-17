@@ -412,13 +412,10 @@
   <hr />
   @if (informacoesCarteirinha) {
     <div #pdfcarteirinha>
-      <app-carteirinha-pet
-    [pet]="informacoesCarteirinha"
-    [imagemBaseUrl]="'http://localhost:8080/arquivos/'"
-  ></app-carteirinha-pet>
+      <app-carteirinha-pet [pet]="informacoesCarteirinha"></app-carteirinha-pet>
     </div>
-}
-<hr />
+  }
+  <hr />
   <p-button
     label="Baixar"
     severity="success"

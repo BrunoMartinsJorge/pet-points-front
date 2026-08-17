@@ -14,6 +14,7 @@ import type { ButtonSeverity } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { ItensCobrancaConsulta } from '../../components/itens-cobranca-consulta/itens-cobranca-consulta';
 import type { ItemCobrancaForm } from '../../form/FinalizarConsultaForm';
+import { environment } from '../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-detalhes-consulta',
@@ -106,7 +107,7 @@ export class DetalhesConsulta implements OnInit {
     if (this.informacoesConsulta == null) return '';
     const imagem = this.informacoesConsulta.pet.imagem;
     return imagem !== '' && imagem !== null
-      ? 'http://localhost:8080/arquivos/' + imagem
+      ? environment.apiUrl + '/arquivos' + imagem
       : '';
   }
 
@@ -114,7 +115,7 @@ export class DetalhesConsulta implements OnInit {
     if (this.informacoesConsulta == null) return '';
     const imagem = this.informacoesConsulta.cliente.imagem;
     return imagem !== '' && imagem !== null
-      ? 'http://localhost:8080/arquivos/' + imagem
+      ? environment.apiUrl + '/arquivos' + imagem
       : '';
   }
 

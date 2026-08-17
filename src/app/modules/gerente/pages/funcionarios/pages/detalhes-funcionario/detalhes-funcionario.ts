@@ -18,6 +18,7 @@ import { FuncionariosOpcoesForm } from '../../../../shared/TiposFuncionarios';
 import type { FileSelectEvent } from 'primeng/fileupload';
 import type { NovoFuncionarioForm } from '../registrar-funcionario/forms/NovoFuncionarioForm';
 import { DetalhesConsulta } from "../../../consultas-clinica/pages/detalhes-consulta/detalhes-consulta";
+import { environment } from '../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-detalhes-funcionario',
@@ -127,7 +128,7 @@ export class DetalhesFuncionario implements OnInit {
   public get getImagemFuncionario(): string {
     if (!this.funcionario) return '';
     const uuid = this.funcionario.arquivo || '';
-    return uuid !== '' ? 'http://localhost:8080/arquivos/' + uuid : '';
+    return uuid !== '' ? environment.apiUrl + '/arquivos/' + uuid : '';
   }
 
   public carregarArquivo(event: FileSelectEvent): void {
