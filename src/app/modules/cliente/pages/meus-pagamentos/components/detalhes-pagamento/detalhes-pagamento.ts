@@ -45,7 +45,6 @@ export class DetalhesPagamento implements OnChanges {
   public novoArquivo: File | undefined;
   public novaFormaPagamento: TipoPagamentoEnum | undefined;
 
-  // Variável responsável por controlar a aba do tabpanel
   public etapa = 0;
 
   public carregandoInformacoesConsultaPagamento = false;
@@ -82,21 +81,6 @@ export class DetalhesPagamento implements OnChanges {
       });
   }
 
-  // private buscarInformacoesComprovante(): void {
-  //   if (!this.pagamentoSelecionado) return;
-  //   this.informacoesComprovante = null;
-  //   this.carregandoInformacoesComprovante = true;
-  //   this.service
-  //     .buscarComprovantePagamento(this.pagamentoSelecionado.id)
-  //     .subscribe({
-  //       next: (response: DetalhesPagamentoDto) => {
-  //         this.informacoesComprovante = response;
-  //         this.carregandoInformacoesComprovante = false;
-  //       },
-  //       error: () => (this.carregandoInformacoesComprovante = false),
-  //     });
-  // }
-
   public baixarComprovante(): void {
     if (
       !this.pagamentoSelecionado ||
@@ -124,6 +108,13 @@ export class DetalhesPagamento implements OnChanges {
   public get habilitarAcessarComprovante(): boolean {
     return (
       this.pagamentoSelecionado != null || this.informacoesComprovante != null
+    );
+  }
+
+  public get pagamentoCartao(): boolean {
+    return (
+      this.pagamentoSelecionado != null &&
+      this.pagamentoSelecionado.tipoPagamento == TipoPagamentoEnum.CARTAO
     );
   }
 
@@ -213,5 +204,16 @@ export class DetalhesPagamento implements OnChanges {
           });
         },
       });
+  }
+
+  public realizarPagamento(): void {
+    if (!this.pagamentoSelecionado) return;
+    const idPagamentoSelecionado = this.pagamentoSelecionado.id;
+    this.service.iniciarSecaoPagamento(idPagamentoSelecionado).subscribe({
+      next: (response) => {
+        console.log(response);
+        window.location.href = response.checkoutUrl;
+      },
+    });
   }
 }

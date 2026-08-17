@@ -17,6 +17,7 @@ import type { EspecializacaoDto } from './model/EspecializacaoDto';
 import type { EspecializacaoForm } from './form/EspecializacaoForm';
 import type { DetalhesEspecializacaoDto } from './model/DetalhesEspecializacaoDto';
 import { DetalhesConsulta } from './pages/detalhes-consulta/detalhes-consulta';
+import { StatusConsultaEnum } from '../../../../shared/models/enums/StatusConsultaEnum';
 
 @Component({
   selector: 'app-consultas-clinica',
@@ -39,6 +40,15 @@ export class ConsultasClinica implements OnInit {
   public carregandoConsultas = false;
   public consultasFiltradas: ConsultaClinicaDto[] = [];
   public idConsultaSelecionada: number | null = null;
+
+  public resumo = {
+    total: 0,
+    totalGeral: 0,
+    pendentes: 0,
+    emAndamento: 0,
+    finalizadas: 0,
+    canceladas: 0,
+  };
 
   public carregandoTiposConsultas = false;
   public tiposConsultas: TiposConsultaDto[] = [];
@@ -94,22 +104,57 @@ export class ConsultasClinica implements OnInit {
     this.buscarConsultas();
   }
 
+  public recarregar(): void {
+    this.buscarConsultas();
+  }
+
   private buscarConsultas(): void {
     this.carregandoConsultas = true;
+    this.carregandoTiposConsultas = true;
+    this.carregandoEspecializacoes = true;
     this.consultas = [];
     this.consultasFiltradas = [];
+    this.atualizarResumo();
     this.service.listarConsultas().subscribe({
       next: (response: ConsultaClinicaDto[]) => {
         this.consultas = response;
         this.consultasFiltradas = response;
         this.carregandoConsultas = false;
+        this.atualizarResumo();
         this.buscarTiposConsulta();
         this.buscarClientesFiltros();
         this.buscarVeterinariosFiltros();
         this.buscarTiposConsultaFiltros();
         this.buscarEspecializacoes();
       },
+      error: () => {
+        this.carregandoConsultas = false;
+        this.carregandoTiposConsultas = false;
+        this.carregandoEspecializacoes = false;
+      },
     });
+  }
+
+  private atualizarResumo(): void {
+    const contar = (...status: StatusConsultaEnum[]): number =>
+      this.consultasFiltradas.filter((consulta) =>
+        status.includes(consulta.status),
+      ).length;
+
+    this.resumo = {
+      total: this.consultasFiltradas.length,
+      totalGeral: this.consultas.length,
+      pendentes: contar(StatusConsultaEnum.PENDENTE),
+      emAndamento: contar(
+        StatusConsultaEnum.APROVADA,
+        StatusConsultaEnum.INICIADO,
+      ),
+      finalizadas: contar(StatusConsultaEnum.FINALIZADO),
+      canceladas: contar(
+        StatusConsultaEnum.CANCELADO,
+        StatusConsultaEnum.REPROVADA,
+      ),
+    };
   }
 
   private buscarTiposConsulta(): void {
@@ -118,6 +163,9 @@ export class ConsultasClinica implements OnInit {
     this.service.listarTiposConsulta().subscribe({
       next: (response: TiposConsultaDto[]) => {
         this.tiposConsultas = response;
+        this.carregandoTiposConsultas = false;
+      },
+      error: () => {
         this.carregandoTiposConsultas = false;
       },
     });
@@ -217,6 +265,15 @@ export class ConsultasClinica implements OnInit {
       });
     }
     this.consultasFiltradas = consultas;
+    this.atualizarResumo();
+  }
+
+  public get filtrosAtivos(): boolean {
+    return (
+      this.filtros.cliente !== null ||
+      this.filtros.veterinario !== null ||
+      this.filtros.tipoConsulta !== null
+    );
   }
 
   public limparFiltros(): void {

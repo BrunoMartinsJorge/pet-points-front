@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 import type { CardsPagamentoDto } from '../models/CardsPagamentoDto';
@@ -52,5 +52,14 @@ export class MeusPagamentosService {
 
   public buscarPagamento(idPagamento: number): Observable<PagamentosDto> {
     return this.http.get<PagamentosDto>(`${this.URL}/${idPagamento}`);
+  }
+
+  public iniciarSecaoPagamento(idPagamento: number): Observable<any> {
+    return this.http.post<any>(`${this.URL}/${idPagamento}/checkout`, {});
+  }
+
+  public verificarStatusPagamento(idSession: string): Observable<any> {
+    const params = new HttpParams().set('sessionId', idSession);
+    return this.http.get<any>(`${this.URL}/checkout/status`, { params })
   }
 }
