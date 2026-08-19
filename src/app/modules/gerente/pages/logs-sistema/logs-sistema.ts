@@ -47,7 +47,12 @@ export class LogsSistema {
       next: (res: LogDto[]) => {
         this.listaLogs = res;
         this.logsFiltrados = res;
-        this.opcoesTipoLogs.unshift({ label: 'Todos', value: '' });
+        if (
+          !this.opcoesTipoLogs
+            .map((a) => a.label.toLowerCase())
+            .includes('todos')
+        )
+          this.opcoesTipoLogs.unshift({ label: 'Todos', value: '' });
         this.formatarParaGrafico();
         setTimeout(() => {
           this.carregandoLogs = false;
@@ -164,16 +169,15 @@ export class LogsSistema {
       labels: chartData.labels,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       datasets: chartData.datasets.map((ds: any, index: number) => {
+        const label = ds.label.toUpperCase() as TipoLogEnum;
         const variavelCor =
           this.tipoFiltro === 'tipo'
-            ? CORES_POR_TIPO_LOG[ds.label as TipoLogEnum]
+            ? CORES_POR_TIPO_LOG[label as TipoLogEnum]
             : undefined;
-
         const cor = documentStyle.getPropertyValue(
           variavelCor ??
-            CORES_GRAFICO_CICLICAS[index % CORES_GRAFICO_CICLICAS.length],
+          CORES_GRAFICO_CICLICAS[index % CORES_GRAFICO_CICLICAS.length],
         );
-
         return { ...ds, borderColor: cor, backgroundColor: cor };
       }),
     };

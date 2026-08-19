@@ -1,17 +1,4 @@
 <main>
-  <header class="financeiro-header">
-    <div class="titulo">
-      <h1>Registros Financeiros</h1>
-      <p>Acompanhe a receita, pagamentos pendentes e o histórico de faturas da clínica.</p>
-    </div>
-    <p-button
-      label="Atualizar"
-      icon="fa fa-rotate-right"
-      severity="secondary"
-      [outlined]="true"
-      (click)="recarregar()"
-    />
-  </header>
 
   <section class="kpis">
     @if (carregandoCards) {
