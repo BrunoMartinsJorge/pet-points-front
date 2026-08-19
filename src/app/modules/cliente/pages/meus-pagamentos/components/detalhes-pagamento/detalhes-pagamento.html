@@ -12,11 +12,11 @@
       <p-progressSpinner></p-progressSpinner>
     </div>
   } @else {
-    <p-tabs [value]="etapa">
+    <p-tabs [value]="1">
       <p-tablist>
         <p-tab [value]="0">Informações</p-tab>
         <p-tab [value]="1" [disabled]="!habilitarAcessarComprovante"
-          >Comprovante</p-tab
+          >Pagamento</p-tab
         >
       </p-tablist>
       <p-tabpanels>
@@ -134,12 +134,6 @@
               </p-fieldset>
               <hr />
             }
-            @if (novaFormaPagamento !== pagamentoSelecionado.tipoPagamento) {
-              <p>
-                Caso altere a forma de pagamento, e já tiver enviado um
-                comprovante, o mesmo sera perdido!
-              </p>
-            }
             <p-inputgroup>
               <p-inputgroup-addon>
                 <i [ngClass]="iconePagamento(novaFormaPagamento)"></i>
@@ -166,65 +160,9 @@
                 />
               </p-inputgroup-addon>
             </p-inputgroup>
-            <p-fieldset legend="Comprovante" [toggleable]="true">
-              @if (informacoesComprovante) {
-                <div class="informacoes-comprovante">
-                  <p-button
-                    icon="fa fa-download"
-                    severity="info"
-                    [disabled]="informacoesComprovante.uuid === ''"
-                    pTooltip="Baixar comprovante"
-                    (click)="baixarComprovante()"
-                  />
-                  <p-fileupload
-                    #fu
-                    mode="basic"
-                    [chooseLabel]="
-                      informacoesComprovante.uuid === ''
-                        ? 'Carregar'
-                        : 'Alterar'
-                    "
-                    chooseIcon="pi pi-upload"
-                    [multiple]="false"
-                    name="demo[]"
-                    [fileLimit]="1"
-                    accept="image/*"
-                    maxFileSize="1000000"
-                    (onSelect)="carregarArquivo($event)"
-                    [auto]="true"
-                    [disabled]="
-                      pagamentoSelecionado.statusPagamento === 'APROVADO'
-                    "
-                  >
-                  </p-fileupload>
-                  <div
-                    class="nome-arquivo"
-                    [innerText]="getTituloComprovante"
-                  ></div>
-                  <span class="tipo-arquivo">{{ getTipoComprovante }}</span>
-                </div>
-                <hr />
-                <p-button
-                  label="Enviar"
-                  icon="fa fa-send"
-                  severity="success"
-                  [style]="{ width: '100%' }"
-                  [disabled]="
-                    novoArquivo === undefined ||
-                    pagamentoSelecionado.statusPagamento === 'APROVADO'
-                  "
-                  (click)="enviarComprovante()"
-                />
-              } @else {
-                <span class="sem-resultados">
-                  {{
-                    pagamentoSelecionado.tipoPagamento !== "PIX"
-                      ? "O tipo de pagamento escolhido não possui comprovante"
-                      : "Nenhum comprovante para esse pagamento!"
-                  }}
-                </span>
-              }
-            </p-fieldset>
+            @if (pagamentoCartao) {
+              <p-button label="Realizar Pagamento" severity="success" icon="fa far fa-credit-card" fluid (click)="realizarPagamento()"></p-button>
+            }
           </section>
         </p-tabpanel>
       </p-tabpanels>

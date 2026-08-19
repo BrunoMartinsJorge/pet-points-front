@@ -35,6 +35,7 @@ import { LogsService } from '../../../modules/gerente/pages/logs-sistema/service
 import { MovimentacoesClinicaService } from '../../../modules/gerente/pages/movimentacoes-clinica/service/movimentacoes-clinica-service';
 import { BagLog } from "../../../modules/gerente/pages/logs-sistema/components/bag-log/bag-log";
 import { AgendaConsultas } from '../../components/agenda-consultas/agenda-consultas';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-perfil',
@@ -185,7 +186,7 @@ export class Perfil implements OnInit {
       return '';
     const idUsuario = this.tokenService.decodeToken(token).id_usuario;
     return idUsuario !== ''
-      ? 'http://localhost:8080/arquivos/usuario/' + idUsuario
+      ? environment.apiUrl + '/arquivos/usuario/' + idUsuario
       : '';
   }
 
@@ -209,6 +210,10 @@ export class Perfil implements OnInit {
     else return 'fa fas fas fa-money-check';
   }
 
+  /**
+   * 
+   * @description Metodo responsável por buscar as informações do ranking de avaliação de atendentes e veterinários
+   */
   private buscarInformacoesRankingAvaliacoes(): void {
     if (
       this.getTipoUsuario !== 'ATENDENTE' &&
@@ -228,6 +233,11 @@ export class Perfil implements OnInit {
     });
   }
 
+  /**
+   * 
+   * @description - Metodo responsável por selecionar um pagamento e redirecionar o cliente para a tela de pagamentos
+   * @param {PagamentosDto} pagamento - Pagamento selecionado
+   */
   public selecionarPagamento(pagamento: PagamentosDto): void {
     this.clienteService.idPagamentoSelecionado = pagamento.id;
     this.clienteService.redirecionadoParaPagamento = true;

@@ -6,6 +6,8 @@ import type { PagamentosDto } from './models/PagamentosDto';
 import type { CardsPagamentoDto } from './models/CardsPagamentoDto';
 import { TipoPagamentoEnum } from '../../../../shared/models/enums/TipoPagamentoEnum';
 import { DetalhesPagamento } from './components/detalhes-pagamento/detalhes-pagamento';
+import { finalize } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-meus-pagamentos',
@@ -16,6 +18,8 @@ import { DetalhesPagamento } from './components/detalhes-pagamento/detalhes-paga
 export class MeusPagamentos implements OnInit {
   // Variavel responsável por conter o acesso ao service do componente em questão com acesso as requests de endpoint
   private readonly service = inject(MeusPagamentosService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   // Variavel responsável por armazenar as informacoes dos cards
   public informacoesCards: CardsPagamentoDto = {
@@ -51,7 +55,12 @@ export class MeusPagamentos implements OnInit {
     this.buscarInformacoesCards();
     this.listarPagamentosPendentesAtrasados();
     this.listarPagamentosReprovados();
-    this.listarHistoricoPagamentos();
+    const sessionId = this.route.snapshot.paramMap.get('session_id');
+    if (!sessionId) {
+      this.listarHistoricoPagamentos();
+    } else {
+      this.buscarPagamentoSessao(sessionId);
+    }
   }
 
   private verificarPagamentoPreSelecionadoExiste(): void {
@@ -144,6 +153,27 @@ export class MeusPagamentos implements OnInit {
       },
       error: () => (this.carregandoHistoricoPagamentos = false),
     });
+  }
+
+  private buscarPagamentoSessao(sessionId: string): void {
+    this.service
+      .verificarStatusPagamento(sessionId)
+      .pipe(
+        finalize(() =>
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {},
+            replaceUrl: true,
+          }),
+        ),
+      )
+      .subscribe({
+        next: (status) => {
+          this.listarHistoricoPagamentos();
+        },
+        error: (err) =>
+          console.error('Falha ao confirmar retorno da Stripe', err),
+      });
   }
 
   /**

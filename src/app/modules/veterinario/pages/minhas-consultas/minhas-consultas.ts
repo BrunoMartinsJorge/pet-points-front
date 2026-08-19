@@ -31,16 +31,13 @@ export class MinhasConsultas implements OnInit {
   public itensCobranca: ItemCobrancaForm[] = [];
   public finalizandoConsulta = false;
 
-  public consultasDoDia: ConsultaVeterinarioDto[] = [
-  ];
+  public consultasDoDia: ConsultaVeterinarioDto[] = [];
   public carregandoConsultasDia = false;
 
   public consultaAtual: ConsultaAtualDto | null = null;
   public carregandoConsultaAtual = false;
 
-  public historicoConsultas: ConsultaVeterinarioDto[] = [
-
-  ];
+  public historicoConsultas: ConsultaVeterinarioDto[] = [];
   public carregandoHistoricoConsultas = false;
 
   public ngOnInit(): void {

@@ -1,10 +1,84 @@
 <main>
+  <header class="consultas-header">
+    <div class="titulo">
+      <h1>Consultas da Clínica</h1>
+      <p>
+        Acompanhe as consultas, gerencie os tipos de atendimento e as
+        especializações dos veterinários.
+      </p>
+    </div>
+    <p-button
+      label="Atualizar"
+      icon="fa fa-rotate-right"
+      severity="secondary"
+      [outlined]="true"
+      [disabled]="carregandoConsultas"
+      (click)="recarregar()"
+    />
+  </header>
+
+  <section class="kpis">
+    @if (carregandoConsultas) {
+      <p-skeleton height="102px" />
+      <p-skeleton height="102px" />
+      <p-skeleton height="102px" />
+      <p-skeleton height="102px" />
+    } @else {
+      <div class="kpi-card">
+        <span class="kpi-icon total">
+          <i class="fa fa-clipboard-list"></i>
+        </span>
+        <div class="kpi-info">
+          <span class="kpi-label">Consultas Exibidas</span>
+          <strong class="kpi-valor">{{ resumo.total }}</strong>
+          <span class="kpi-sub">de {{ resumo.totalGeral }} no total</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-icon pendente">
+          <i class="fa fa-clock"></i>
+        </span>
+        <div class="kpi-info">
+          <span class="kpi-label">Pendentes</span>
+          <strong class="kpi-valor">{{ resumo.pendentes }}</strong>
+          <span class="kpi-sub">aguardando aprovação</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-icon andamento">
+          <i class="fa fa-stethoscope"></i>
+        </span>
+        <div class="kpi-info">
+          <span class="kpi-label">Em Andamento</span>
+          <strong class="kpi-valor">{{ resumo.emAndamento }}</strong>
+          <span class="kpi-sub">aprovadas ou iniciadas</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-icon finalizada">
+          <i class="fa fa-circle-check"></i>
+        </span>
+        <div class="kpi-info">
+          <span class="kpi-label">Finalizadas</span>
+          <strong class="kpi-valor">{{ resumo.finalizadas }}</strong>
+          <span class="kpi-sub"
+            >{{ resumo.canceladas }} cancelada(s) ou reprovada(s)</span
+          >
+        </div>
+      </div>
+    }
+  </section>
+
   <p-fieldset legend="Filtros" [toggleable]="false">
     <div class="filtros">
       <div class="inputs">
         <div class="input-group">
-          <label for="nome">Cliente</label>
+          <label for="cliente">Cliente</label>
           <p-select
+            inputId="cliente"
             [(ngModel)]="filtros.cliente"
             [options]="clientesFiltros"
             appendTo="body"
@@ -16,8 +90,9 @@
           />
         </div>
         <div class="input-group">
-          <label for="nome">Veterinário</label>
+          <label for="veterinario">Veterinário</label>
           <p-select
+            inputId="veterinario"
             [(ngModel)]="filtros.veterinario"
             [options]="veterinariosFiltros"
             appendTo="body"
@@ -29,8 +104,9 @@
           />
         </div>
         <div class="input-group">
-          <label for="nome">Tipo de Consulta</label>
+          <label for="tipoConsulta">Tipo de Consulta</label>
           <p-select
+            inputId="tipoConsulta"
             [(ngModel)]="filtros.tipoConsulta"
             [options]="tiposConsultasFiltros"
             appendTo="body"
@@ -51,6 +127,8 @@
           label="Limpar Filtros"
           severity="danger"
           icon="fa fa-eraser"
+          [outlined]="true"
+          [disabled]="!filtrosAtivos"
           (click)="limparFiltros()"
         />
         <p-button
@@ -65,151 +143,160 @@
       </div>
     </div>
   </p-fieldset>
-  <hr />
-  <section class="consultas-tipos-consultas">
-    <p-fieldset legend="Consultas da Clínica" [toggleable]="false">
-      <div class="lista-consultas">
-        @if (consultasFiltradas.length === 0) {
-          @if (carregandoConsultas) {
-            <p-progressSpinner
-              [style]="{ overflow: 'hidden' }"
-            ></p-progressSpinner>
-          } @else {
+
+  <section class="conteudo">
+    <p-fieldset [toggleable]="false">
+      <ng-template pTemplate="header">
+        <div class="header-fieldset">
+          <i class="fa fa-clipboard-check"></i>
+          <span>Consultas da Clínica</span>
+        </div>
+      </ng-template>
+      @if (carregandoConsultas) {
+        <div class="lista-consultas">
+          <p-skeleton height="96px" />
+          <p-skeleton height="96px" />
+          <p-skeleton height="96px" />
+          <p-skeleton height="96px" />
+        </div>
+      } @else {
+        <p-dataview [value]="consultasFiltradas" [paginator]="true" [rows]="8">
+          <ng-template #list let-consultas>
+            <div class="lista-consultas">
+              @for (consulta of consultas; track consulta.id) {
+                <div class="consulta-card">
+                  <div class="conteudo-card">
+                    <div class="badges">
+                      <app-bag-status-consulta
+                        [status]="consulta.status"
+                      ></app-bag-status-consulta>
+                      <span class="tipo-consulta">{{ consulta.tipo.nome }}</span>
+                    </div>
+                    <div class="informacoes">
+                      <span class="info">
+                        <i class="fa fa-user"></i>
+                        {{ consulta.cliente.nome }}
+                      </span>
+                      <span class="info">
+                        <i class="fa fa-user-doctor"></i>
+                        {{ consulta.veterinario.nome }}
+                      </span>
+                      <span class="info">
+                        <i class="fa fa-calendar"></i>
+                        {{ consulta.solicitadoEm | date: "dd/MM/yyyy - HH:mm" }}
+                      </span>
+                    </div>
+                  </div>
+                  <p-button
+                    label="Ver"
+                    icon="fa fa-eye"
+                    severity="secondary"
+                    [outlined]="true"
+                    pTooltip="Ver detalhes da consulta"
+                    (click)="verDetalhesConsulta(consulta.id)"
+                  />
+                </div>
+              }
+            </div>
+          </ng-template>
+          <ng-template #emptymessage>
             <span class="sem-resultados">Nenhuma consulta encontrada!</span>
-          }
-        } @else {
-          @for (consulta of consultasFiltradas; track consulta.id) {
-            <div class="consulta-card">
-              <div
-                style="
-                  min-width: 200px;
-                  flex: 1;
-                  display: flex;
-                  flex-direction: column;
-                  gap: 0.5rem;
-                "
-              >
-                <div class="body-card">
-                  <app-bag-status-consulta
-                    [status]="consulta.status"
-                  ></app-bag-status-consulta>
-                  <strong>Veterinário: {{ consulta.veterinario.nome }}</strong>
-                  <span class="tipo-consulta">{{ consulta.tipo.nome }}</span>
+          </ng-template>
+        </p-dataview>
+      }
+    </p-fieldset>
+
+    <aside class="painel-lateral">
+      <p-fieldset [toggleable]="false">
+        <ng-template pTemplate="header">
+          <div class="header-fieldset">
+            <i class="fa fa-user-doctor"></i>
+            <span>Especializações</span>
+          </div>
+        </ng-template>
+        <div class="lista-cadastros">
+          <p-button
+            label="Adicionar Nova Especialização"
+            severity="info"
+            icon="fa fa-plus"
+            [outlined]="true"
+            [style]="{ width: '100%' }"
+            (click)="alterarVisibilidadeAdicionarEspecializacao()"
+          />
+          @if (carregandoEspecializacoes) {
+            <p-skeleton height="60px" />
+            <p-skeleton height="60px" />
+          } @else if (especializacoes.length === 0) {
+            <span class="sem-resultados">Nenhuma especialização encontrada!</span>
+          } @else {
+            <div class="rolagem">
+              @for (tipo of especializacoes; track tipo.id) {
+                <div class="card-cadastro">
+                  <div class="informacoes">
+                    <strong>{{ tipo.descricao }}</strong>
+                  </div>
+                  <p-button
+                    icon="fa fa-eye"
+                    severity="secondary"
+                    [outlined]="true"
+                    [rounded]="true"
+                    pTooltip="Ver especialização"
+                    (click)="verDetalhesEspecializacao(tipo.id)"
+                  />
                 </div>
-                <hr />
-                <div>
-                  <span class="solicitado-em"
-                    >Data e Hora da Consulta:
-                    {{
-                      consulta.solicitadoEm | date: "dd/MM/yyyy - HH:mm"
-                    }}</span
-                  >
-                </div>
-              </div>
-              <p-button
-                label="Ver"
-                icon="fa fa-eye"
-                severity="secondary"
-                (click)="verDetalhesConsulta(consulta.id)"
-              />
+              }
             </div>
           }
-        }
-      </div>
-    </p-fieldset>
-    <section class="tipos-consultas-especializacoes">
-      <p-fieldset legend="Especializações" [toggleable]="false">
-        <div class="lista-tipos-consultas">
-          @if (especializacoes.length === 0) {
-            @if (carregandoTiposConsultas) {
-              <p-progressSpinner></p-progressSpinner>
-            } @else {
-              <span class="sem-resultados"
-                >Nenhuma especialização encontrada!</span
-              >
-              <p-button
-                label="Adicionar Nova Especialização"
-                severity="info"
-                icon="fa fa-plus"
-                (click)="alterarVisibilidadeAdicionarEspecializacao()"
-                [style]="{ width: '100%' }"
-              />
-            }
+        </div>
+      </p-fieldset>
+
+      <p-fieldset [toggleable]="false">
+        <ng-template pTemplate="header">
+          <div class="header-fieldset">
+            <i class="fa fa-notes-medical"></i>
+            <span>Tipos de Consultas</span>
+          </div>
+        </ng-template>
+        <div class="lista-cadastros">
+          <p-button
+            label="Adicionar Novo Tipo de Consulta"
+            severity="info"
+            icon="fa fa-plus"
+            [outlined]="true"
+            [style]="{ width: '100%' }"
+            (click)="alterarNovoTipoConsulta()"
+          />
+          @if (carregandoTiposConsultas) {
+            <p-skeleton height="76px" />
+            <p-skeleton height="76px" />
+          } @else if (tiposConsultas.length === 0) {
+            <span class="sem-resultados"
+              >Nenhum tipo de consulta encontrado!</span
+            >
           } @else {
-            <p-button
-              label="Adicionar Nova Especialização"
-              severity="info"
-              icon="fa fa-plus"
-              (click)="alterarVisibilidadeAdicionarEspecializacao()"
-              [style]="{ width: '100%' }"
-            />
-            @for (tipo of especializacoes; track tipo.id) {
-              <div class="card-tipo-consulta">
-                <div class="informacoes">
-                  <strong>
-                    {{ tipo.descricao }}
-                  </strong>
+            <div class="rolagem">
+              @for (tipo of tiposConsultas; track tipo.id) {
+                <div class="card-cadastro">
+                  <div class="informacoes">
+                    <strong>{{ tipo.nome }}</strong>
+                    <span class="descricao">{{ tipo.descricao }}</span>
+                    <span class="valor">{{ tipo.valor | currency: "BRL" }}</span>
+                  </div>
+                  <p-button
+                    icon="fa fa-eye"
+                    severity="secondary"
+                    [outlined]="true"
+                    [rounded]="true"
+                    pTooltip="Ver tipo de consulta"
+                    (click)="verDetalhesTipoConsulta(tipo.id)"
+                  />
                 </div>
-                <p-button
-                  label="Ver"
-                  icon="fa fa-eye"
-                  severity="secondary"
-                  (click)="verDetalhesEspecializacao(tipo.id)"
-                />
-              </div>
-            }
+              }
+            </div>
           }
         </div>
       </p-fieldset>
-      <p-fieldset legend="Tipos de Consultas" [toggleable]="false">
-        <div class="lista-tipos-consultas">
-          @if (tiposConsultas.length === 0) {
-            @if (carregandoTiposConsultas) {
-              <p-progressSpinner></p-progressSpinner>
-            } @else {
-              <span class="sem-resultados"
-                >Nenhum tipo de consulta encontrado!</span
-              >
-              <p-button
-                label="Adicionar Novo Tipo de Consulta"
-                severity="info"
-                icon="fa fa-plus"
-                (click)="alterarNovoTipoConsulta()"
-                [style]="{ width: '100%' }"
-              />
-            }
-          } @else {
-            <p-button
-              label="Adicionar Novo Tipo de Consulta"
-              severity="info"
-              icon="fa fa-plus"
-              (click)="alterarNovoTipoConsulta()"
-              [style]="{ width: '100%' }"
-            />
-            @for (tipo of tiposConsultas; track tipo.id) {
-              <div class="card-tipo-consulta">
-                <div class="informacoes">
-                  <strong>
-                    {{ tipo.nome }}
-                  </strong>
-                  <span
-                    >{{ tipo.descricao }} - <strong>Valor: </strong> R${{
-                      tipo.valor
-                    }}
-                  </span>
-                </div>
-                <p-button
-                  label="Ver"
-                  icon="fa fa-eye"
-                  severity="secondary"
-                  (click)="verDetalhesTipoConsulta(tipo.id)"
-                />
-              </div>
-            }
-          }
-        </div>
-      </p-fieldset>
-    </section>
+    </aside>
   </section>
 </main>
 <p-dialog
@@ -526,3 +613,8 @@
     "
   />
 </p-dialog>
+
+<app-detalhes-consulta
+  [idConsulta]="idConsultaSelecionada"
+  (fechado)="idConsultaSelecionada = null"
+></app-detalhes-consulta>

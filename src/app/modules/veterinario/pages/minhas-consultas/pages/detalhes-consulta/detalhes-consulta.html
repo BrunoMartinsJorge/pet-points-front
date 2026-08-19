@@ -366,11 +366,15 @@
             </li>
             <li>
               <span>Valor dos Itens:</span>
-              <span>{{ informacoesConsulta.valorItens | currency: "BRL" }}</span>
+              <span>{{
+                informacoesConsulta.valorItens | currency: "BRL"
+              }}</span>
             </li>
             <li class="total">
               <span>Total Cobrado:</span>
-              <span>{{ informacoesConsulta.valorTotal | currency: "BRL" }}</span>
+              <span>{{
+                informacoesConsulta.valorTotal | currency: "BRL"
+              }}</span>
             </li>
           </ul>
         </div>
@@ -389,6 +393,22 @@
       [disabled]="carregandoInformacoesConsulta || !habilitarBotao"
       (click)="iniciarOuFinalizarConsulta()"
     />
+    @if (
+      informacoesConsulta !== null &&
+      informacoesConsulta.status === "FINALIZADO"
+    ) {
+      <p-button
+        label="Gerar Prescrição"
+        severity="secondary"
+        fluid
+        [icon]="
+          carregandoInformacoesConsulta ? 'pi pi-spin pi-spinner' : 'pi pi-file'
+        "
+        rounded="true"
+        outlined="true"
+        (click)="iniciarOuFinalizarConsulta()"
+      />
+    }
   </section>
 </main>
 <p-dialog

@@ -21,13 +21,13 @@
         </div>
       </div>
     } @else {
-      @if (consultaAtual) {
+      @if (proximaConsulta) {
         <app-proxima-consulta-cliente
           pTooltip="Próxima Consulta"
           tooltipPosition="top"
           [style]="{ width: '100%' }"
-          [proximaConsulta]="consultaAtual"
-          (verDetalhes)="selecionarConsulta(consultaAtual)"
+          [proximaConsulta]="proximaConsulta"
+          (verDetalhes)="selecionarConsulta(proximaConsulta)"
         ></app-proxima-consulta-cliente>
       } @else {
         <div class="proxima">

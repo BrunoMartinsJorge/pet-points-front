@@ -9,6 +9,7 @@ import type { FiltroFuncionariosForm } from './form/FiltroFuncionariosForm';
 import { ConverterCpfPipe } from '../../../../shared/pipes/converter-cpf-pipe';
 import { GeneroBag } from '../../../../shared/components/genero-bag/genero-bag';
 import { ChatApiService } from '../../../../shared/services/chat-api-service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-funcionarios',
@@ -132,6 +133,6 @@ export class Funcionarios implements OnInit {
   public getImagemFuncionario(funcionario: FuncionarioDto): string {
     if (!funcionario) return '';
     const uuid = funcionario.arquivo || '';
-    return uuid !== '' ? 'http://localhost:8080/arquivos/' + uuid : '';
+    return uuid !== '' ? environment.apiUrl + '/arquivos' + uuid : '';
   }
 }

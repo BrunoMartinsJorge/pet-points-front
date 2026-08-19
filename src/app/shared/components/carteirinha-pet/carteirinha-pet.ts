@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
 import type { CarteirinhaPetDto } from './dto/CarteirinhaPetDto';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-carteirinha-pet',
@@ -11,7 +12,7 @@ import type { CarteirinhaPetDto } from './dto/CarteirinhaPetDto';
 export class CarteirinhaPet {
   @Input({ required: true }) pet!: CarteirinhaPetDto;
 
-  @Input() imagemBaseUrl = '';
+  public readonly imagemBaseUrl = environment.apiUrl + '/arquivos/';
 
   @Input() mascararCpf = true;
 

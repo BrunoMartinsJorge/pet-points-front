@@ -1,23 +1,4 @@
 <main>
-  <header class="dashboard-header">
-    <div class="titulo">
-      <h1>Visão geral da clínica</h1>
-      <p>Acompanhe a operação, o estoque e os atendimentos em um só lugar.</p>
-    </div>
-    <div class="acoes">
-      <span class="atualizado">
-        Atualizado: {{ dataAtualizacao | date: "shortTime" }}
-      </span>
-      <p-button
-        label="Atualizar"
-        icon="fa fa-rotate-right"
-        severity="secondary"
-        [outlined]="true"
-        (click)="recarregar()"
-      />
-    </div>
-  </header>
-
   <section class="kpis">
     <div class="kpi-card">
       <span class="kpi-icon iniciado">

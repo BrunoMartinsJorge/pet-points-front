@@ -6,7 +6,6 @@ import type { ConsultaClinicaDto } from './model/ConsultaClinicaDto';
 import type { TiposConsultaDto } from './model/TiposConsultaDto';
 import type { OpcoesFiltro } from './model/OpcoesFiltro';
 import { BagStatusConsulta } from '../../../../shared/components/bag-status-consulta/bag-status-consulta';
-import { Router } from '@angular/router';
 import type { DetalhesTipoConsultaDto } from './model/DetalhesTipoConsultaDto';
 import { TabsModule } from 'primeng/tabs';
 import type { TipoConsultaForm } from './form/TipoConsultaForm';
@@ -17,22 +16,39 @@ import type { FiltroConsultaForm } from './form/FiltroConsultaForm';
 import type { EspecializacaoDto } from './model/EspecializacaoDto';
 import type { EspecializacaoForm } from './form/EspecializacaoForm';
 import type { DetalhesEspecializacaoDto } from './model/DetalhesEspecializacaoDto';
+import { DetalhesConsulta } from './pages/detalhes-consulta/detalhes-consulta';
+import { StatusConsultaEnum } from '../../../../shared/models/enums/StatusConsultaEnum';
 
 @Component({
   selector: 'app-consultas-clinica',
-  imports: [PrimeNGModule, BagStatusConsulta, TabsModule, AccordionModule],
+  imports: [
+    PrimeNGModule,
+    BagStatusConsulta,
+    TabsModule,
+    AccordionModule,
+    DetalhesConsulta,
+  ],
   templateUrl: './consultas-clinica.html',
   styleUrl: './consultas-clinica.scss',
 })
 export class ConsultasClinica implements OnInit {
   private readonly service = inject(ConsultasClinicaService);
-  private readonly router = inject(Router);
   private readonly toast = inject(MessageService);
 
   private consultas: ConsultaClinicaDto[] = [];
 
   public carregandoConsultas = false;
   public consultasFiltradas: ConsultaClinicaDto[] = [];
+  public idConsultaSelecionada: number | null = null;
+
+  public resumo = {
+    total: 0,
+    totalGeral: 0,
+    pendentes: 0,
+    emAndamento: 0,
+    finalizadas: 0,
+    canceladas: 0,
+  };
 
   public carregandoTiposConsultas = false;
   public tiposConsultas: TiposConsultaDto[] = [];
@@ -88,22 +104,57 @@ export class ConsultasClinica implements OnInit {
     this.buscarConsultas();
   }
 
+  public recarregar(): void {
+    this.buscarConsultas();
+  }
+
   private buscarConsultas(): void {
     this.carregandoConsultas = true;
+    this.carregandoTiposConsultas = true;
+    this.carregandoEspecializacoes = true;
     this.consultas = [];
     this.consultasFiltradas = [];
+    this.atualizarResumo();
     this.service.listarConsultas().subscribe({
       next: (response: ConsultaClinicaDto[]) => {
         this.consultas = response;
         this.consultasFiltradas = response;
         this.carregandoConsultas = false;
+        this.atualizarResumo();
         this.buscarTiposConsulta();
         this.buscarClientesFiltros();
         this.buscarVeterinariosFiltros();
         this.buscarTiposConsultaFiltros();
         this.buscarEspecializacoes();
       },
+      error: () => {
+        this.carregandoConsultas = false;
+        this.carregandoTiposConsultas = false;
+        this.carregandoEspecializacoes = false;
+      },
     });
+  }
+
+  private atualizarResumo(): void {
+    const contar = (...status: StatusConsultaEnum[]): number =>
+      this.consultasFiltradas.filter((consulta) =>
+        status.includes(consulta.status),
+      ).length;
+
+    this.resumo = {
+      total: this.consultasFiltradas.length,
+      totalGeral: this.consultas.length,
+      pendentes: contar(StatusConsultaEnum.PENDENTE),
+      emAndamento: contar(
+        StatusConsultaEnum.APROVADA,
+        StatusConsultaEnum.INICIADO,
+      ),
+      finalizadas: contar(StatusConsultaEnum.FINALIZADO),
+      canceladas: contar(
+        StatusConsultaEnum.CANCELADO,
+        StatusConsultaEnum.REPROVADA,
+      ),
+    };
   }
 
   private buscarTiposConsulta(): void {
@@ -112,6 +163,9 @@ export class ConsultasClinica implements OnInit {
     this.service.listarTiposConsulta().subscribe({
       next: (response: TiposConsultaDto[]) => {
         this.tiposConsultas = response;
+        this.carregandoTiposConsultas = false;
+      },
+      error: () => {
         this.carregandoTiposConsultas = false;
       },
     });
@@ -211,6 +265,15 @@ export class ConsultasClinica implements OnInit {
       });
     }
     this.consultasFiltradas = consultas;
+    this.atualizarResumo();
+  }
+
+  public get filtrosAtivos(): boolean {
+    return (
+      this.filtros.cliente !== null ||
+      this.filtros.veterinario !== null ||
+      this.filtros.tipoConsulta !== null
+    );
   }
 
   public limparFiltros(): void {
@@ -275,7 +338,7 @@ export class ConsultasClinica implements OnInit {
   }
 
   public verDetalhesConsulta(idConsulta: number): void {
-    this.router.navigate(['gerente/detalhes-consulta', idConsulta]);
+    this.idConsultaSelecionada = idConsulta;
   }
 
   public verDetalhesTipoConsulta(idTipoConsulta: number): void {
