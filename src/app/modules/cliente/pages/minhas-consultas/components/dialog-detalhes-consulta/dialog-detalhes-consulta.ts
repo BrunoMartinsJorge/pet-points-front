@@ -16,6 +16,7 @@ import type { PagamentoDto } from '../../models/PagamentoDto';
 import type { AvaliacaoConsultaDto } from '../../models/AvaliacaoConsultaDto';
 import type { AvaliacaoConsultaForm } from '../../form/AvaliacaoConsultaForm';
 import { Imagem } from '../../../../../../shared/components/imagem/imagem';
+import { MeusPagamentosService } from '../../../meus-pagamentos/service/meus-pagamentos-service';
 
 @Component({
   selector: 'app-dialog-detalhes-consulta',
@@ -32,6 +33,7 @@ import { Imagem } from '../../../../../../shared/components/imagem/imagem';
 export class DialogDetalhesConsulta {
   private readonly service = inject(MinhasConsultasService);
   private readonly toast = inject(MessageService);
+  private readonly pagamentoService = inject(MeusPagamentosService);
 
   @Input() consulta: MinhasConsultasDto | null = null;
 
@@ -286,5 +288,15 @@ export class DialogDetalhesConsulta {
     else if (tipoPagamento === TipoPagamentoEnum.DINHEIRO)
       return 'fa fas fa-money-bill';
     else return 'fa fas fas fa-money-check';
+  }
+
+  public realizarPagamento(): void {
+    if (!this.pagamento) return;
+    const idPagamentoSelecionado = this.pagamento.id;
+    this.pagamentoService.iniciarSecaoPagamento(idPagamentoSelecionado).subscribe({
+      next: (response) => {
+        window.location.href = response.checkoutUrl;
+      },
+    });
   }
 }

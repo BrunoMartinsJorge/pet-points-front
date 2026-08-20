@@ -205,6 +205,19 @@
               severity="info"
             ></p-button>
           }
+          @if (pagamento.formaPagamento === "CARTAO") {
+            <p-button
+              label="Realizar Pagamento"
+              [disabled]="
+                pagamento === null ||
+                pagamento.status === 'APROVADO'
+              "
+              severity="success"
+              icon="fa far fa-credit-card"
+              fluid
+              (click)="realizarPagamento()"
+            ></p-button>
+          }
         }
       </p-tabpanel>
       <p-tabpanel value="3">

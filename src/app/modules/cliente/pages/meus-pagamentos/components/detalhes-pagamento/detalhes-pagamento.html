@@ -161,7 +161,7 @@
               </p-inputgroup-addon>
             </p-inputgroup>
             @if (pagamentoCartao) {
-              <p-button label="Realizar Pagamento" severity="success" icon="fa far fa-credit-card" fluid (click)="realizarPagamento()"></p-button>
+              <p-button label="Realizar Pagamento" [disabled]="pagamentoSelecionado === null || pagamentoSelecionado.statusPagamento === 'APROVADO'" severity="success" icon="fa far fa-credit-card" fluid (click)="realizarPagamento()"></p-button>
             }
           </section>
         </p-tabpanel>

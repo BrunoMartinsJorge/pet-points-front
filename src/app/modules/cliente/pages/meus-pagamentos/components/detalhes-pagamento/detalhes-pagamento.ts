@@ -211,7 +211,6 @@ export class DetalhesPagamento implements OnChanges {
     const idPagamentoSelecionado = this.pagamentoSelecionado.id;
     this.service.iniciarSecaoPagamento(idPagamentoSelecionado).subscribe({
       next: (response) => {
-        console.log(response);
         window.location.href = response.checkoutUrl;
       },
     });
