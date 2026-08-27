@@ -5,6 +5,7 @@ import type { ChatAtendimentoDto } from '../models/ChatAtendimentoDto';
 import type { MensagemAtendimento } from '../../../../../../shared/models/ChatModels';
 import type { AvaliacaoForm } from '../../../../../../shared/form/AvaliacaoForm';
 import type { AvaliacaoDto } from '../../../../../../shared/models/AvaliacaoDto';
+import type { EquipeAtendimentoDto } from '../models/EquipeAtendimentoDto';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,13 @@ import type { AvaliacaoDto } from '../../../../../../shared/models/AvaliacaoDto'
 export class AtendimentosClienteService {
   private readonly URL = '/chat-atendimento';
   private readonly http = inject(HttpClient);
+
+  /** Atendentes ativos, usados para dar rosto à equipe na central de atendimento. */
+  public buscarEquipeAtendimento(): Observable<EquipeAtendimentoDto[]> {
+    return this.http.get<EquipeAtendimentoDto[]>(
+      `${this.URL}/cliente/equipe-atendimento`,
+    );
+  }
 
   public buscarAtendimentosCliente(): Observable<ChatAtendimentoDto[]> {
     return this.http.get<ChatAtendimentoDto[]>(

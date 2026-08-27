@@ -8,10 +8,12 @@ import { TipoPagamentoEnum } from '../../../../shared/models/enums/TipoPagamento
 import { DetalhesPagamento } from './components/detalhes-pagamento/detalhes-pagamento';
 import { finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CardResumo } from '../../../../shared/components/card-resumo/card-resumo';
+import { BagStatusPagamento } from "../../../../shared/components/bag-status-pagamento/bag-status-pagamento";
 
 @Component({
   selector: 'app-meus-pagamentos',
-  imports: [PrimeNGModule, DetalhesPagamento],
+  imports: [PrimeNGModule, DetalhesPagamento, CardResumo, BagStatusPagamento],
   templateUrl: './meus-pagamentos.html',
   styleUrl: './meus-pagamentos.scss',
 })
@@ -24,8 +26,8 @@ export class MeusPagamentos implements OnInit {
   // Variavel responsável por armazenar as informacoes dos cards
   public informacoesCards: CardsPagamentoDto = {
     pagamentosEfetuados: 0,
+    pagamentosPendentes: 0,
     pagamentosAtrasados: 0,
-    pagamentosReprovados: 0,
   };
   // Variavel responsável por delimitar o carregamento dos cards
   public carregandoInformacoesCards = false;
@@ -94,8 +96,8 @@ export class MeusPagamentos implements OnInit {
   private buscarInformacoesCards(): void {
     this.informacoesCards = {
       pagamentosEfetuados: 0,
+      pagamentosPendentes: 0,
       pagamentosAtrasados: 0,
-      pagamentosReprovados: 0,
     };
     this.carregandoInformacoesCards = true;
     this.service.buscarInformacoesCards().subscribe({
@@ -168,7 +170,7 @@ export class MeusPagamentos implements OnInit {
         ),
       )
       .subscribe({
-        next: (status) => {
+        next: () => {
           this.listarHistoricoPagamentos();
         },
         error: (err) =>

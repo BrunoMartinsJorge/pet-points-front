@@ -6,10 +6,12 @@ import { TipoPetBag } from '../../../../../../shared/components/tipo-pet-bag/tip
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { Imagem } from '../../../../../../shared/components/imagem/imagem';
+import { BagStatusPerfil } from '../../../../../../shared/components/bag-status-perfil/bag-status-perfil';
+import { urlArquivo } from '../../../../../../shared/utils/imagem-url';
 
 @Component({
   selector: 'app-pet-card',
-  imports: [CommonModule, GeneroBag, TipoPetBag, ButtonModule, Imagem],
+  imports: [CommonModule, GeneroBag, TipoPetBag, ButtonModule, Imagem, BagStatusPerfil],
   templateUrl: './pet-card.html',
   styleUrl: './pet-card.scss',
 })
@@ -23,7 +25,6 @@ export class PetCard {
   }
 
   public getUrlImagem(pet: MeuPetDto): string {
-    if (pet.imagem == null) return '';
-    return 'http://localhost:8080/cliente/meus-pets/imagem/' + pet.id;
+    return urlArquivo(pet.imagem);
   }
 }

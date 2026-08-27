@@ -1,8 +1,8 @@
 <p-confirmdialog />
-<p-toast 
-    [showTransformOptions]="'translateY(100%)'" 
-    [showTransitionOptions]="'500ms'" 
-    [hideTransitionOptions]="'1000ms'" 
+<p-toast
+    [showTransformOptions]="'translateY(100%)'"
+    [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'1000ms'"
     [showTransformOptions]="'translateX(100%)'" />
 <main>
   <section>
@@ -11,8 +11,11 @@
     } @else {
       <p-fieldset>
         <ng-template pTemplate="header">
-          <div class="header-fieldset">
-            <i class="fas fas fas fa-clipboard-check"></i><span>Consultas</span>
+          <div class="header-fieldset header-consultas">
+            <div class="titulo">
+              <i class="fas fas fas fa-clipboard-check"></i
+              ><span>Consultas</span>
+            </div>
           </div>
         </ng-template>
         <p-dataview #dv [value]="consultas" [paginator]="true" [rows]="6">
@@ -23,12 +26,8 @@
                   [ngClass]="'card-consulta ' + consulta.status.toLowerCase()"
                 >
                   <div class="badges">
-                    <span [ngClass]="'status ' + consulta.status.toLowerCase()">
-                      {{ consulta.status | titlecase }}
-                    </span>
-                    <span class="tipo-consulta">
-                      {{ consulta.tipoConsulta }}
-                    </span>
+                    <app-bag-status-consulta [status]="consulta.status"></app-bag-status-consulta>
+                    <p-tag [value]="consulta.tipoConsulta" severity="secondary"></p-tag>
                   </div>
                   <div class="informacoes">
                     <div>
@@ -55,10 +54,7 @@
                       (click)="selecionarConsulta(consulta)"
                     />
                   </div>
-                  @if (
-                    consulta.status === "Cancelado" ||
-                    consulta.status === "Reprovada"
-                  ) {
+                  @if (consultaRecusada(consulta)) {
                     <div class="cancelada-indeferida">
                       <span>
                         {{ gerarTextoCancelamentoIndeferimento(consulta) }}
@@ -71,6 +67,16 @@
           </ng-template>
           <ng-template #emptymessage>
             <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+          </ng-template>
+          <ng-template #paginatorleft>
+            <p-button
+              label="Registrar Consulta"
+              icon="pi pi-plus"
+              severity="success"
+              size="small"
+              [rounded]="true"
+              (click)="abrirDialogRegistrarConsulta()"
+            />
           </ng-template>
         </p-dataview>
       </p-fieldset>
@@ -101,14 +107,8 @@
                   "
                 >
                   <div class="badges">
-                    <span
-                      [ngClass]="'status ' + solicitacao.status.toLowerCase()"
-                    >
-                      {{ solicitacao.status | titlecase }}
-                    </span>
-                    <span class="tipo-consulta">
-                      {{ solicitacao.tipoConsulta }}
-                    </span>
+                    <app-bag-status-consulta [status]="solicitacao.status"></app-bag-status-consulta>
+                    <p-tag [value]="solicitacao.tipoConsulta" severity="secondary"></p-tag>
                   </div>
                   <div class="informacoes">
                     <span class="info">
@@ -140,7 +140,8 @@
                       icon="pi pi-check"
                       fluid="true"
                       size="small"
-                      (click)="aprovarConsulta(solicitacao)"
+                      [disabled]="desabilitarAcoes"
+                      (click)="abrirDialogAprovarConsulta(solicitacao)"
                     />
                     <p-button
                       label="Reprovar"
@@ -150,6 +151,7 @@
                       fluid="true"
                       size="small"
                       variant="outlined"
+                      [disabled]="desabilitarAcoes"
                       (click)="selecionarSolicitacaoConsulta(solicitacao)"
                     />
                   </div>
@@ -167,6 +169,222 @@
     }
   </section>
 </main>
+
+<p-dialog
+  header="Aprovar Consulta"
+  [(visible)]="visibilidadeDialogAprovarConsulta"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ maxWidth: '820px', width: '100%' }"
+  (onHide)="fecharDialogAprovarConsulta()"
+>
+  @if (solicitacaoParaAprovar) {
+    <section class="aprovar-consulta">
+      <div class="resumo-solicitacao">
+        <div class="participante">
+          <app-imagem
+            tipo="usuario"
+            width="44"
+            [urlImagem]="urlImagem(solicitacaoParaAprovar.imagemSolicitante)"
+            [alt]="'Foto de ' + solicitacaoParaAprovar.solicitante"
+          ></app-imagem>
+          <div class="infos">
+            <span class="papel">Cliente</span>
+            <strong>{{ solicitacaoParaAprovar.solicitante }}</strong>
+          </div>
+        </div>
+        <div class="participante">
+          <app-imagem
+            tipo="pet"
+            width="44"
+            [urlImagem]="urlImagem(solicitacaoParaAprovar.imagemPet)"
+            [alt]="'Foto de ' + solicitacaoParaAprovar.pet"
+          ></app-imagem>
+          <div class="infos">
+            <span class="papel">Pet</span>
+            <strong>{{ solicitacaoParaAprovar.pet }}</strong>
+          </div>
+        </div>
+        <div class="participante">
+          <app-imagem
+            tipo="usuario"
+            width="44"
+            [urlImagem]="urlImagem(solicitacaoParaAprovar.imagemVeterinario)"
+            [alt]="'Foto de ' + solicitacaoParaAprovar.veterinario"
+          ></app-imagem>
+          <div class="infos">
+            <span class="papel">Veterinário</span>
+            <strong>{{ solicitacaoParaAprovar.veterinario }}</strong>
+          </div>
+        </div>
+        <div class="participante">
+          <span class="icone-data"><i class="fa fa-calendar"></i></span>
+          <div class="infos">
+            <span class="papel">Data da consulta</span>
+            <strong>{{ solicitacaoParaAprovar.dataConsulta }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="titulo-secao">Situação financeira do cliente</h3>
+
+      @if (carregandoPendencias) {
+        <p-skeleton height="90px"></p-skeleton>
+        <br />
+        <p-skeleton height="120px"></p-skeleton>
+      } @else if (erroAoCarregarPendencias) {
+        <div class="situacao erro">
+          <i class="fa fa-triangle-exclamation"></i>
+          <div class="texto">
+            <strong>Não foi possível consultar os pagamentos do cliente</strong>
+            <span>
+              A aprovação continua disponível, mas sem a checagem financeira.
+            </span>
+          </div>
+          <p-button
+            label="Tentar novamente"
+            icon="fa fa-rotate-right"
+            severity="secondary"
+            size="small"
+            (click)="recarregarPendenciasCliente()"
+          />
+        </div>
+      } @else if (!clientePossuiPendencias) {
+        <div class="situacao ok">
+          <i class="fa fa-circle-check"></i>
+          <div class="texto">
+            <strong>Cliente sem pendências financeiras</strong>
+            <span>Nenhuma cobrança em aberto na clínica.</span>
+          </div>
+        </div>
+      } @else {
+        <div
+          class="situacao"
+          [class.atrasado]="clientePossuiAtrasos"
+          [class.pendente]="!clientePossuiAtrasos"
+        >
+          <i class="fa fa-triangle-exclamation"></i>
+          <div class="texto">
+            <strong>
+              {{ pendenciasCliente?.quantidadePendentes }} cobrança(s) em aberto
+              @if (clientePossuiAtrasos) {
+                · {{ pendenciasCliente?.quantidadeAtrasadas }} em atraso
+              }
+            </strong>
+            <span>
+              Total pendente de
+              {{ pendenciasCliente?.valorTotalPendente | currency: "BRL" }}
+              @if (clientePossuiAtrasos) {
+                , sendo
+                {{ pendenciasCliente?.valorTotalAtrasado | currency: "BRL" }}
+                vencido
+              }
+            </span>
+          </div>
+        </div>
+
+        <p-table
+          [value]="pendenciasCliente?.pendencias ?? []"
+          [paginator]="true"
+          [rows]="5"
+          [stripedRows]="true"
+          [showGridlines]="true"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Consulta</th>
+              <th>Valor</th>
+              <th>Forma</th>
+              <th>Data limite</th>
+              <th>Situação</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-pendencia>
+            <tr>
+              <td>
+                <div class="celula-consulta">
+                  <app-imagem
+                    tipo="pet"
+                    width="36"
+                    [urlImagem]="urlImagem(pendencia.imagemPet)"
+                    [alt]="'Foto de ' + pendencia.pet"
+                  ></app-imagem>
+                  <div class="textos">
+                    <strong>{{ pendencia.tipoConsulta }}</strong>
+                    <span>
+                      {{ pendencia.pet }} · {{ pendencia.dataConsulta }}
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td>{{ pendencia.valor | currency: "BRL" }}</td>
+              <td>
+                <app-bag-forma-pagamento
+                  [tipo]="pendencia.forma"
+                ></app-bag-forma-pagamento>
+              </td>
+              <td>{{ pendencia.dataLimite || "Sem data limite" }}</td>
+              <td>
+                @if (pendencia.atrasado) {
+                  <p-tag
+                    severity="danger"
+                    icon="fa fa-clock"
+                    [value]="
+                      'Atrasado há ' + pendencia.diasEmAtraso + ' dia(s)'
+                    "
+                  ></p-tag>
+                } @else {
+                  <app-bag-status-pagamento
+                    [status]="pendencia.status"
+                  ></app-bag-status-pagamento>
+                }
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="5">
+                <span class="sem-resultados">
+                  Nenhuma cobrança em aberto para esse cliente!
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+
+      <div class="acoes-dialog">
+        @if (clientePossuiAtrasos) {
+          <span class="aviso">
+            <i class="fa fa-circle-info"></i>
+            O cliente possui cobranças vencidas. A cobrança é tratada na tela de
+            Pagamentos da Clínica.
+          </span>
+        }
+        <div class="btns">
+          <p-button
+            label="Cancelar"
+            icon="pi pi-times"
+            severity="danger"
+            [rounded]="true"
+            [outlined]="true"
+            [disabled]="desabilitarAcoes"
+            (click)="visibilidadeDialogAprovarConsulta = false"
+          />
+          <p-button
+            label="Aprovar Consulta"
+            icon="pi pi-check"
+            severity="success"
+            [rounded]="true"
+            [loading]="desabilitarAcoes"
+            [disabled]="desabilitarAcoes || carregandoPendencias"
+            (click)="aprovarConsulta()"
+          />
+        </div>
+      </div>
+    </section>
+  }
+</p-dialog>
 
 <p-dialog
   header="Reprovar Consulta"
@@ -206,3 +424,7 @@
   [visibilidade]="visibilidadeDialogDetalhesConsulta"
   [consultaSelecionada]="consultaSelecionada"
 ></app-detalhes-consulta>
+<app-dialog-registrar-consulta
+  [(visible)]="visibilidadeDialogRegistrarConsulta"
+  (registrado)="consultaRegistrada()"
+></app-dialog-registrar-consulta>

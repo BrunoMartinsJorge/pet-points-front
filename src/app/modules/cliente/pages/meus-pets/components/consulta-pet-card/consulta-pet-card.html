@@ -1,6 +1,7 @@
 @if (consulta !== null) {
   <div class="card">
     <app-imagem
+      tipo="pet"
       [urlImagem]="getUrlImagem(consulta)"
       [alt]="consulta.pet"
       [width]="'100'"

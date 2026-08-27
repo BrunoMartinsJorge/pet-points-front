@@ -5,6 +5,7 @@ export interface ConsultasAtendenteDto {
   iniciadoEm: Date;
   finalizadoEm: Date;
   status: StatusConsultaEnum;
+  idSolicitante: number;
   solicitante: string;
   atendente: string;
   veterinario: string;
@@ -18,4 +19,8 @@ export interface ConsultasAtendenteDto {
   canceladoEm: Date;
   motivoCancelamento: string;
   observacoes: string;
+  imagemSolicitante: string | null;
+  imagemPet: string | null;
+  imagemVeterinario: string | null;
+  imagemAtendente: string | null;
 }

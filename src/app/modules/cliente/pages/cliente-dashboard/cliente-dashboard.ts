@@ -9,10 +9,12 @@ import { MinhasConsultasService } from '../minhas-consultas/services/minhas-cons
 import { Router } from '@angular/router';
 import { TipoPagamentoEnum } from '../../../../shared/models/enums/TipoPagamentoEnum';
 import { MeusPagamentosService } from '../meus-pagamentos/service/meus-pagamentos-service';
+import { BagStatusPagamento } from "../../../../shared/components/bag-status-pagamento/bag-status-pagamento";
+import { BagStatusConsulta } from "../../../../shared/components/bag-status-consulta/bag-status-consulta";
 
 @Component({
   selector: 'app-cliente-dashboard',
-  imports: [PrimeNGModule],
+  imports: [PrimeNGModule, BagStatusPagamento, BagStatusConsulta],
   templateUrl: './cliente-dashboard.html',
   styleUrl: './cliente-dashboard.scss',
 })

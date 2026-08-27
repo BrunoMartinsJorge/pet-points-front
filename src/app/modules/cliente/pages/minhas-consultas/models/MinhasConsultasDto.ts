@@ -8,4 +8,6 @@ export interface MinhasConsultasDto {
   statusConsulta: StatusConsultaEnum;
   tipoConsulta: string;
   idVeterinario: number;
+  imagemPet: string | null;
+  imagemVeterinario: string | null;
 }

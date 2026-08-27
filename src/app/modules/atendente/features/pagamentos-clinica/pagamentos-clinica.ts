@@ -8,10 +8,11 @@ import type { CardsPagamentosClinica } from './model/CardsPagamentosClinica';
 import type { DetalhesPagamentoClinicaDto } from './model/DetalhesPagamentoClinicaDto';
 import { StatusPagamentoEnum } from '../../../../shared/models/enums/StatusPagamentoEnum';
 import { TipoPagamentoEnum } from '../../../../shared/models/enums/TipoPagamentoEnum';
+import { CardResumo } from "../../../../shared/components/card-resumo/card-resumo";
+import { BagStatusPagamento } from "../../../../shared/components/bag-status-pagamento/bag-status-pagamento";
 
 @Component({
-  selector: 'app-pagamentos-clinica',
-  imports: [PrimeNGModule],
+  imports: [PrimeNGModule, CardResumo, BagStatusPagamento],
   templateUrl: './pagamentos-clinica.html',
   styleUrl: './pagamentos-clinica.scss',
 })

@@ -14,7 +14,7 @@ import type { ButtonSeverity } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { ItensCobrancaConsulta } from '../../components/itens-cobranca-consulta/itens-cobranca-consulta';
 import type { ItemCobrancaForm } from '../../form/FinalizarConsultaForm';
-import { environment } from '../../../../../../../environments/environment';
+import { urlArquivo } from '../../../../../../shared/utils/imagem-url';
 
 @Component({
   selector: 'app-detalhes-consulta',
@@ -105,18 +105,12 @@ export class DetalhesConsulta implements OnInit {
 
   public get getImagemPet(): string {
     if (this.informacoesConsulta == null) return '';
-    const imagem = this.informacoesConsulta.pet.imagem;
-    return imagem !== '' && imagem !== null
-      ? environment.apiUrl + '/arquivos' + imagem
-      : '';
+    return urlArquivo(this.informacoesConsulta.pet.imagem);
   }
 
   public get getImagemCliente(): string {
     if (this.informacoesConsulta == null) return '';
-    const imagem = this.informacoesConsulta.cliente.imagem;
-    return imagem !== '' && imagem !== null
-      ? environment.apiUrl + '/arquivos' + imagem
-      : '';
+    return urlArquivo(this.informacoesConsulta.cliente.imagem);
   }
 
   public iniciarOuFinalizarConsulta(): void {

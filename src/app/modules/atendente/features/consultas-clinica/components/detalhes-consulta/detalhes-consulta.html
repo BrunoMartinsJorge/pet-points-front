@@ -1,267 +1,310 @@
-<p-toast 
-    [showTransformOptions]="'translateY(100%)'" 
-    [showTransitionOptions]="'500ms'" 
-    [hideTransitionOptions]="'1000ms'" 
-    [showTransformOptions]="'translateX(100%)'" />
 <p-dialog
   header="Detalhes da Consulta"
   [(visible)]="visibilidade"
   [draggable]="false"
   [modal]="true"
-  [style]="{ width: '50vw' }"
+  [style]="{ maxWidth: '900px', width: '100%' }"
   (onHide)="fecharDetalhesConsulta()"
 >
-  @if (consultaSelecionada === null) {
-  } @else {
-    <div class="informacoes-consulta">
-      <div class="basicas">
-        <span class="info">
-          <i class="fa fas fa-user"></i>
-          {{ consultaSelecionada.solicitante }}
-        </span>
-        <span class="info">
-          <i class="fa fas fa-paw"></i>
-          {{ consultaSelecionada.pet }}
-        </span>
-        <span class="info">
-          <i class="fa fas fa-user-md"></i>
-          {{ consultaSelecionada.veterinario }}
-        </span>
-      </div>
-      <div class="badges">
+  @if (consultaSelecionada) {
+    <section class="detalhes-consulta">
+      <div class="identificacao">
         <app-bag-status-consulta
           [status]="consultaSelecionada.status"
         ></app-bag-status-consulta>
-        <span class="data-consulta">
-          <i class="fa fas fa-calendar"></i>
+        <p-tag
+          [value]="consultaSelecionada.tipoConsulta"
+          severity="secondary"
+        ></p-tag>
+        <span class="agendamento">
+          <i class="fa fa-calendar"></i>
           {{ consultaSelecionada.dataConsulta }}
         </span>
       </div>
-    </div>
-    <hr />
-    <p-tabs [value]="etapa">
-      <p-tablist>
-        <p-tab [value]="0" (click)="etapa = 0">Detalhes</p-tab>
-        <p-tab [value]="1" (click)="etapa = 1" [disabled]="!possuiPagamento">Pagamento</p-tab>
-        <p-tab [value]="2" (click)="etapa = 2" [disabled]="getConsultaFinalizada"
-          >Avaliação</p-tab
-        >
-      </p-tablist>
-      <p-tabpanels>
-        <p-tabpanel [value]="0">
-          <div class="info-input">
-            <label for="observacoes">Observações</label>
-            <textarea
-              disabled
-              id="observacoes"
-              pInputTextarea
-              rows="4"
-              [(ngModel)]="consultaSelecionada.observacoes"
-            >
-            </textarea>
-          </div>
-          <div class="informacoes">
-            <div class="info-input">
-              <label for="iniciadoEm">Iniciado em</label>
-              <input
-                pInputText
-                fluid="true"
-                disabled
-                id="iniciadoEm"
-                [ngModel]="consultaSelecionada.iniciadoEm || 'Não Iniciada'"
-              />
-            </div>
-            <div class="info-input">
-              <label for="finalizadoEm">Finalizado em</label>
-              <input
-                pInputText
-                fluid="true"
-                disabled
-                id="finalizadoEm"
-                [ngModel]="consultaSelecionada.finalizadoEm || 'Não Finalizada'"
-              />
-            </div>
-            <hr />
-            <div class="info-input">
-              <label for="tipoConsulta">Tipo de consulta</label>
-              <input
-                fluid="true"
-                disabled
-                id="tipoConsulta"
-                type="text"
-                pInputText
-                [(ngModel)]="consultaSelecionada.tipoConsulta"
-              />
-            </div>
-            <div class="info-input">
-              <label for="solicitadoEm">Solicitado em</label>
-              <input
-                pInputText
-                fluid="true"
-                disabled
-                id="solicitadoEm"
-                [ngModel]="consultaSelecionada.solicitadoEm"
-              />
-            </div>
-            <hr />
-            <div class="info-input">
-              <label for="deferidoEm">Deferido em</label>
-              <input
-                pInputText
-                fluid="true"
-                disabled
-                id="deferidoEm"
-                [ngModel]="
-                  consultaSelecionada.deferidoEm || 'Não Deferida/Indeferida'
-                "
-              />
-            </div>
-            <div class="info-input">
-              <label for="dataConsulta">Data da consulta</label>
-              <input
-                pInputText
-                fluid="true"
-                disabled
-                id="dataConsulta"
-                [ngModel]="consultaSelecionada.dataConsulta"
-              />
-            </div>
-            <hr />
-            @if (consultaSelecionada.status === "FINALIZADO") {
-              <div class="info-input">
-                <label for="resumoConsulta">Resumo da consulta</label>
-                <textarea
-                  disabled
-                  id="resumoConsulta"
-                  pInputTextarea
-                  rows="4"
-                  [(ngModel)]="consultaSelecionada.resumoConsulta"
-                >
-                </textarea>
-              </div>
-            }
-            @if (consultaSelecionada.status === "CANCELADO") {
-              <div class="info-input">
-                <label for="canceladoEm">Cancelado em</label>
-                <input
-                  pInputText
-                  fluid="true"
-                  disabled
-                  id="canceladoEm"
-                  [ngModel]="consultaSelecionada.canceladoEm || 'Não Cancelada'"
-                />
-              </div>
-            }
-          </div>
 
-          @if (
-            consultaSelecionada.status === "CANCELADO" ||
-            consultaSelecionada.status === "REPROVADA"
-          ) {
-            <div class="info-input">
-              <label for="motivoCancelamento">Motivo do cancelamento</label>
-              <textarea
-                disabled
-                id="motivoCancelamento"
-                pInputTextarea
-                rows="4"
-                [(ngModel)]="consultaSelecionada.motivoCancelamento"
+      <div class="envolvidos">
+        <div class="envolvido">
+          <app-imagem
+            tipo="usuario"
+            width="48"
+            [urlImagem]="urlImagem(consultaSelecionada.imagemSolicitante)"
+            [alt]="'Foto de ' + consultaSelecionada.solicitante"
+            [preview]="true"
+          ></app-imagem>
+          <div class="infos">
+            <span class="papel">Cliente</span>
+            <strong>{{ consultaSelecionada.solicitante }}</strong>
+          </div>
+        </div>
+        <div class="envolvido">
+          <app-imagem
+            tipo="pet"
+            width="48"
+            [urlImagem]="urlImagem(consultaSelecionada.imagemPet)"
+            [alt]="'Foto de ' + consultaSelecionada.pet"
+            [preview]="true"
+          ></app-imagem>
+          <div class="infos">
+            <span class="papel">Pet</span>
+            <strong>{{ consultaSelecionada.pet }}</strong>
+          </div>
+        </div>
+        <div class="envolvido">
+          <app-imagem
+            tipo="usuario"
+            width="48"
+            [urlImagem]="urlImagem(consultaSelecionada.imagemVeterinario)"
+            [alt]="'Foto de ' + consultaSelecionada.veterinario"
+            [preview]="true"
+          ></app-imagem>
+          <div class="infos">
+            <span class="papel">Veterinário</span>
+            <strong>{{ consultaSelecionada.veterinario }}</strong>
+          </div>
+        </div>
+        <div class="envolvido">
+          <app-imagem
+            tipo="usuario"
+            width="48"
+            [urlImagem]="urlImagem(consultaSelecionada.imagemAtendente)"
+            [alt]="'Foto de ' + consultaSelecionada.atendente"
+            [preview]="true"
+          ></app-imagem>
+          <div class="infos">
+            <span class="papel">Atendente</span>
+            <strong>{{ consultaSelecionada.atendente }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <p-tabs [(value)]="etapa">
+        <p-tablist>
+          <p-tab [value]="0">Detalhes</p-tab>
+          <p-tab [value]="1" [disabled]="!possuiPagamento">Pagamento</p-tab>
+          <p-tab [value]="2" [disabled]="abaAvaliacaoDesabilitada">
+            Avaliação
+          </p-tab>
+        </p-tablist>
+        <p-tabpanels>
+          <p-tabpanel [value]="0">
+            <div class="campos">
+              <div class="campo">
+                <label>Tipo de consulta</label>
+                <div class="valor-campo">
+                  <i class="fa fa-stethoscope"></i>
+                  <span>{{ consultaSelecionada.tipoConsulta }}</span>
+                </div>
+              </div>
+              <div class="campo">
+                <label>Solicitado em</label>
+                <div class="valor-campo">
+                  <i class="fa fa-clock"></i>
+                  <span>{{ consultaSelecionada.solicitadoEm }}</span>
+                </div>
+              </div>
+              <div class="campo">
+                <label>Data da consulta</label>
+                <div class="valor-campo">
+                  <i class="fa fa-calendar"></i>
+                  <span>{{ consultaSelecionada.dataConsulta }}</span>
+                </div>
+              </div>
+              <div class="campo">
+                <label>Deferido em</label>
+                <div
+                  class="valor-campo"
+                  [class.vazio]="!consultaSelecionada.deferidoEm"
+                >
+                  <span>
+                    {{ consultaSelecionada.deferidoEm || "Não deferida" }}
+                  </span>
+                </div>
+              </div>
+              <div class="campo">
+                <label>Iniciada em</label>
+                <div
+                  class="valor-campo"
+                  [class.vazio]="!consultaSelecionada.iniciadoEm"
+                >
+                  <span>
+                    {{ consultaSelecionada.iniciadoEm || "Não iniciada" }}
+                  </span>
+                </div>
+              </div>
+              <div class="campo">
+                <label>Finalizada em</label>
+                <div
+                  class="valor-campo"
+                  [class.vazio]="!consultaSelecionada.finalizadoEm"
+                >
+                  <span>
+                    {{ consultaSelecionada.finalizadoEm || "Não finalizada" }}
+                  </span>
+                </div>
+              </div>
+              @if (consultaCancelada) {
+                <div class="campo">
+                  <label>Cancelada em</label>
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!consultaSelecionada.canceladoEm"
+                  >
+                    <span>
+                      {{ consultaSelecionada.canceladoEm || "Não cancelada" }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <h3 class="titulo-secao">Observações do cliente</h3>
+            <div
+              class="bloco-texto"
+              [class.vazio]="!consultaSelecionada.observacoes"
+            >
+              {{
+                consultaSelecionada.observacoes ||
+                  "Nenhuma observação informada na solicitação."
+              }}
+            </div>
+
+            @if (consultaFinalizada) {
+              <h3 class="titulo-secao">Resumo da consulta</h3>
+              <div
+                class="bloco-texto"
+                [class.vazio]="!consultaSelecionada.resumoConsulta"
               >
-              </textarea>
-            </div>
-          }
-        </p-tabpanel>
-        <p-tabpanel [value]="1">
-          @if (pagamento === null || carregandoPagamento) {
-          } @else {
-            <div class="header">
-              <span id="data">
-                <i class="fa fas fa-calendar"></i>
-                {{ pagamento.enviadoEm || "Não Enviado" }}
+                {{
+                  consultaSelecionada.resumoConsulta ||
+                    "O veterinário não registrou um resumo para essa consulta."
+                }}
+              </div>
+            }
+
+            @if (exibirMotivoRecusa) {
+              <h3 class="titulo-secao reprovado">{{ tituloMotivoRecusa }}</h3>
+              <div class="bloco-texto reprovado">
+                {{ motivoRecusa || "Sem motivo informado." }}
+              </div>
+            }
+          </p-tabpanel>
+
+          <p-tabpanel [value]="1">
+            @if (carregandoPagamento) {
+              <p-skeleton height="90px"></p-skeleton>
+              <br />
+              <p-skeleton height="180px"></p-skeleton>
+            } @else if (pagamento === null) {
+              <span class="sem-resultados">
+                Nenhuma cobrança gerada para essa consulta!
               </span>
-              <span
-                [ngClass]="'status-pagamento ' + pagamento.status.toLowerCase()"
-              >
-                {{ pagamento.status | titlecase }}
+            } @else {
+              <div class="resumo-valor">
+                <div class="valor">
+                  <span>Valor da cobrança</span>
+                  <strong>
+                    <small>R$</small>
+                    {{ pagamento.valor | currency: "BRL" : "" }}
+                  </strong>
+                </div>
+                <div class="marcadores">
+                  <app-bag-status-pagamento
+                    [status]="pagamento.status"
+                  ></app-bag-status-pagamento>
+                  <app-bag-forma-pagamento
+                    [tipo]="pagamento.formaPagamento"
+                  ></app-bag-forma-pagamento>
+                </div>
+              </div>
+
+              <div class="campos">
+                <div class="campo">
+                  <label>Forma de pagamento</label>
+                  <div class="valor-campo">
+                    <i [ngClass]="iconePagamento(pagamento.formaPagamento)"></i>
+                    <span>{{ pagamento.formaPagamento | titlecase }}</span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Emitida em</label>
+                  <div class="valor-campo" [class.vazio]="!pagamento.emitidoEm">
+                    <span>{{ pagamento.emitidoEm || "Não informado" }}</span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Data limite</label>
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!pagamento.dataLimite"
+                  >
+                    <i class="fa fa-clock"></i>
+                    <span>{{ pagamento.dataLimite || "Sem data limite" }}</span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Pago em</label>
+                  <div class="valor-campo" [class.vazio]="!pagamentoPago">
+                    <span>{{ pagamento.pagoEm || "Ainda não pago" }}</span>
+                  </div>
+                </div>
+                <div class="campo">
+                  <label>Avaliado por</label>
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!pagamento.avaliadoPor"
+                  >
+                    <span>
+                      {{ pagamento.avaliadoPor || "Sem avaliação registrada" }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              @if (pagamento.motivoIndeferimento) {
+                <h3 class="titulo-secao reprovado">Motivo do indeferimento</h3>
+                <div class="bloco-texto reprovado">
+                  {{ pagamento.motivoIndeferimento }}
+                </div>
+              }
+
+              <span class="aviso">
+                <i class="fa fa-circle-info"></i>
+                A baixa e o indeferimento dessa cobrança são feitos na tela de
+                <strong>Pagamentos da Clínica</strong>.
               </span>
-            </div>
-            <div class="opcoes">
-              <input
-                type="text"
-                disabled
-                [value]="pagamento.formaPagamento"
-                pInputText
-              />
-              <p-togglebutton
-                [(ngModel)]="aprovarComprovante"
-                onLabel="Aprovar"
-                offLabel="Reprovar"
-                [disabled]="pagamento.comprovante === null"
-                (click)="motivoIndeferimento = ''"
-              />
-            </div>
-            <hr />
-            <textarea
-              placeholder="Digite o motivo do indeferimento do pagamento"
-              name="motivo_indeferimento"
-              id="motivo_indeferimento"
-              pInputTextarea
-              rows="5"
-              [disabled]="pagamento.comprovante === null || aprovarComprovante"
-              [(ngModel)]="motivoIndeferimento"
-            ></textarea>
-            <hr />
-            <br />
-            <div class="acoes">
-              <p-button
-                icon="pi pi-download"
-                label="Baixar Comprovante"
-                [disabled]="pagamento.comprovante === null"
-                severity="info"
-                variant="outlined"
-                (click)="baixarComprovante()"
-              />
-              <p-button
-                icon="pi pi-send"
-                label="Enviar Deferimento/Indeferimento"
-                [disabled]="!habilitarBotaoEnviarAvaliacao"
-                severity="success"
-                (click)="enviarAvaliacaoComprovante()"
-              />
-            </div>
-          }
-        </p-tabpanel>
-        <p-tabpanel [value]="2">
-          @if (avaliacao === null || carregandoAvaliacao) {
-            <br />
-            <p-skeleton height="50px"></p-skeleton>
-            <br />
-            <p-skeleton height="200px"></p-skeleton>
-            <br />
-            <span style="display: flex; align-items: end; justify-content: end">
-              <p-skeleton height="25px" width="150px"></p-skeleton>
-            </span>
-          } @else {
-            <span class="pontuacao">
-              Pontuação: <p-rating [(ngModel)]="avaliacao.pontuacao" />
-            </span>
-            <textarea
-              name=""
-              id=""
-              pTextarea
-              rows="4"
-              disabled
-              [ngModel]="avaliacao.observacoes"
-              [autoResize]="false"
-              style="resize: none; overflow-y: auto; height: 200px; width: 100%"
-            ></textarea>
-            <span id="data">
-              {{ avaliacao.enviadoEm || "Não Avaliado" }}
-              <i class="fa fas fa-calendar"></i>
-            </span>
-          }
-        </p-tabpanel>
-      </p-tabpanels>
-    </p-tabs>
+            }
+          </p-tabpanel>
+
+          <p-tabpanel [value]="2">
+            @if (carregandoAvaliacao) {
+              <p-skeleton height="50px"></p-skeleton>
+              <br />
+              <p-skeleton height="180px"></p-skeleton>
+            } @else if (avaliacao === null || !avaliacao.enviadoEm) {
+              <span class="sem-resultados">
+                O cliente ainda não avaliou essa consulta!
+              </span>
+            } @else {
+              <div class="pontuacao">
+                <span>Pontuação</span>
+                <p-rating [ngModel]="avaliacao.pontuacao" [readonly]="true" />
+              </div>
+
+              <h3 class="titulo-secao">Observações do cliente</h3>
+              <div class="bloco-texto" [class.vazio]="!avaliacao.observacoes">
+                {{
+                  avaliacao.observacoes || "Nenhuma observação foi registrada."
+                }}
+              </div>
+
+              <span class="data-avaliacao">
+                <i class="fa fa-calendar"></i>
+                Avaliada em {{ avaliacao.enviadoEm }}
+              </span>
+            }
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+    </section>
   }
 </p-dialog>

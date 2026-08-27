@@ -8,20 +8,19 @@ import type { InformacoesPagamentoDto } from '../../models/InformacoesPagamentoD
 import type { AvaliacaoConsultaDto } from '../../models/AvaliacaoConsultaDto';
 import { ConsultasServices } from '../../service/consultas-services';
 import { Rating } from 'primeng/rating';
-import { ToggleButton } from 'primeng/togglebutton';
-import type { IndeferirPagamentoForm } from '../../forms/IndeferirPagamentoForm';
-import { MessageService } from 'primeng/api';
+import { BagStatusPagamento } from '../../../../../../shared/components/bag-status-pagamento/bag-status-pagamento';
+import { TipoPagamentoEnum } from '../../../../../../shared/models/enums/TipoPagamentoEnum';
+import { Imagem } from '../../../../../../shared/components/imagem/imagem';
+import { urlArquivo } from '../../../../../../shared/utils/imagem-url';
 
 @Component({
   selector: 'app-detalhes-consulta',
-  imports: [PrimeNGModule, BagStatusConsulta, Rating, ToggleButton],
-  providers: [MessageService],
+  imports: [PrimeNGModule, BagStatusConsulta, Rating, BagStatusPagamento, Imagem],
   templateUrl: './detalhes-consulta.html',
   styleUrl: './detalhes-consulta.scss',
 })
 export class DetalhesConsulta implements OnChanges {
   private readonly service = inject(ConsultasServices);
-  private readonly toast = inject(MessageService);
 
   @Input() public consultaSelecionada: ConsultasAtendenteDto | null = null;
   @Input() public visibilidade = false;
@@ -35,12 +34,8 @@ export class DetalhesConsulta implements OnChanges {
   public avaliacao: AvaliacaoConsultaDto | null = null;
   public carregandoAvaliacao = false;
 
-  public enviandoAvaliacaoPagamento = false;
-  public aprovarComprovante = false;
-  public motivoIndeferimento = '';
-
   /**
-   * 
+   *
    * @description - Metodo executado ao receber novas informacoes
    * @param - changes - Informacoes recebidas
    */
@@ -58,15 +53,10 @@ export class DetalhesConsulta implements OnChanges {
     this.visibilidadeChange.emit(false);
   }
 
-  public get getConsultaFinalizada(): boolean {
-    if (!this.consultaSelecionada) return false;
-    return this.consultaSelecionada.status !== StatusConsultaEnum.FINALIZADO;
-  }
-
   private buscarInformacoesPagamento(): void {
     this.pagamento = null;
-    this.carregandoPagamento = true;
     if (!this.consultaSelecionada) return;
+    this.carregandoPagamento = true;
     this.service
       .buscarInformacoesPagamento(this.consultaSelecionada.id)
       .subscribe({
@@ -82,8 +72,8 @@ export class DetalhesConsulta implements OnChanges {
 
   private buscarInformacoesAvaliacao(): void {
     this.avaliacao = null;
-    this.carregandoAvaliacao = true;
     if (!this.consultaSelecionada) return;
+    this.carregandoAvaliacao = true;
     this.service.buscarAvaliacao(this.consultaSelecionada.id).subscribe({
       next: (response) => {
         this.avaliacao = response;
@@ -95,52 +85,59 @@ export class DetalhesConsulta implements OnChanges {
     });
   }
 
-  public baixarComprovante(): void {
-    if (this.pagamento == null || this.pagamento.comprovante == null) return;
-    this.service
-      .baixarArquivoComprovante(this.pagamento.comprovante)
-      .subscribe({
-        next: (response: Blob) => {
-          const url = window.URL.createObjectURL(response);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'Comprovante_Pagamento_' + Date.now() + '.pdf';
-          link.click();
-        },
-      });
+  public get consultaFinalizada(): boolean {
+    return this.consultaSelecionada?.status === StatusConsultaEnum.FINALIZADO;
   }
 
-  public get habilitarBotaoEnviarAvaliacao(): boolean {
-    if (this.enviandoAvaliacaoPagamento) return false;
-    if (!this.consultaSelecionada || !this.pagamento || this.pagamento.comprovante == null) return false;
-    if (this.aprovarComprovante) return true;
-    return !this.aprovarComprovante && this.motivoIndeferimento.length > 0;
+  public get consultaCancelada(): boolean {
+    return this.consultaSelecionada?.status === StatusConsultaEnum.CANCELADO;
   }
 
-  public enviarAvaliacaoComprovante(): void {
-    if (!this.consultaSelecionada) return;
-    this.enviandoAvaliacaoPagamento = true;
-    const form: IndeferirPagamentoForm = {
-      aprovar: this.aprovarComprovante,
-      motivoIndeferimento: this.motivoIndeferimento,
-    };
-    this.service.enviarAvaliacao(this.consultaSelecionada.id, form).subscribe({
-      next: () => {
-        this.toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Avaliacao enviada com sucesso!' });
-        this.enviandoAvaliacaoPagamento = false;
-        this.buscarInformacoesPagamento();
-      },
-      error: () => {
-        this.enviandoAvaliacaoPagamento = false;
-      }
-    });
+  /** Só consultas finalizadas possuem resumo e avaliação para exibir. */
+  public get abaAvaliacaoDesabilitada(): boolean {
+    return !this.consultaFinalizada;
   }
 
+  /**
+   *
+   * @description - A cobrança só existe depois que o veterinário finaliza a consulta
+   */
   public get possuiPagamento(): boolean {
+    return this.consultaFinalizada && this.pagamento != null;
+  }
+
+  public get exibirMotivoRecusa(): boolean {
     return (
-      this.pagamento != null &&
-      this.consultaSelecionada != null &&
-      this.consultaSelecionada.status == StatusConsultaEnum.FINALIZADO
+      this.consultaCancelada ||
+      this.consultaSelecionada?.status === StatusConsultaEnum.REPROVADA
     );
+  }
+
+  public get tituloMotivoRecusa(): string {
+    return this.consultaCancelada
+      ? 'Motivo do cancelamento'
+      : 'Motivo do indeferimento';
+  }
+
+  public get motivoRecusa(): string {
+    if (!this.consultaSelecionada) return '';
+    return this.consultaCancelada
+      ? this.consultaSelecionada.motivoCancelamento
+      : this.consultaSelecionada.motivoIndeferimento;
+  }
+
+  public get pagamentoPago(): boolean {
+    return this.pagamento?.pagoEm != null;
+  }
+
+  public iconePagamento(tipoPagamento: TipoPagamentoEnum | null): string {
+    if (tipoPagamento === null) return 'fa fas fa-money-check';
+    if (tipoPagamento === TipoPagamentoEnum.PIX) return 'fa fas fa-qrcode';
+    if (tipoPagamento === TipoPagamentoEnum.DINHEIRO) return 'fa fas fa-money-bill';
+    return 'fa fas fa-money-check';
+  }
+
+  public urlImagem(uuid: string | null | undefined): string {
+    return urlArquivo(uuid);
   }
 }

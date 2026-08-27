@@ -1,212 +1,298 @@
 <main>
-  <header class="consultas-header">
-    <div class="titulo">
-      <h1>Consultas da Clínica</h1>
-      <p>
-        Acompanhe as consultas, gerencie os tipos de atendimento e as
-        especializações dos veterinários.
-      </p>
-    </div>
-    <p-button
-      label="Atualizar"
-      icon="fa fa-rotate-right"
-      severity="secondary"
-      [outlined]="true"
-      [disabled]="carregandoConsultas"
-      (click)="recarregar()"
-    />
-  </header>
-
-  <section class="kpis">
+  <section class="cards-padrao">
     @if (carregandoConsultas) {
-      <p-skeleton height="102px" />
-      <p-skeleton height="102px" />
-      <p-skeleton height="102px" />
-      <p-skeleton height="102px" />
+      <p-skeleton height="140px" />
+      <p-skeleton height="140px" />
+      <p-skeleton height="140px" />
+      <p-skeleton height="140px" />
     } @else {
-      <div class="kpi-card">
-        <span class="kpi-icon total">
-          <i class="fa fa-clipboard-list"></i>
-        </span>
-        <div class="kpi-info">
-          <span class="kpi-label">Consultas Exibidas</span>
-          <strong class="kpi-valor">{{ resumo.total }}</strong>
-          <span class="kpi-sub">de {{ resumo.totalGeral }} no total</span>
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <span class="kpi-icon pendente">
-          <i class="fa fa-clock"></i>
-        </span>
-        <div class="kpi-info">
-          <span class="kpi-label">Pendentes</span>
-          <strong class="kpi-valor">{{ resumo.pendentes }}</strong>
-          <span class="kpi-sub">aguardando aprovação</span>
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <span class="kpi-icon andamento">
-          <i class="fa fa-stethoscope"></i>
-        </span>
-        <div class="kpi-info">
-          <span class="kpi-label">Em Andamento</span>
-          <strong class="kpi-valor">{{ resumo.emAndamento }}</strong>
-          <span class="kpi-sub">aprovadas ou iniciadas</span>
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <span class="kpi-icon finalizada">
-          <i class="fa fa-circle-check"></i>
-        </span>
-        <div class="kpi-info">
-          <span class="kpi-label">Finalizadas</span>
-          <strong class="kpi-valor">{{ resumo.finalizadas }}</strong>
-          <span class="kpi-sub"
-            >{{ resumo.canceladas }} cancelada(s) ou reprovada(s)</span
-          >
-        </div>
-      </div>
+      <app-card-resumo
+        titulo="Total de Consultas"
+        icone="fa fa-clipboard-list"
+        variante="primario"
+        [valor]="resumo.total"
+        [descricao]="textoVariacaoMes"
+        [tomDescricao]="tomVariacaoMes"
+      />
+      <app-card-resumo
+        titulo="Consultas de Hoje"
+        icone="fa fa-calendar-day"
+        variante="info"
+        [valor]="resumo.hoje"
+        [descricao]="textoVariacaoHoje"
+        [tomDescricao]="tomVariacaoHoje"
+      />
+      <app-card-resumo
+        titulo="Em Andamento"
+        icone="fa fa-stethoscope"
+        variante="pendente"
+        [valor]="resumo.emAndamento"
+        [descricao]="resumo.pendentes + ' pendentes de aprovação'"
+      />
+      <app-card-resumo
+        titulo="Finalizadas"
+        icone="fa fa-circle-check"
+        variante="sucesso"
+        [valor]="resumo.finalizadas"
+        [descricao]="resumo.canceladas + ' canceladas ou reprovadas'"
+      />
     }
   </section>
 
-  <p-fieldset legend="Filtros" [toggleable]="false">
-    <div class="filtros">
-      <div class="inputs">
-        <div class="input-group">
-          <label for="cliente">Cliente</label>
-          <p-select
-            inputId="cliente"
-            [(ngModel)]="filtros.cliente"
-            [options]="clientesFiltros"
-            appendTo="body"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Selecione um cliente"
-            (onChange)="filtrarConsultas()"
-            [disabled]="carregandoConsultas"
-          />
-        </div>
-        <div class="input-group">
-          <label for="veterinario">Veterinário</label>
-          <p-select
-            inputId="veterinario"
-            [(ngModel)]="filtros.veterinario"
-            [options]="veterinariosFiltros"
-            appendTo="body"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Selecione um veterinário"
-            (onChange)="filtrarConsultas()"
-            [disabled]="carregandoConsultas"
-          />
-        </div>
-        <div class="input-group">
-          <label for="tipoConsulta">Tipo de Consulta</label>
-          <p-select
-            inputId="tipoConsulta"
-            [(ngModel)]="filtros.tipoConsulta"
-            [options]="tiposConsultasFiltros"
-            appendTo="body"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Selecione um tipo de consulta"
-            (onChange)="filtrarConsultas()"
-            [disabled]="
-              carregandoConsultas ||
-              carregandoTiposConsultas ||
-              tiposConsultas.length === 0
-            "
-          />
-        </div>
-      </div>
-      <div class="btns">
+  <section class="painel-consultas">
+    <div class="barra-ferramentas">
+      <p-selectbutton
+        [options]="abas"
+        [ngModel]="abaSelecionada"
+        (ngModelChange)="selecionarAba($event)"
+        optionLabel="label"
+        optionValue="value"
+        [allowEmpty]="false"
+      />
+      <div class="acoes-ferramentas">
+        <p-datepicker
+          appendTo="body"
+          placeholder="Filtrar por data"
+          dateFormat="dd/mm/yy"
+          [showClear]="true"
+          [showIcon]="true"
+          iconDisplay="input"
+          [(ngModel)]="dataFiltro"
+          (ngModelChange)="filtrarConsultas()"
+          [disabled]="carregandoConsultas"
+        ></p-datepicker>
         <p-button
-          label="Limpar Filtros"
-          severity="danger"
-          icon="fa fa-eraser"
+          [label]="filtrosAtivos ? 'Filtros (ativos)' : 'Filtros'"
+          icon="fa fa-sliders"
+          severity="secondary"
           [outlined]="true"
-          [disabled]="!filtrosAtivos"
-          (click)="limparFiltros()"
+          (click)="alterarVisibilidadeFiltros()"
         />
+        <div class="alternar-visao">
+          <p-button
+            icon="fa fa-table-cells-large"
+            severity="secondary"
+            [text]="!modoLista"
+            [outlined]="!modoLista"
+            pTooltip="Visualizar em cards"
+            (click)="alterarModoVisualizacao(false)"
+          />
+          <p-button
+            icon="fa fa-list"
+            severity="secondary"
+            [text]="modoLista"
+            [outlined]="modoLista"
+            pTooltip="Visualizar em lista"
+            (click)="alterarModoVisualizacao(true)"
+          />
+        </div>
         <p-button
-          [label]="
-            carregandoRelatorio ? 'Gerando Relatório...' : 'Gerar Relatório'
-          "
-          [disabled]="carregandoRelatorio"
-          severity="success"
-          [icon]="carregandoRelatorio ? 'pi pi-spin pi-spinner' : 'fa fa-file'"
-          (click)="gerarRelatorio()"
+          icon="fa fa-gear"
+          severity="secondary"
+          [outlined]="true"
+          pTooltip="Tipos de consulta e especializações"
+          (click)="alterarVisibilidadeGestao()"
         />
       </div>
     </div>
-  </p-fieldset>
 
-  <section class="conteudo">
-    <p-fieldset [toggleable]="false">
-      <ng-template pTemplate="header">
-        <div class="header-fieldset">
-          <i class="fa fa-clipboard-check"></i>
-          <span>Consultas da Clínica</span>
+    @if (visibilidadeFiltros) {
+      <div class="filtros">
+        <div class="inputs">
+          <div class="input-group">
+            <label for="cliente">Cliente</label>
+            <p-select
+              inputId="cliente"
+              [(ngModel)]="filtros.cliente"
+              [options]="clientesFiltros"
+              appendTo="body"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecione um cliente"
+              (onChange)="filtrarConsultas()"
+              [disabled]="carregandoConsultas"
+            />
+          </div>
+          <div class="input-group">
+            <label for="veterinario">Veterinário</label>
+            <p-select
+              inputId="veterinario"
+              [(ngModel)]="filtros.veterinario"
+              [options]="veterinariosFiltros"
+              appendTo="body"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecione um veterinário"
+              (onChange)="filtrarConsultas()"
+              [disabled]="carregandoConsultas"
+            />
+          </div>
+          <div class="input-group">
+            <label for="tipoConsulta">Tipo de Consulta</label>
+            <p-select
+              inputId="tipoConsulta"
+              [(ngModel)]="filtros.tipoConsulta"
+              [options]="tiposConsultasFiltros"
+              appendTo="body"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecione um tipo de consulta"
+              (onChange)="filtrarConsultas()"
+              [disabled]="
+                carregandoConsultas ||
+                carregandoTiposConsultas ||
+                tiposConsultas.length === 0
+              "
+            />
+          </div>
         </div>
-      </ng-template>
-      @if (carregandoConsultas) {
-        <div class="lista-consultas">
-          <p-skeleton height="96px" />
-          <p-skeleton height="96px" />
-          <p-skeleton height="96px" />
-          <p-skeleton height="96px" />
+        <div class="btns">
+          <p-button
+            label="Limpar Filtros"
+            severity="danger"
+            icon="fa fa-eraser"
+            [outlined]="true"
+            [disabled]="!filtrosAtivos"
+            (click)="limparFiltros()"
+          />
+          <p-button
+            [label]="
+              carregandoRelatorio ? 'Gerando Relatório...' : 'Gerar Relatório'
+            "
+            [disabled]="carregandoRelatorio"
+            severity="success"
+            [icon]="carregandoRelatorio ? 'pi pi-spin pi-spinner' : 'fa fa-file'"
+            (click)="gerarRelatorio()"
+          />
         </div>
-      } @else {
-        <p-dataview [value]="consultasFiltradas" [paginator]="true" [rows]="8">
-          <ng-template #list let-consultas>
-            <div class="lista-consultas">
-              @for (consulta of consultas; track consulta.id) {
-                <div class="consulta-card">
-                  <div class="conteudo-card">
-                    <div class="badges">
-                      <app-bag-status-consulta
-                        [status]="consulta.status"
-                      ></app-bag-status-consulta>
-                      <span class="tipo-consulta">{{ consulta.tipo.nome }}</span>
-                    </div>
-                    <div class="informacoes">
-                      <span class="info">
-                        <i class="fa fa-user"></i>
-                        {{ consulta.cliente.nome }}
-                      </span>
-                      <span class="info">
-                        <i class="fa fa-user-doctor"></i>
-                        {{ consulta.veterinario.nome }}
-                      </span>
-                      <span class="info">
-                        <i class="fa fa-calendar"></i>
-                        {{ consulta.solicitadoEm | date: "dd/MM/yyyy - HH:mm" }}
-                      </span>
-                    </div>
+      </div>
+    }
+
+    @if (carregandoConsultas) {
+      <div class="grade-consultas">
+        <p-skeleton height="320px" />
+        <p-skeleton height="320px" />
+        <p-skeleton height="320px" />
+      </div>
+    } @else {
+      <p-dataview
+        [value]="consultasVisiveis"
+        [paginator]="true"
+        [rows]="modoLista ? 8 : 6"
+      >
+        <ng-template #list let-consultas>
+          <div [class]="modoLista ? 'lista-consultas' : 'grade-consultas'">
+            @for (consulta of consultas; track consulta.id) {
+              <article class="consulta-card">
+                <div class="card-topo">
+                  <app-bag-status-consulta
+                    [status]="consulta.status"
+                  ></app-bag-status-consulta>
+                </div>
+
+                <div class="participante">
+                  <div class="avatar">
+                    <i class="fa fa-paw"></i>
                   </div>
+                  <div class="dados">
+                    <span class="rotulo">Paciente</span>
+                    <strong>{{ consulta.pet || "Pet não informado" }}</strong>
+                  </div>
+                </div>
+
+                <div class="detalhes">
+                  <div class="detalhe">
+                    <span class="rotulo">Agendamento</span>
+                    <strong>
+                      {{ consulta.dataConsulta | date: "dd/MM/yyyy - HH:mm" }}
+                    </strong>
+                  </div>
+                  <div class="detalhe">
+                    <span class="rotulo">Tipo de Consulta</span>
+                    <strong>{{ consulta.tipo.nome }}</strong>
+                  </div>
+                  <div class="detalhe">
+                    <span class="rotulo">Forma de Pagamento</span>
+                    <strong>
+                      {{ rotuloFormaPagamento(consulta.formaPagamento) }}
+                    </strong>
+                  </div>
+                  <div class="detalhe">
+                    <span class="rotulo">Valor</span>
+                    <strong>{{ consulta.valor | currency: "BRL" }}</strong>
+                  </div>
+                </div>
+
+                <div class="participante tutor">
+                  <div class="avatar">
+                    @if (avatarComErro('cliente-' + consulta.cliente.id)) {
+                      <span class="iniciais">
+                        {{ pegarIniciais(consulta.cliente.nome) }}
+                      </span>
+                    } @else {
+                      <img
+                        [src]="urlAvatar(consulta.cliente.id)"
+                        [alt]="'Foto de ' + consulta.cliente.nome"
+                        (error)="marcarAvatarComErro('cliente-' + consulta.cliente.id)"
+                      />
+                    }
+                  </div>
+                  <div class="dados">
+                    <span class="rotulo">Tutor</span>
+                    <strong>{{ consulta.cliente.nome }}</strong>
+                  </div>
+                </div>
+
+                <div class="participante">
+                  <div class="avatar">
+                    @if (avatarComErro('vet-' + consulta.veterinario.id)) {
+                      <span class="iniciais">
+                        {{ pegarIniciais(consulta.veterinario.nome) }}
+                      </span>
+                    } @else {
+                      <img
+                        [src]="urlAvatar(consulta.veterinario.id)"
+                        [alt]="'Foto de ' + consulta.veterinario.nome"
+                        (error)="marcarAvatarComErro('vet-' + consulta.veterinario.id)"
+                      />
+                    }
+                  </div>
+                  <div class="dados">
+                    <span class="rotulo">Veterinário</span>
+                    <strong>{{ consulta.veterinario.nome }}</strong>
+                  </div>
+                </div>
+
+                <div class="card-acoes">
                   <p-button
-                    label="Ver"
-                    icon="fa fa-eye"
+                    label="Ver Detalhes"
                     severity="secondary"
                     [outlined]="true"
-                    pTooltip="Ver detalhes da consulta"
+                    size="small"
                     (click)="verDetalhesConsulta(consulta.id)"
                   />
+                  <p-button
+                    label="Ver Tutor"
+                    icon="fa fa-user"
+                    severity="secondary"
+                    [text]="true"
+                    size="small"
+                    (click)="verDetalhesCliente(consulta.cliente.id)"
+                  />
                 </div>
-              }
-            </div>
-          </ng-template>
-          <ng-template #emptymessage>
-            <span class="sem-resultados">Nenhuma consulta encontrada!</span>
-          </ng-template>
-        </p-dataview>
-      }
-    </p-fieldset>
+              </article>
+            }
+          </div>
+        </ng-template>
+        <ng-template #emptymessage>
+          <span class="sem-resultados">Nenhuma consulta encontrada!</span>
+        </ng-template>
+      </p-dataview>
+    }
+  </section>
 
-    <aside class="painel-lateral">
+  @if (visibilidadeGestao) {
+    <section class="gestao">
       <p-fieldset [toggleable]="false">
         <ng-template pTemplate="header">
           <div class="header-fieldset">
@@ -296,8 +382,8 @@
           }
         </div>
       </p-fieldset>
-    </aside>
-  </section>
+    </section>
+  }
 </main>
 <p-dialog
   [(visible)]="visibilidadeDialogNovoTipoConsulta"

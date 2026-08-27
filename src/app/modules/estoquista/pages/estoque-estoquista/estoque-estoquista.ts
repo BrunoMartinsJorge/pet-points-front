@@ -18,10 +18,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import type { NovoProdutoForm } from './forms/NovoProdutoForm';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import type { EditarProdutoForm } from './forms/EditarProdutoForm';
+import { CardResumo } from '../../../../shared/components/card-resumo/card-resumo';
 
 @Component({
   selector: 'app-estoque-estoquista',
-  imports: [PrimeNGModule, ToggleButtonModule, SkeletonModule],
+  imports: [PrimeNGModule, ToggleButtonModule, SkeletonModule, CardResumo],
   templateUrl: './estoque-estoquista.html',
   styleUrl: './estoque-estoquista.scss',
 })

@@ -8,6 +8,9 @@ import type { FaturaDto } from './model/FaturaDto';
 import type { RelatorioFinanceiroForm } from './form/RelatorioFinanceiroForm';
 import { TipoPagamentoOpcoesFiltros } from '../../../../shared/models/enums/TipoPagamentoEnum';
 import type { OptionSelect } from '../../../../shared/models/OptionSelect';
+import { CardResumo } from '../../../../shared/components/card-resumo/card-resumo';
+import type { TomDescricaoCardResumo } from '../../../../shared/components/card-resumo/card-resumo';
+import { BagStatusPagamento } from "../../../../shared/components/bag-status-pagamento/bag-status-pagamento";
 
 const OPCOES_STATUS_FATURA: OptionSelect[] = [
   { label: 'Todos', value: '' },
@@ -27,7 +30,7 @@ interface FiltrosFinanceiroForm {
 
 @Component({
   selector: 'app-financeiro',
-  imports: [PrimeNGModule, ChartModule],
+  imports: [PrimeNGModule, ChartModule, CardResumo, BagStatusPagamento],
   templateUrl: './financeiro.html',
   styleUrl: './financeiro.scss',
 })
@@ -48,6 +51,37 @@ export class Financeiro implements OnInit {
     quantidadeEmAtraso: 0,
   };
   public carregandoCards = false;
+
+  public get textoVariacaoMes(): string {
+    return this.textoVariacao(
+      this.cards.variacaoReceitaMesAtual,
+      'em relação ao mês anterior',
+    );
+  }
+
+  public get tomVariacaoMes(): TomDescricaoCardResumo {
+    return this.tomVariacao(this.cards.variacaoReceitaMesAtual);
+  }
+
+  public get textoVariacaoHoje(): string {
+    return this.textoVariacao(this.cards.variacaoReceitaHoje, 'em relação a ontem');
+  }
+
+  public get tomVariacaoHoje(): TomDescricaoCardResumo {
+    return this.tomVariacao(this.cards.variacaoReceitaHoje);
+  }
+
+  /** Sem base de comparação a linha fica vazia, em vez de mostrar 0%. */
+  private textoVariacao(variacao: number | null, periodo: string): string {
+    if (variacao === null) return '';
+    const sinal = variacao >= 0 ? '+' : '';
+    return `${sinal}${variacao.toFixed(1)}% ${periodo}`;
+  }
+
+  private tomVariacao(variacao: number | null): TomDescricaoCardResumo {
+    if (variacao === null) return 'neutro';
+    return variacao >= 0 ? 'positivo' : 'negativo';
+  }
 
   public exibirGraficoMensal = false;
   public grafico = {

@@ -31,6 +31,7 @@ export interface MensagemAtendimento {
   id: number;
   idChat: number;
   remetenteId?: number;
+  enviadoPor?: string;
   mensagem: string;
   enviadoEm: Date;
   enviadoPorVoce: boolean;

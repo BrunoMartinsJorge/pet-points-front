@@ -1,48 +1,33 @@
 <main>
-  <section class="kpis">
-    <div class="kpi-card">
-      <span class="kpi-icon iniciado">
-        <i class="fa fa-clipboard-list"></i>
-      </span>
-      <div class="kpi-info">
-        <span class="kpi-label">Consultas do dia</span>
-        <strong class="kpi-valor">{{ qtdConsultas }}</strong>
-        <span class="kpi-sub">Agenda de hoje</span>
-      </div>
-    </div>
-
-    <div class="kpi-card">
-      <span class="kpi-icon efetuado">
-        <i class="fa fa-right-left"></i>
-      </span>
-      <div class="kpi-info">
-        <span class="kpi-label">Movimentações</span>
-        <strong class="kpi-valor">{{ qtdMovimentacoes }}</strong>
-        <span class="kpi-sub">Registradas no mês</span>
-      </div>
-    </div>
-
-    <div class="kpi-card">
-      <span class="kpi-icon entrada">
-        <i class="fa fa-arrow-up"></i>
-      </span>
-      <div class="kpi-info">
-        <span class="kpi-label">Entradas</span>
-        <strong class="kpi-valor">{{ qtdEntradas }}</strong>
-        <span class="kpi-sub">Reposições de estoque</span>
-      </div>
-    </div>
-
-    <div class="kpi-card">
-      <span class="kpi-icon saida">
-        <i class="fa fa-arrow-down"></i>
-      </span>
-      <div class="kpi-info">
-        <span class="kpi-label">Saídas</span>
-        <strong class="kpi-valor">{{ qtdSaidas }}</strong>
-        <span class="kpi-sub">Consumo de estoque</span>
-      </div>
-    </div>
+  <section class="cards-padrao">
+    <app-card-resumo
+      titulo="Consultas do dia"
+      icone="fa fa-clipboard-list"
+      variante="info"
+      [valor]="qtdConsultas"
+      descricao="Agenda de hoje"
+    />
+    <app-card-resumo
+      titulo="Movimentações"
+      icone="fa fa-right-left"
+      variante="sucesso"
+      [valor]="qtdMovimentacoes"
+      descricao="Registradas no mês"
+    />
+    <app-card-resumo
+      titulo="Entradas"
+      icone="fa fa-arrow-up"
+      variante="primario"
+      [valor]="qtdEntradas"
+      descricao="Reposições de estoque"
+    />
+    <app-card-resumo
+      titulo="Saídas"
+      icone="fa fa-arrow-down"
+      variante="perigo"
+      [valor]="qtdSaidas"
+      descricao="Consumo de estoque"
+    />
   </section>
 
   <section class="painel-grafico">
@@ -128,11 +113,13 @@
         </ng-template>
         <ng-template pTemplate="body" let-product>
           <tr>
-            <td>{{ product.descricao }}</td>
             <td>
-              {{ product.tipoMovimentacao }}
+              <p-tag severity="secondary" [value]="product.tipo"></p-tag>
             </td>
-            <td>{{ product.dataSolicitacao }}</td>
+            <td>
+              {{ product.descricacao || 'Sem descrição' }}
+            </td>
+            <td>{{ product.dataSolicitacao | date: "dd/MM/yyyy HH:mm" }}</td>
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">

@@ -15,9 +15,7 @@
           <app-bag-status-consulta
             [status]="consulta.statusConsulta"
           ></app-bag-status-consulta>
-          <span class="tipo-consulta">
-            {{ consulta.tipoConsulta }}
-          </span>
+          <p-tag [value]="consulta.tipoConsulta" severity="secondary"></p-tag>
         </div>
       }
     </div>
@@ -116,9 +114,10 @@
               <strong>VETERINARIO</strong>
               <div class="card">
                 <app-imagem
-                  formato="circle"
-                  width="70px"
-                  height="70px"
+                  tipo="usuario"
+                  width="70"
+                  [urlImagem]="urlImagem(consulta.imagemVeterinario)"
+                  [alt]="'Foto de ' + consulta.veterinarioConsulta"
                 ></app-imagem>
                 <span>
                   {{ consulta.veterinarioConsulta }}
@@ -129,9 +128,10 @@
               <strong>ATENDENTE</strong>
               <div class="card">
                 <app-imagem
-                  formato="circle"
-                  width="70px"
-                  height="70px"
+                  tipo="usuario"
+                  width="70"
+                  [urlImagem]="urlImagem(detalhes.imagemAtendente)"
+                  [alt]="'Foto de ' + detalhes.atendente"
                 ></app-imagem>
                 <span>
                   {{ detalhes.atendente }}
@@ -142,9 +142,10 @@
               <strong>PET</strong>
               <div class="card">
                 <app-imagem
-                  formato="circle"
-                  width="70px"
-                  height="70px"
+                  tipo="pet"
+                  width="70"
+                  [urlImagem]="urlImagem(consulta.imagemPet)"
+                  [alt]="'Foto de ' + consulta.petConsulta"
                 ></app-imagem>
                 <span>
                   {{ consulta.petConsulta }}
@@ -225,9 +226,10 @@
           @if (!consulta) {
           } @else {
             <app-imagem
-              formato="circle"
-              width="70px"
-              height="70px"
+              tipo="usuario"
+              width="70"
+              [urlImagem]="urlImagem(consulta.imagemVeterinario)"
+              [alt]="'Foto de ' + consulta.veterinarioConsulta"
             ></app-imagem>
             <div class="infos">
               <strong

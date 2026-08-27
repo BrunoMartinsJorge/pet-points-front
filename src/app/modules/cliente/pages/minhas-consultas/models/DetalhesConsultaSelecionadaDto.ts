@@ -9,4 +9,6 @@ export interface DetalhesConsultaSelecionadaDto {
   observacoes: string;
   iniciadoEm: string;
   finalizadoEm: string;
+  imagemPet: string | null;
+  imagemAtendente: string | null;
 }

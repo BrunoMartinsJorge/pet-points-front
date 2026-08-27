@@ -4,12 +4,19 @@ import { PrimeNGModule } from '../../../../shared/modules/prime-ng/prime-ng-modu
 import { ConsultasServices } from './service/consultas-services';
 import type { ConsultasAtendenteDto } from './models/ConsultasAtendenteDto';
 import type { IndeferirConsultaForm } from './forms/IndeferirConsultaForm';
+import type { PendenciasFinanceirasClienteDto } from './models/PendenciasFinanceirasClienteDto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DetalhesConsulta } from './components/detalhes-consulta/detalhes-consulta';
+import { BagStatusConsulta } from "../../../../shared/components/bag-status-consulta/bag-status-consulta";
+import { BagStatusPagamento } from "../../../../shared/components/bag-status-pagamento/bag-status-pagamento";
+import { DialogRegistrarConsulta } from './components/dialog-registrar-consulta/dialog-registrar-consulta';
+import { StatusConsultaEnum } from '../../../../shared/models/enums/StatusConsultaEnum';
+import { Imagem } from '../../../../shared/components/imagem/imagem';
+import { urlArquivo } from '../../../../shared/utils/imagem-url';
 
 @Component({
   selector: 'app-consultas-clinica',
-  imports: [PrimeNGModule, DetalhesConsulta],
+  imports: [PrimeNGModule, DetalhesConsulta, BagStatusConsulta, BagStatusPagamento, DialogRegistrarConsulta, Imagem],
   templateUrl: './consultas-clinica.html',
   styleUrl: './consultas-clinica.scss',
 })
@@ -33,6 +40,14 @@ export class ConsultasClinica implements OnInit {
 
   public consultaSelecionada: ConsultasAtendenteDto | null = null;
   public visibilidadeDialogDetalhesConsulta = false;
+
+  public visibilidadeDialogRegistrarConsulta = false;
+
+  public solicitacaoParaAprovar: ConsultasAtendenteDto | null = null;
+  public visibilidadeDialogAprovarConsulta = false;
+  public pendenciasCliente: PendenciasFinanceirasClienteDto | null = null;
+  public carregandoPendencias = false;
+  public erroAoCarregarPendencias = false;
 
   public ngOnInit(): void {
     this.verificarRedirecionamento();
@@ -85,10 +100,21 @@ export class ConsultasClinica implements OnInit {
     });
   }
 
+  public urlImagem(uuid: string | null | undefined): string {
+    return urlArquivo(uuid);
+  }
+
+  public consultaRecusada(consulta: ConsultasAtendenteDto): boolean {
+    return (
+      consulta.status === StatusConsultaEnum.CANCELADO ||
+      consulta.status === StatusConsultaEnum.REPROVADA
+    );
+  }
+
   public gerarTextoCancelamentoIndeferimento(
     consulta: ConsultasAtendenteDto,
   ): string {
-    if (consulta.status.toString() == 'Cancelado') {
+    if (consulta.status === StatusConsultaEnum.CANCELADO) {
       return (
         'Motivo Cancelamento: ' + (consulta.motivoCancelamento || 'Sem motivo')
       );
@@ -103,6 +129,14 @@ export class ConsultasClinica implements OnInit {
   public selecionarConsulta(consulta: ConsultasAtendenteDto): void {
     this.consultaSelecionada = consulta;
     this.visibilidadeDialogDetalhesConsulta = true;
+  }
+
+  public abrirDialogRegistrarConsulta(): void {
+    this.visibilidadeDialogRegistrarConsulta = true;
+  }
+
+  public consultaRegistrada(): void {
+    this.buscarConsultas();
   }
 
   public fecharDialogDetalhesConsulta(): void {
@@ -122,42 +156,73 @@ export class ConsultasClinica implements OnInit {
     );
   }
 
-  public aprovarConsulta(consulta: ConsultasAtendenteDto): void {
-    this.desabilitarAcoes = true;
-    this.confirmService.confirm({
-      header: 'Aprovar Consulta',
-      message: 'Tem certeza que deseja aprovar essa consulta?',
-      rejectButtonProps: {
-        label: 'Cancelar',
-        severity: 'danger',
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: 'Aprovar',
-        severity: 'success',
-      },
+  /**
+   *
+   * @description - Abre a confirmação de aprovação já carregando a situação
+   * financeira do cliente, para que o atendente decida sabendo se existem
+   * cobranças em aberto ou atrasadas
+   */
+  public abrirDialogAprovarConsulta(consulta: ConsultasAtendenteDto): void {
+    this.solicitacaoParaAprovar = consulta;
+    this.visibilidadeDialogAprovarConsulta = true;
+    this.buscarPendenciasCliente(consulta.idSolicitante);
+  }
 
-      accept: () => {
-        this.service.aprovarSolicitacaoConsulta(consulta.id).subscribe({
-          next: () => {
-            this.toast.add({
-              severity: 'success',
-              summary: 'Sucesso',
-              detail: 'Consulta aprovada com sucesso!',
-            });
-            this.buscarConsultas();
-            this.buscarSolicitacoes();
-            this.visibilidadeSolicitacaoConsulta = false;
-            this.solicitacaoConsultaSelecionada = {
-              idConsulta: 0,
-              motivo: '',
-            };
-            this.desabilitarAcoes = false;
-          },
-          error: () => {
-            this.desabilitarAcoes = false;
-          },
+  public fecharDialogAprovarConsulta(): void {
+    this.solicitacaoParaAprovar = null;
+    this.pendenciasCliente = null;
+    this.erroAoCarregarPendencias = false;
+    this.visibilidadeDialogAprovarConsulta = false;
+  }
+
+  public buscarPendenciasCliente(idCliente: number): void {
+    this.pendenciasCliente = null;
+    this.erroAoCarregarPendencias = false;
+    this.carregandoPendencias = true;
+    this.service.buscarPendenciasFinanceirasCliente(idCliente).subscribe({
+      next: (response: PendenciasFinanceirasClienteDto) => {
+        this.pendenciasCliente = response;
+        this.carregandoPendencias = false;
+      },
+      error: () => {
+        this.erroAoCarregarPendencias = true;
+        this.carregandoPendencias = false;
+      },
+    });
+  }
+
+  public recarregarPendenciasCliente(): void {
+    if (!this.solicitacaoParaAprovar) return;
+    this.buscarPendenciasCliente(this.solicitacaoParaAprovar.idSolicitante);
+  }
+
+  public get clientePossuiPendencias(): boolean {
+    return (this.pendenciasCliente?.quantidadePendentes ?? 0) > 0;
+  }
+
+  public get clientePossuiAtrasos(): boolean {
+    return (this.pendenciasCliente?.quantidadeAtrasadas ?? 0) > 0;
+  }
+
+  public aprovarConsulta(): void {
+    if (!this.solicitacaoParaAprovar) return;
+    const idConsulta = this.solicitacaoParaAprovar.id;
+    this.desabilitarAcoes = true;
+    this.service.aprovarSolicitacaoConsulta(idConsulta).subscribe({
+      next: () => {
+        this.toast.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Consulta aprovada com sucesso!',
         });
+        this.buscarConsultas();
+        this.buscarSolicitacoes();
+        this.visibilidadeDialogAprovarConsulta = false;
+        this.fecharDialogAprovarConsulta();
+        this.desabilitarAcoes = false;
+      },
+      error: () => {
+        this.desabilitarAcoes = false;
       },
     });
   }
@@ -165,7 +230,6 @@ export class ConsultasClinica implements OnInit {
   // Tenho que lembrar de notificar o cliente quando for aprovado ou reprovado
   public reprovarConsulta(): void {
     if (!this.habilitarBotaoEnviarReprova) return;
-    this.desabilitarAcoes = true;
     this.confirmService.confirm({
       header: 'Reprovar Consulta',
       message: 'Tem certeza que deseja reprovar essa consulta?',
@@ -180,6 +244,7 @@ export class ConsultasClinica implements OnInit {
       },
 
       accept: () => {
+        this.desabilitarAcoes = true;
         this.service
           .reprovarSolicitacaoConsulta(this.solicitacaoConsultaSelecionada)
           .subscribe({

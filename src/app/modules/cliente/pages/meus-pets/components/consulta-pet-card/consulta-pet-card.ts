@@ -5,6 +5,7 @@ import { BagStatusConsulta } from '../../../../../../shared/components/bag-statu
 import { Router } from '@angular/router';
 import { MinhasConsultasService } from '../../../minhas-consultas/services/minhas-consultas-service';
 import { Imagem } from '../../../../../../shared/components/imagem/imagem';
+import { urlArquivo } from '../../../../../../shared/utils/imagem-url';
 
 @Component({
   selector: 'app-consulta-pet-card',
@@ -19,8 +20,7 @@ export class ConsultaPetCard {
   @Input() consulta: MeuPetConsultaDto | null = null;
 
   public getUrlImagem(consulta: MeuPetConsultaDto): string {
-    if (consulta.imagem == null) return '';
-    return 'http://localhost:8080/cliente/meus-pets/imagem/' + consulta.idPet;
+    return urlArquivo(consulta.imagem);
   }
 
   public acessarConsulta(consulta: MeuPetConsultaDto): void {

@@ -18,6 +18,11 @@ import type { EspecializacaoForm } from './form/EspecializacaoForm';
 import type { DetalhesEspecializacaoDto } from './model/DetalhesEspecializacaoDto';
 import { DetalhesConsulta } from './pages/detalhes-consulta/detalhes-consulta';
 import { StatusConsultaEnum } from '../../../../shared/models/enums/StatusConsultaEnum';
+import { Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
+import { TipoPagamentoEnum } from '../../../../shared/models/enums/TipoPagamentoEnum';
+import { CardResumo } from '../../../../shared/components/card-resumo/card-resumo';
+import type { TomDescricaoCardResumo } from '../../../../shared/components/card-resumo/card-resumo';
 
 @Component({
   selector: 'app-consultas-clinica',
@@ -27,6 +32,7 @@ import { StatusConsultaEnum } from '../../../../shared/models/enums/StatusConsul
     TabsModule,
     AccordionModule,
     DetalhesConsulta,
+    CardResumo,
   ],
   templateUrl: './consultas-clinica.html',
   styleUrl: './consultas-clinica.scss',
@@ -34,6 +40,7 @@ import { StatusConsultaEnum } from '../../../../shared/models/enums/StatusConsul
 export class ConsultasClinica implements OnInit {
   private readonly service = inject(ConsultasClinicaService);
   private readonly toast = inject(MessageService);
+  private readonly router = inject(Router);
 
   private consultas: ConsultaClinicaDto[] = [];
 
@@ -48,7 +55,54 @@ export class ConsultasClinica implements OnInit {
     emAndamento: 0,
     finalizadas: 0,
     canceladas: 0,
+    hoje: 0,
+    variacaoMes: null as number | null,
+    variacaoHoje: null as number | null,
   };
+
+  public readonly abas = [
+    { label: 'Recentes', value: 'RECENTES' },
+    { label: 'Em Andamento', value: 'ANDAMENTO' },
+    { label: 'Finalizadas', value: 'FINALIZADAS' },
+  ];
+  public abaSelecionada = 'RECENTES';
+
+  private readonly avataresSemImagem = new Set<string>();
+
+  public get textoVariacaoMes(): string {
+    if (this.resumo.variacaoMes === null)
+      return `de ${this.resumo.totalGeral} no total`;
+    return this.textoVariacao(this.resumo.variacaoMes, 'que o mês passado');
+  }
+
+  public get tomVariacaoMes(): TomDescricaoCardResumo {
+    return this.tomVariacao(this.resumo.variacaoMes);
+  }
+
+  public get textoVariacaoHoje(): string {
+    if (this.resumo.variacaoHoje === null) return 'agendadas para hoje';
+    return this.textoVariacao(this.resumo.variacaoHoje, 'que ontem');
+  }
+
+  public get tomVariacaoHoje(): TomDescricaoCardResumo {
+    return this.tomVariacao(this.resumo.variacaoHoje);
+  }
+
+  private textoVariacao(variacao: number, periodo: string): string {
+    const sinal = variacao > 0 ? '+' : '';
+    const comparacao = variacao >= 0 ? 'mais' : 'menos';
+    return `${sinal}${variacao}% ${comparacao} ${periodo}`;
+  }
+
+  private tomVariacao(variacao: number | null): TomDescricaoCardResumo {
+    if (variacao === null) return 'neutro';
+    return variacao >= 0 ? 'positivo' : 'negativo';
+  }
+
+  public dataFiltro: Date | null = null;
+  public visibilidadeFiltros = false;
+  public visibilidadeGestao = false;
+  public modoLista = false;
 
   public carregandoTiposConsultas = false;
   public tiposConsultas: TiposConsultaDto[] = [];
@@ -154,7 +208,56 @@ export class ConsultasClinica implements OnInit {
         StatusConsultaEnum.CANCELADO,
         StatusConsultaEnum.REPROVADA,
       ),
+      hoje: this.contarNoDia(0),
+      variacaoMes: this.calcularVariacaoMensal(),
+      variacaoHoje: this.calcularVariacao(
+        this.contarNoDia(0),
+        this.contarNoDia(-1),
+      ),
     };
+  }
+
+  /** Consultas agendadas no dia de hoje deslocado por `diferencaDias`. */
+  private contarNoDia(diferencaDias: number): number {
+    const alvo = new Date();
+    alvo.setDate(alvo.getDate() + diferencaDias);
+    return this.consultasFiltradas.filter((consulta) =>
+      this.mesmoDia(new Date(consulta.dataConsulta), alvo),
+    ).length;
+  }
+
+  /** Compara o volume do mês corrente com o do mês anterior. */
+  private calcularVariacaoMensal(): number | null {
+    const agora = new Date();
+    const mesAnterior = new Date(agora.getFullYear(), agora.getMonth() - 1, 1);
+
+    const contarMes = (referencia: Date): number =>
+      this.consultasFiltradas.filter((consulta) => {
+        const data = new Date(consulta.dataConsulta);
+        return (
+          data.getMonth() === referencia.getMonth() &&
+          data.getFullYear() === referencia.getFullYear()
+        );
+      }).length;
+
+    return this.calcularVariacao(contarMes(agora), contarMes(mesAnterior));
+  }
+
+  /**
+   * Variação percentual entre dois períodos. Devolve null quando não há base de
+   * comparação, para a tela não exibir um percentual sem significado.
+   */
+  private calcularVariacao(atual: number, anterior: number): number | null {
+    if (anterior === 0) return null;
+    return Math.round(((atual - anterior) / anterior) * 100);
+  }
+
+  private mesmoDia(a: Date, b: Date): boolean {
+    return (
+      a.getDate() === b.getDate() &&
+      a.getMonth() === b.getMonth() &&
+      a.getFullYear() === b.getFullYear()
+    );
   }
 
   private buscarTiposConsulta(): void {
@@ -264,21 +367,114 @@ export class ConsultasClinica implements OnInit {
         return consulta.tipo.id === this.filtros.tipoConsulta;
       });
     }
-    this.consultasFiltradas = consultas;
+    if (this.dataFiltro !== null) {
+      const dataEscolhida = this.dataFiltro;
+      consultas = consultas.filter((consulta) =>
+        this.mesmoDia(new Date(consulta.dataConsulta), dataEscolhida),
+      );
+    }
+    this.consultasFiltradas = this.ordenarPorDataConsulta(consultas);
     this.atualizarResumo();
+  }
+
+  /** Mais recentes primeiro, que é a leitura esperada de um histórico. */
+  private ordenarPorDataConsulta(
+    consultas: ConsultaClinicaDto[],
+  ): ConsultaClinicaDto[] {
+    return [...consultas].sort(
+      (a, b) =>
+        new Date(b.dataConsulta).getTime() - new Date(a.dataConsulta).getTime(),
+    );
+  }
+
+  /** Recorte da aba aplicado sobre o resultado dos filtros. */
+  public get consultasVisiveis(): ConsultaClinicaDto[] {
+    if (this.abaSelecionada === 'ANDAMENTO') {
+      return this.consultasFiltradas.filter(
+        (consulta) =>
+          consulta.status === StatusConsultaEnum.APROVADA ||
+          consulta.status === StatusConsultaEnum.INICIADO,
+      );
+    }
+    if (this.abaSelecionada === 'FINALIZADAS') {
+      return this.consultasFiltradas.filter(
+        (consulta) => consulta.status === StatusConsultaEnum.FINALIZADO,
+      );
+    }
+    return this.consultasFiltradas;
+  }
+
+  public selecionarAba(aba: string): void {
+    if (!aba) return;
+    this.abaSelecionada = aba;
+  }
+
+  public alterarVisibilidadeFiltros(): void {
+    this.visibilidadeFiltros = !this.visibilidadeFiltros;
+  }
+
+  public alterarVisibilidadeGestao(): void {
+    this.visibilidadeGestao = !this.visibilidadeGestao;
+  }
+
+  public alterarModoVisualizacao(lista: boolean): void {
+    this.modoLista = lista;
   }
 
   public get filtrosAtivos(): boolean {
     return (
       this.filtros.cliente !== null ||
       this.filtros.veterinario !== null ||
-      this.filtros.tipoConsulta !== null
+      this.filtros.tipoConsulta !== null ||
+      this.dataFiltro !== null
     );
   }
 
   public limparFiltros(): void {
     this.filtros = { cliente: null, veterinario: null, tipoConsulta: null };
+    this.dataFiltro = null;
     this.filtrarConsultas();
+  }
+
+  public urlAvatar(idUsuario: number): string {
+    return environment.apiUrl + '/arquivos/usuario/' + idUsuario;
+  }
+
+  /**
+   * Usuários sem foto fazem o endpoint de avatar responder erro; nesses casos o
+   * card passa a exibir as iniciais em vez de uma imagem quebrada.
+   */
+  public marcarAvatarComErro(chave: string): void {
+    this.avataresSemImagem.add(chave);
+  }
+
+  public avatarComErro(chave: string): boolean {
+    return this.avataresSemImagem.has(chave);
+  }
+
+  public pegarIniciais(nome: string): string {
+    const limpo = (nome ?? '').trim();
+    if (!limpo) return '';
+    const partes = limpo.split(' ').filter((parte) => parte.length > 0);
+    if (partes.length === 1) return partes[0].substring(0, 2).toUpperCase();
+    return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+  }
+
+  public rotuloFormaPagamento(forma: TipoPagamentoEnum | null): string {
+    switch (forma) {
+      case TipoPagamentoEnum.PIX:
+        return 'Pix';
+      case TipoPagamentoEnum.CARTAO:
+        return 'Cartão';
+      case TipoPagamentoEnum.DINHEIRO:
+        return 'Dinheiro';
+      default:
+        return 'Não informada';
+    }
+  }
+
+  public verDetalhesCliente(idCliente: number): void {
+    this.router.navigate(['gerente/detalhes-clientes', idCliente]);
   }
 
   public gerarRelatorio(): void {

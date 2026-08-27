@@ -9,6 +9,7 @@ import type { CardsVeterinarioDashboardDto } from './models/CardsVeterinarioDash
 import { TokenService } from '../../../../core/services/token-service';
 import { Router } from '@angular/router';
 import { StatusConsultaEnum } from '../../../../shared/models/enums/StatusConsultaEnum';
+import { CardResumo } from '../../../../shared/components/card-resumo/card-resumo';
 
 interface FiltroConsulta {
   label: string;
@@ -17,7 +18,7 @@ interface FiltroConsulta {
 
 @Component({
   selector: 'app-dashboard-veterinario',
-  imports: [PrimeNGModule, BagStatusConsulta],
+  imports: [PrimeNGModule, BagStatusConsulta, CardResumo],
   templateUrl: './dashboard-veterinario.html',
   styleUrl: './dashboard-veterinario.scss',
 })

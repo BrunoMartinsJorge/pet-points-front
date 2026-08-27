@@ -31,11 +31,12 @@
       >
         <div>
           <app-imagem
+            tipo="usuario"
             [urlImagem]="novaImagem.url || getImagemUsuario"
             [alt]="'Imagem do Usuário'"
             [imagemRedonda]="false"
             [tamanhoTotal]="true"
-            [width]="'200px'"
+            [width]="'200'"
             [preview]="true"
           />
           @if (podeEditar) {
@@ -355,14 +356,8 @@
                       "
                     >
                       <div class="badges">
-                        <span
-                          [ngClass]="'status ' + consulta.status.toLowerCase()"
-                        >
-                          {{ consulta.status | titlecase }}
-                        </span>
-                        <span class="tipo-consulta">
-                          {{ consulta.tipoConsulta }}
-                        </span>
+                        <app-bag-status-consulta [status]="consulta.status"></app-bag-status-consulta>
+                        <p-tag [value]="consulta.tipoConsulta" severity="secondary"></p-tag>
                       </div>
                       <div class="informacoes">
                         <div>

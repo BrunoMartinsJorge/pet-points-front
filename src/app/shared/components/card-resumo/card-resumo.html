@@ -1,0 +1,14 @@
+<div class="card">
+  <div class="icon" [ngClass]="variante">
+    <i [ngClass]="icone"></i>
+  </div>
+  <div class="infos">
+    <span class="titulo">{{ titulo }}</span>
+    <span class="descricao" [ngClass]="tomDescricao">
+      @if (valor !== null) {
+        <strong>{{ valor }}</strong>
+      }
+      {{ descricao }}
+    </span>
+  </div>
+</div>

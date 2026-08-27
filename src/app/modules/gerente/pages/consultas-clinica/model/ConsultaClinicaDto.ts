@@ -1,4 +1,5 @@
 import type { StatusConsultaEnum } from '../../../../../shared/models/enums/StatusConsultaEnum';
+import type { TipoPagamentoEnum } from '../../../../../shared/models/enums/TipoPagamentoEnum';
 import type { ParticipantesConsultaDto } from './ParticipantesConsultaDto';
 
 export interface ConsultaClinicaDto {
@@ -12,4 +13,8 @@ export interface ConsultaClinicaDto {
   observacoes: string;
   cliente: ParticipantesConsultaDto;
   veterinario: ParticipantesConsultaDto;
+  pet: string | null;
+  dataConsulta: Date;
+  valor: number;
+  formaPagamento: TipoPagamentoEnum | null;
 }

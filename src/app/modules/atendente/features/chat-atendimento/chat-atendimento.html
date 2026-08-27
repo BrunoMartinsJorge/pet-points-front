@@ -4,49 +4,28 @@
     [hideTransitionOptions]="'1000ms'" 
     [showTransformOptions]="'translateX(100%)'" />
 <main>
-  <section class="cards">
-    <div class="card-pagamentos">
-      <span class="icon pendente">
-        <i class="fa far far fa-clock"></i>
-      </span>
-      <div class="infos">
-        <span>Atendimentos em Andamento</span>
-        <span>
-          <strong>
-            {{ cardsAtendimentos.atendimentosEmAndamento }}
-          </strong>
-          Em Andamento
-        </span>
-      </div>
-    </div>
-    <div class="card-pagamentos">
-      <span class="icon efetuado">
-        <i class="fa far far fa-check-circle"></i>
-      </span>
-      <div class="infos">
-        <span>Atendimentos Finalizados</span>
-        <span>
-          <strong>
-            {{ cardsAtendimentos.atendimentosFinalizadas }}
-          </strong>
-          Finalizados
-        </span>
-      </div>
-    </div>
-    <div class="card-pagamentos">
-      <span class="icon iniciado">
-        <i class="fa far fa-star"></i>
-      </span>
-      <div class="infos">
-        <span>Pontuação Média</span>
-        <span>
-          <strong>
-            {{ cardsAtendimentos.pontuacaoMedia }}
-          </strong>
-          Pontuação
-        </span>
-      </div>
-    </div>
+  <section class="cards-padrao">
+    <app-card-resumo
+      titulo="Atendimentos em Andamento"
+      icone="fa far far fa-clock"
+      variante="pendente"
+      [valor]="cardsAtendimentos.atendimentosEmAndamento"
+      descricao="Em Andamento"
+    />
+    <app-card-resumo
+      titulo="Atendimentos Finalizados"
+      icone="fa far far fa-check-circle"
+      variante="sucesso"
+      [valor]="cardsAtendimentos.atendimentosFinalizadas"
+      descricao="Finalizados"
+    />
+    <app-card-resumo
+      titulo="Pontuação Média"
+      icone="fa far fa-star"
+      variante="info"
+      [valor]="cardsAtendimentos.pontuacaoMedia"
+      descricao="Pontuação"
+    />
   </section>
   <hr />
   <section class="atendimentos">
@@ -57,11 +36,7 @@
             @for (atendimento of atendimentos; track atendimento.id) {
               <div class="card-atendimento">
                 <div class="informacoes">
-                  <span
-                    [ngClass]="'status ' + atendimento.status.toLowerCase()"
-                  >
-                    {{ atendimento.status | titlecase }}
-                  </span>
+                  <app-bag-status-atendimento [status]="atendimento.status"></app-bag-status-atendimento>
                   <div class="info cliente">
                     <i class="fa fa-user"></i>
                     <span>
