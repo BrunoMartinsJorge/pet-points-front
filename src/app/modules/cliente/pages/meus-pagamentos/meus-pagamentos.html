@@ -1,5 +1,5 @@
 <main>
-  <section class="cards">
+  <section class="cards-padrao">
     @if (carregandoInformacoesCards) {
       <span style="display: flex; gap: 1rem; width: 100%">
         <p-skeleton height="140px" />
@@ -7,48 +7,27 @@
         <p-skeleton height="140px" />
       </span>
     } @else {
-      <div class="card-pagamentos">
-        <span class="icon efetuado">
-          <i class="fa far far fa-check-circle"></i>
-        </span>
-        <div class="infos">
-          <span>Pagamentos Efetuados</span>
-          <span>
-            <strong>
-              {{ informacoesCards.pagamentosEfetuados }}
-            </strong>
-            Pagamento(s) efetuado(s)
-          </span>
-        </div>
-      </div>
-      <div class="card-pagamentos">
-        <span class="icon pendente">
-          <i class="fa far far fa-clock"></i>
-        </span>
-        <div class="infos">
-          <span>Pagamentos Atrasados</span>
-          <span>
-            <strong>
-              {{ informacoesCards.pagamentosAtrasados }}
-            </strong>
-            Pagamentos(s) atrasados
-          </span>
-        </div>
-      </div>
-      <div class="card-pagamentos">
-        <span class="icon reprovado">
-          <i class="fa far fa-thumbs-down"></i>
-        </span>
-        <div class="infos">
-          <span>Pagamentos Reprovados</span>
-          <span>
-            <strong>
-              {{ informacoesCards.pagamentosReprovados }}
-            </strong>
-            Pagamento(s) reprovados
-          </span>
-        </div>
-      </div>
+      <app-card-resumo
+        titulo="Pagamentos Efetuados"
+        icone="fa far far fa-check-circle"
+        variante="sucesso"
+        [valor]="informacoesCards.pagamentosEfetuados"
+        descricao="Pagamento(s) Efetuado(s)"
+      />
+      <app-card-resumo
+        titulo="Pagamentos Pendentes"
+        icone="fa far far fa-clock"
+        variante="pendente"
+        [valor]="informacoesCards.pagamentosPendentes"
+        descricao="Pagamentos(s) Pendentes"
+      />
+      <app-card-resumo
+        titulo="Pagamentos Atrasados"
+        icone="fa far fas fa-exclamation-triangle"
+        variante="perigo"
+        [valor]="informacoesCards.pagamentosAtrasados"
+        descricao="Pagamento(s) Atrasados"
+      />
     }
   </section>
   <hr />
@@ -176,11 +155,17 @@
                             : (pagamento.statusPagamento | titlecase)
                         }}
                       </span>
-                      <span
-                        [ngClass]="pagamento.atrasado ? 'atrasado' : 'em-tempo'"
-                      >
-                        {{ pagamento.atrasado ? "Atrasado" : "Em Tempo" }}
-                      </span>
+                      @if (pagamento.statusPagamento !== "APROVADO") {
+                        <p-tag
+                          [severity]="pagamento.atrasado ? 'danger' : 'warn'"
+                          [value]="pagamento.atrasado ? 'Atrasado' : 'Em Tempo'"
+                          [icon]="
+                            pagamento.atrasado
+                              ? 'fa far fa-clock'
+                              : 'fa fas fa-calendar-times'
+                          "
+                        ></p-tag>
+                      }
                     </div>
                     <p-button
                       icon="fa fa-eye"
@@ -237,25 +222,20 @@
                   </div>
                   <div class="body-card">
                     <div class="badges">
-                      <span
-                        [ngClass]="
-                          'status-pagamento ' +
-                          (pagamento.atrasado
-                            ? 'atrasado'
-                            : pagamento.statusPagamento.toLowerCase())
-                        "
-                      >
-                        {{
-                          pagamento.atrasado
-                            ? "ATRASADO"
-                            : (pagamento.statusPagamento | titlecase)
-                        }}
-                      </span>
-                      <span
-                        [ngClass]="pagamento.atrasado ? 'atrasado' : 'em-tempo'"
-                      >
-                        {{ pagamento.atrasado ? "Atrasado" : "Em Tempo" }}
-                      </span>
+                      <app-bag-status-pagamento
+                        [status]="pagamento.statusPagamento"
+                      ></app-bag-status-pagamento>
+                      @if (pagamento.statusPagamento !== "APROVADO") {
+                        <p-tag
+                          [severity]="pagamento.atrasado ? 'danger' : 'warn'"
+                          [value]="pagamento.atrasado ? 'Atrasado' : 'Em Tempo'"
+                          [icon]="
+                            pagamento.atrasado
+                              ? 'fa far fa-clock'
+                              : 'fa fas fa-calendar-times'
+                          "
+                        ></p-tag>
+                      }
                     </div>
                     <p-button
                       icon="fa fa-eye"

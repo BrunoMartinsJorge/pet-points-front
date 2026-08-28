@@ -1,33 +1,25 @@
-@if (
-  urlImagem === null ||
-  urlImagem === "" ||
-  urlImagem === undefined ||
-  urlImagem.trim() === ""
-) {
-<div
-  [ngClass]="{
-    'imagem-vazia': true,
-    'imagem-redonda': imagemRedonda,
-    'tamanho-total': tamanhoTotal
-  }"
-  [style.width]="width"
-  [style.height]="height"
->
-</div>
-} @else {
+@if (possuiImagem) {
   <p-image
-    [src]="urlImagem"
+    [src]="srcImagem"
     [alt]="alt"
-    [width]="width"
-    [height]="height"
+    [width]="larguraAttr"
+    [height]="alturaAttr"
     [preview]="preview"
-    [imageStyle]="
-      tamanhoTotal
-        ? { 'aspect-ratio': '1 / 1' }
-        : imagemRedonda
-          ? { 'border-radius': '50%', 'object-fit': 'cover' }
-          : { 'object-fit': 'cover' }
-    "
+    [imageStyle]="estiloImagem"
     appendTo="body"
   />
+} @else {
+  <div
+    [ngClass]="{
+      'imagem-vazia': true,
+      'imagem-redonda': imagemRedonda,
+      'tamanho-total': tamanhoTotal
+    }"
+    [style.width]="larguraCss"
+    [style.height]="alturaCss"
+    [attr.aria-label]="alt"
+    role="img"
+  >
+    <i [ngClass]="iconePlaceholder"></i>
+  </div>
 }

@@ -1,48 +1,33 @@
 <p-confirmDialog></p-confirmDialog>
 <p-toast></p-toast>
 <main>
-  <section class="cards">
+  <section class="cards-padrao">
     @if (!cards) {
       <p-skeleton height="175px"></p-skeleton>
       <p-skeleton height="175px"></p-skeleton>
       <p-skeleton height="175px"></p-skeleton>
     } @else {
-      <div class="card">
-        <span class="icon efetuado">
-          <i class="fa fa-comment"></i>
-        </span>
-        <div class="infos">
-          <span>Total de Pagamentos</span>
-          <span>
-            <strong> {{ cards.totalPagamentosClinica }} </strong>
-            Pagamentos(s)
-          </span>
-        </div>
-      </div>
-      <div class="card">
-        <span class="icon pendente">
-          <i class="fa fa-clipboard"></i>
-        </span>
-        <div class="infos">
-          <span>Pagamentos Pendentes/Atrasados</span>
-          <span>
-            <strong> {{ cards.pagamentosPendentesAtrasados }} </strong>
-            Pagamento(s)
-          </span>
-        </div>
-      </div>
-      <div class="card">
-        <span class="icon iniciado">
-          <i class="fas fa-ranking-star"></i>
-        </span>
-        <div class="infos">
-          <span>Aprovados por Min</span>
-          <span>
-            <strong> {{ cards.meusPagamentosClinica }} </strong>
-            Pagamentos(s)
-          </span>
-        </div>
-      </div>
+      <app-card-resumo
+        titulo="Total de Pagamentos"
+        icone="fa fa-comment"
+        variante="sucesso"
+        [valor]="cards.totalPagamentosClinica"
+        descricao="Pagamentos(s)"
+      />
+      <app-card-resumo
+        titulo="Pagamentos Pendentes/Atrasados"
+        icone="fa fa-clipboard"
+        variante="pendente"
+        [valor]="cards.pagamentosPendentesAtrasados"
+        descricao="Pagamento(s)"
+      />
+      <app-card-resumo
+        titulo="Aprovados por Mim"
+        icone="fas fa-ranking-star"
+        variante="info"
+        [valor]="cards.meusPagamentosClinica"
+        descricao="Pagamentos(s)"
+      />
     }
   </section>
   <hr />
@@ -79,8 +64,16 @@
                   : "Não Pago!"
               }}
             </td>
-            <td>{{ pagamento.forma }}</td>
-            <td>{{ pagamento.status }}</td>
+            <td>
+              <app-bag-forma-pagamento
+                [tipo]="pagamento.forma"
+              ></app-bag-forma-pagamento>
+            </td>
+            <td>
+              <app-bag-status-pagamento
+                [status]="pagamento.status"
+              ></app-bag-status-pagamento>
+            </td>
             <td>
               <p-button
                 icon="fa fa-eye"
@@ -122,7 +115,11 @@
           <tr>
             <td>{{ pagamento.cliente }}</td>
             <td>{{ pagamento.valor | currency: "BRL" }}</td>
-            <td>{{ pagamento.forma }}</td>
+            <td>
+              <app-bag-forma-pagamento
+                [tipo]="pagamento.forma"
+              ></app-bag-forma-pagamento>
+            </td>
             <td>
               <div class="btns">
                 <p-button
@@ -172,20 +169,16 @@
   @if (pagamentoSelecionado) {
     <section class="detalhes-pagamento">
       <div class="identificacao">
-        <span
-          class="bag-status"
-          [ngClass]="statusPagamento ? statusPagamento.toLowerCase() : ''"
-        >
-          <i class="fa fa-circle"></i>
-          {{ statusPagamento }}
-        </span>
-        <span class="bag-forma">
-          <i [ngClass]="iconePagamento(formaPagamento)"></i>
-          {{ formaPagamento }}
-        </span>
-        <span class="numero-pagamento">
-          Pagamento #{{ pagamentoSelecionado.id }}
-        </span>
+        @if (statusPagamento) {
+          <app-bag-status-pagamento
+            [status]="statusPagamento"
+          ></app-bag-status-pagamento>
+        }
+        @if (formaPagamento) {
+          <app-bag-forma-pagamento
+            [tipo]="formaPagamento"
+          ></app-bag-forma-pagamento>
+        }
       </div>
 
       <div class="resumo-valor">
@@ -229,13 +222,13 @@
                   <label for="tipo">Tipo de Pagamento</label>
                   <div class="valor-campo">
                     <i [ngClass]="iconePagamento(formaPagamento)"></i>
-                    <span>{{ (formaPagamento ?? "") | titlecase }}</span>
+                    <span>{{ formaPagamento ?? "" | titlecase }}</span>
                   </div>
                 </div>
                 <div class="campo">
                   <label for="status">Status</label>
                   <div class="valor-campo">
-                    <span>{{ (statusPagamento ?? "") | titlecase }}</span>
+                    <span>{{ statusPagamento ?? "" | titlecase }}</span>
                   </div>
                 </div>
                 <div class="campo">
@@ -341,11 +334,11 @@
                   </span>
                 </div>
               } @else {
-                <div class="responsavel vazio">
-                  <span>
-                    Ainda não aprovado — aguardando confirmação do pagamento.
-                  </span>
-                </div>
+                @if (formaPagamento === "DINHEIRO") {
+                  <div class="responsavel vazio">
+                    <span> Aguardando um atendente registrar pagamento </span>
+                  </div>
+                }
               }
               @if (pagamentoIndeferido) {
                 <span class="aviso-avaliacao">
@@ -388,7 +381,10 @@
                 </div>
                 <div class="campo">
                   <label for="status">Status no gateway</label>
-                  <div class="valor-campo" [class.vazio]="!transacao.statusGateway">
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!transacao.statusGateway"
+                  >
                     <span>
                       {{ transacao.statusGateway ?? "Não consultado" }}
                     </span>
@@ -396,7 +392,10 @@
                 </div>
                 <div class="campo">
                   <label for="detalhes_status">Detalhe do status</label>
-                  <div class="valor-campo" [class.vazio]="!transacao.detalheStatus">
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!transacao.detalheStatus"
+                  >
                     <span>
                       {{ transacao.detalheStatus ?? "Não consultado" }}
                     </span>
@@ -404,10 +403,15 @@
                 </div>
                 <div class="campo">
                   <label for="valor">Valor total</label>
-                  <div class="valor-campo" [class.vazio]="!transacao.valorTotal">
+                  <div
+                    class="valor-campo"
+                    [class.vazio]="!transacao.valorTotal"
+                  >
                     <span>
                       {{
-                        transacao.valorTotal ? "R$ " + transacao.valorTotal : "Não informado"
+                        transacao.valorTotal
+                          ? "R$ " + transacao.valorTotal
+                          : "Não informado"
                       }}
                     </span>
                   </div>
@@ -417,7 +421,9 @@
                   <div class="valor-campo" [class.vazio]="!transacao.valorPago">
                     <span>
                       {{
-                        transacao.valorPago ? "R$ " + transacao.valorPago : "Não consultado"
+                        transacao.valorPago
+                          ? "R$ " + transacao.valorPago
+                          : "Não consultado"
                       }}
                     </span>
                   </div>
@@ -501,10 +507,6 @@
       </p-tabs>
 
       <div class="acoes">
-        <span class="aviso">
-          <i class="fa fa-info-circle"></i>
-          Status sincronizado via webhook do gateway de pagamento.
-        </span>
         <div class="btns">
           <p-button
             label="Consultar status"

@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <p-confirmdialog></p-confirmdialog>
 <main>
-  <section class="cards">
+  <section class="cards-padrao">
     @if (cards === null) {
       @if (carregandoCards) {
         <span style="display: flex; gap: 1rem; width: 100%">
@@ -11,45 +11,26 @@
         </span>
       }
     } @else {
-      <div class="card">
-        <div class="icon valor">
-          <i class="fas fa-coins"></i>
-        </div>
-        <div class="informacoes">
-          <span id="titulo">Valor Total em Estoque</span>
-          <span>
-            <strong id="descricao">
-              R$ {{ cards.valorTotalEstoque | number: "1.2-2" }}
-            </strong>
-          </span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="icon quantidade">
-          <i class="fas fa-box"></i>
-        </div>
-        <div class="informacoes">
-          <span id="titulo">Produtos em Estoque</span>
-          <span>
-            <strong id="descricao">
-              {{ cards.quantidadeProdutosEstoque }}
-            </strong>
-            Produtos
-          </span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="icon limite">
-          <i class="fas fa-triangle-exclamation"></i>
-        </div>
-        <div class="informacoes">
-          <span id="titulo">Produtos Abaixo do Estoque</span>
-          <span>
-            <strong id="descricao">{{ cards.produtosAbaixoEstoque }}</strong>
-            Produtos
-          </span>
-        </div>
-      </div>
+      <app-card-resumo
+        titulo="Valor Total em Estoque"
+        icone="fas fa-coins"
+        variante="primario"
+        [valor]="'R$ ' + (cards.valorTotalEstoque | number: '1.2-2')"
+      />
+      <app-card-resumo
+        titulo="Produtos em Estoque"
+        icone="fas fa-box"
+        variante="info"
+        [valor]="cards.quantidadeProdutosEstoque"
+        descricao="Produtos"
+      />
+      <app-card-resumo
+        titulo="Produtos Abaixo do Estoque"
+        icone="fas fa-triangle-exclamation"
+        variante="perigo"
+        [valor]="cards.produtosAbaixoEstoque"
+        descricao="Produtos"
+      />
     }
   </section>
   <hr />

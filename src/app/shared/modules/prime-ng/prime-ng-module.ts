@@ -34,10 +34,17 @@ import { DataViewModule } from 'primeng/dataview';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { titlecasePipe } from '../../pipes/texto-format-pipe';
 import { DividerModule } from 'primeng/divider';
+import { TagModule } from 'primeng/tag';
+import { BagStatusPerfil } from '../../components/bag-status-perfil/bag-status-perfil';
+import { BagStatusAtendimento } from '../../components/bag-status-atendimento/bag-status-atendimento';
+import { BagFormaPagamento } from '../../components/bag-forma-pagamento/bag-forma-pagamento';
 
 @NgModule({
   providers: [MessageService, ConfirmationService],
   imports: [
+    BagStatusPerfil,
+    BagStatusAtendimento,
+    BagFormaPagamento,
     CommonModule,
     ButtonModule,
     DialogModule,
@@ -73,6 +80,7 @@ import { DividerModule } from 'primeng/divider';
     SelectButtonModule,
     titlecasePipe,
     DividerModule,
+    TagModule,
   ],
   exports: [
     CommonModule,
@@ -110,6 +118,13 @@ import { DividerModule } from 'primeng/divider';
     SelectButtonModule,
     titlecasePipe,
     DividerModule,
+    TagModule,
+    BagStatusPerfil,
+    BagStatusAtendimento,
+    BagFormaPagamento,
   ],
+  declarations: [
+    
+  ]
 })
 export class PrimeNGModule {}

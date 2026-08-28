@@ -22,16 +22,8 @@
                 </div>
                 <div class="informacoes-card">
                   <div class="titulo-linha">
-                    <strong class="tipo-consulta">
-                      {{ consulta.tipoConsulta }}
-                    </strong>
-                    <span
-                      [ngClass]="
-                        'status-consulta ' + consulta.status.toLowerCase()
-                      "
-                    >
-                      {{ consulta.status | titlecase }}
-                    </span>
+                    <p-tag [value]="consulta.tipoConsulta" severity="secondary"></p-tag>
+                    <app-bag-status-consulta [status]="consulta.status"></app-bag-status-consulta>
                   </div>
                   <div class="veterinario-pet">
                     <span class="veterinario">
@@ -97,25 +89,14 @@
                 "
               >
                 <div class="status-valor">
-                  <span
-                    [ngClass]="
-                      'status-pagamento ' +
-                      (pagamento.atrasado
-                        ? 'atrasado'
-                        : pagamento.statusPagamento.toLowerCase())
-                    "
-                  >
-                    {{
-                      pagamento.atrasado
-                        ? "Atrasado"
-                        : (pagamento.statusPagamento | titlecase)
-                    }}
-                  </span>
+                  <app-bag-status-pagamento [status]="pagamento.statusPagamento"></app-bag-status-pagamento>
                   <span class="valor">
                     {{ pagamento.valor | currency: "BRL" }}
                   </span>
                 </div>
+                <app-bag-forma-pagamento></app-bag-forma-pagamento>
                 <div class="forma-pagamento">
+
                   <i [class]="iconePagamento(pagamento.tipoPagamento)"></i>
                   <span>{{ pagamento.tipoPagamento | titlecase }}</span>
                 </div>

@@ -1,6 +1,7 @@
 @if (pet !== null) {
   <div [ngClass]="'card ' + pet.status.toLowerCase()">
     <app-imagem
+      tipo="pet"
       [urlImagem]="getUrlImagem(pet)"
       [alt]="pet.nome"
       [width]="'100'"
@@ -12,9 +13,7 @@
       <div>
         <strong>{{ pet.nome }} - {{ pet.raca }}</strong>
         <app-genero-bag [genero]="pet.genero"></app-genero-bag>
-        <span [ngClass]="'status ' + pet.status.toLowerCase()">{{
-          pet.status === "A" ? "Ativo" : "Desativado"
-        }}</span>
+        <app-bag-status-perfil [status]="pet.status"></app-bag-status-perfil>
         <app-tipo-pet-bag [tipo]="pet.tipo"></app-tipo-pet-bag>
       </div>
       <hr />

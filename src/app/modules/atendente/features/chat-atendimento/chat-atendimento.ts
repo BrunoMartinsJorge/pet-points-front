@@ -10,10 +10,11 @@ import { SolicitacoesAtendimentoWsService } from '../../../../shared/services/ws
 import { Subscription } from 'rxjs';
 import type { SolicitacaoRemovidaDto } from './models/SolicitacaoRemovidaDto';
 import type { CardsAtendimentoAtendenteDto } from './models/CardsAtendimentoAtendenteDto';
+import { CardResumo } from '../../../../shared/components/card-resumo/card-resumo';
 
 @Component({
   selector: 'app-chat-atendimento',
-  imports: [PrimeNGModule],
+  imports: [PrimeNGModule, CardResumo],
   templateUrl: './chat-atendimento.html',
   styleUrl: './chat-atendimento.scss',
 })

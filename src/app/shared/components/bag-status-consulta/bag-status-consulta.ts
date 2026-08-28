@@ -1,18 +1,18 @@
 import { Component, Input } from '@angular/core';
-import type { StatusConsultaEnum } from '../../models/enums/StatusConsultaEnum';
-import { CommonModule } from '@angular/common';
+import { getTagData, type StatusConsultaEnum } from '../../models/enums/StatusConsultaEnum';
+import { PrimeNGModule } from '../../modules/prime-ng/prime-ng-module';
+import type { TagData } from '../../models/TagData';
 
 @Component({
   selector: 'app-bag-status-consulta',
-  imports: [CommonModule],
+  imports: [PrimeNGModule],
   templateUrl: './bag-status-consulta.html',
   styleUrl: './bag-status-consulta.scss',
 })
 export class BagStatusConsulta {
   @Input() status: StatusConsultaEnum | null | undefined = null;
 
-  public get getTexto(): string {
-    if (this.status == null || this.status == undefined) return '';
-    return this.status.toString();
+  public get getTagData(): TagData {
+    return getTagData(this.status);
   }
 }

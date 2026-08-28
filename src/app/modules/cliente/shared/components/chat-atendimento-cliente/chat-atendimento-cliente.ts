@@ -1,7 +1,6 @@
 import type { OnInit, OnDestroy } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import { PrimeNGModule } from '../../../../../shared/modules/prime-ng/prime-ng-module';
-import { SelectButton } from 'primeng/selectbutton';
 import type { MensagemAtendimento } from '../../../../../shared/models/ChatModels';
 import { AtendimentosClienteService } from './services/atendimentos-cliente-service';
 import type { ChatAtendimentoDto } from './models/ChatAtendimentoDto';
@@ -10,12 +9,14 @@ import { ChatAtendimentoWsService } from '../../../../../shared/services/ws/chat
 import type { Subscription } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
 import { RatingModule } from 'primeng/rating';
-import type { StatusAtendimentoEnum } from '../../../../../shared/models/enums/StatusAtendimentoEnum';
 import type { AvaliacaoForm } from '../../../../../shared/form/AvaliacaoForm';
+import type { EquipeAtendimentoDto } from './models/EquipeAtendimentoDto';
+import { StatusAtendimentoEnum } from '../../../../../shared/models/enums/StatusAtendimentoEnum';
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
   selector: 'app-chat-atendimento-cliente',
-  imports: [PrimeNGModule, SelectButton, RatingModule],
+  imports: [PrimeNGModule, RatingModule],
   providers: [MessageService],
   templateUrl: './chat-atendimento-cliente.html',
   styleUrl: './chat-atendimento-cliente.scss',
@@ -34,6 +35,10 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
   public mensagemSolicitacaoAtendimento = '';
   public novaMensagem = '';
 
+  public equipeAtendimento: EquipeAtendimentoDto[] = [];
+  public buscaAtendimentos = '';
+  private readonly avataresSemImagem = new Set<number>();
+
   public avaliacaoAtendimento = {
     pontuacao: 0,
     observacoes: '',
@@ -46,6 +51,98 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
         this.atendimentos = atendimentos;
       },
     });
+  }
+
+  private buscarEquipeAtendimento(): void {
+    this.equipeAtendimento = [];
+    this.service.buscarEquipeAtendimento().subscribe({
+      next: (equipe: EquipeAtendimentoDto[]) => (this.equipeAtendimento = equipe),
+    });
+  }
+
+  /** Mostra no máximo quatro rostos na pilha de avatares, como no restante da tela. */
+  public get equipeVisivel(): EquipeAtendimentoDto[] {
+    return this.equipeAtendimento.slice(0, 4);
+  }
+
+  public get atendentesRestantes(): number {
+    return Math.max(0, this.equipeAtendimento.length - this.equipeVisivel.length);
+  }
+
+  /** Atendimentos ordenados do mais recente para o mais antigo e filtrados pela busca. */
+  public get atendimentosFiltrados(): ChatAtendimentoDto[] {
+    const busca = this.buscaAtendimentos.trim().toLowerCase();
+    const filtrados = busca
+      ? this.atendimentos.filter(
+          (atendimento) =>
+            atendimento.mensagem?.toLowerCase().includes(busca) ||
+            atendimento.atendente?.toLowerCase().includes(busca),
+        )
+      : this.atendimentos;
+    return [...filtrados].sort(
+      (a, b) =>
+        new Date(b.solicitadoEm).getTime() - new Date(a.solicitadoEm).getTime(),
+    );
+  }
+
+  public get atendimentoEmAndamento(): boolean {
+    return this.chatSelecionado?.status === StatusAtendimentoEnum.EM_ANDAMENTO;
+  }
+
+  public get aguardandoAtendente(): boolean {
+    return this.chatSelecionado?.status === StatusAtendimentoEnum.PENDENTE;
+  }
+
+  public rotuloStatus(status: string): string {
+    switch (status) {
+      case StatusAtendimentoEnum.PENDENTE:
+        return 'Aguardando atendente';
+      case StatusAtendimentoEnum.EM_ANDAMENTO:
+        return 'Em andamento';
+      case StatusAtendimentoEnum.FINALIZADO:
+        return 'Finalizado';
+      default:
+        return status;
+    }
+  }
+
+  public urlAvatar(idUsuario: number | undefined): string {
+    return environment.apiUrl + '/arquivos/usuario/' + idUsuario;
+  }
+
+  /** Sem foto no perfil o endpoint responde erro; aí o avatar cai para as iniciais. */
+  public marcarAvatarComErro(idUsuario: number | undefined): void {
+    if (idUsuario === undefined) return;
+    this.avataresSemImagem.add(idUsuario);
+  }
+
+  public avatarComErro(idUsuario: number | undefined): boolean {
+    if (idUsuario === undefined) return true;
+    return this.avataresSemImagem.has(idUsuario);
+  }
+
+  public pegarIniciais(nome: string): string {
+    const limpo = (nome ?? '').trim();
+    if (!limpo) return '?';
+    const partes = limpo.split(' ').filter((parte) => parte.length > 0);
+    if (partes.length === 1) return partes[0].substring(0, 2).toUpperCase();
+    return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+  }
+
+  /** Primeira mensagem do atendimento, encurtada para caber no card. */
+  public resumoMensagem(mensagem: string): string {
+    const limpo = (mensagem ?? '').trim();
+    if (limpo.length <= 90) return limpo;
+    return limpo.substring(0, 90) + '...';
+  }
+
+  public abrirNovaMensagem(): void {
+    this.modoAtendimento = 'SOLICITACAO';
+  }
+
+  public voltarParaListaAtendimentos(): void {
+    this.mensagemSolicitacaoAtendimento = '';
+    this.modoAtendimento = 'LISTA';
   }
 
   public async selecionarAtendimento(
@@ -133,6 +230,7 @@ export class ChatAtendimentoCliente implements OnInit, OnDestroy {
   public async ngOnInit(): Promise<void> {
     this.ws.connect();
     this.buscarAtendimentosCliente();
+    this.buscarEquipeAtendimento();
     this.wsSub = this.ws.mensagens$.subscribe(
       (m) => (this.mensagemChatSelecionado = m),
     );

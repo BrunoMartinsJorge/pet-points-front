@@ -16,6 +16,7 @@ import type { PagamentoDto } from '../../models/PagamentoDto';
 import type { AvaliacaoConsultaDto } from '../../models/AvaliacaoConsultaDto';
 import type { AvaliacaoConsultaForm } from '../../form/AvaliacaoConsultaForm';
 import { Imagem } from '../../../../../../shared/components/imagem/imagem';
+import { urlArquivo } from '../../../../../../shared/utils/imagem-url';
 import { MeusPagamentosService } from '../../../meus-pagamentos/service/meus-pagamentos-service';
 
 @Component({
@@ -31,6 +32,10 @@ import { MeusPagamentosService } from '../../../meus-pagamentos/service/meus-pag
   styleUrl: './dialog-detalhes-consulta.scss',
 })
 export class DialogDetalhesConsulta {
+  public urlImagem(uuid: string | null | undefined): string {
+    return urlArquivo(uuid);
+  }
+
   private readonly service = inject(MinhasConsultasService);
   private readonly toast = inject(MessageService);
   private readonly pagamentoService = inject(MeusPagamentosService);

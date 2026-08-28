@@ -1,10 +1,13 @@
+import type { StatusPagamentoEnum } from "../../../../../shared/models/enums/StatusPagamentoEnum";
+import type { TipoPagamentoEnum } from "../../../../../shared/models/enums/TipoPagamentoEnum";
+
 export interface FaturaDto {
   id: number;
   numero: string;
   clienteId: number | null;
   clienteNome: string;
   valor: number;
-  status: string;
+  status: StatusPagamentoEnum;
   data: string;
-  tipoPagamento: string;
+  tipoPagamento: TipoPagamentoEnum;
 }

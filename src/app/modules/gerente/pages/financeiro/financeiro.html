@@ -1,63 +1,42 @@
 <main>
 
-  <section class="kpis">
+  <section class="cards-padrao">
     @if (carregandoCards) {
       <p-skeleton height="110px" />
       <p-skeleton height="110px" />
       <p-skeleton height="110px" />
       <p-skeleton height="110px" />
     } @else {
-      <div class="kpi-card">
-        <span class="kpi-icon receita">
-          <i class="fa fa-sack-dollar"></i>
-        </span>
-        <div class="kpi-info">
-          <span class="kpi-label">Receita do Mês</span>
-          <strong class="kpi-valor">{{ cards.receitaMesAtual | currency: "BRL" }}</strong>
-          @if (cards.variacaoReceitaMesAtual !== null) {
-            <span class="kpi-sub" [ngClass]="cards.variacaoReceitaMesAtual >= 0 ? 'positivo' : 'negativo'">
-              {{ cards.variacaoReceitaMesAtual >= 0 ? "+" : "" }}{{ cards.variacaoReceitaMesAtual | number: "1.1-1" }}% em relação ao mês anterior
-            </span>
-          }
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <span class="kpi-icon hoje">
-          <i class="fa fa-credit-card"></i>
-        </span>
-        <div class="kpi-info">
-          <span class="kpi-label">Receita de Hoje</span>
-          <strong class="kpi-valor">{{ cards.receitaHoje | currency: "BRL" }}</strong>
-          @if (cards.variacaoReceitaHoje !== null) {
-            <span class="kpi-sub" [ngClass]="cards.variacaoReceitaHoje >= 0 ? 'positivo' : 'negativo'">
-              {{ cards.variacaoReceitaHoje >= 0 ? "+" : "" }}{{ cards.variacaoReceitaHoje | number: "1.1-1" }}% em relação a ontem
-            </span>
-          }
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <span class="kpi-icon pendente">
-          <i class="fa fa-clock"></i>
-        </span>
-        <div class="kpi-info">
-          <span class="kpi-label">Pagamentos Pendentes</span>
-          <strong class="kpi-valor">{{ cards.valorPendente | currency: "BRL" }}</strong>
-          <span class="kpi-sub">{{ cards.quantidadePendentes }} fatura(s) a receber</span>
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <span class="kpi-icon atraso">
-          <i class="fa fa-triangle-exclamation"></i>
-        </span>
-        <div class="kpi-info">
-          <span class="kpi-label">Em Atraso</span>
-          <strong class="kpi-valor">{{ cards.valorEmAtraso | currency: "BRL" }}</strong>
-          <span class="kpi-sub">{{ cards.quantidadeEmAtraso }} fatura(s) vencida(s)</span>
-        </div>
-      </div>
+      <app-card-resumo
+        titulo="Receita do Mês"
+        icone="fa fa-sack-dollar"
+        variante="primario"
+        [valor]="cards.receitaMesAtual | currency: 'BRL'"
+        [descricao]="textoVariacaoMes"
+        [tomDescricao]="tomVariacaoMes"
+      />
+      <app-card-resumo
+        titulo="Receita de Hoje"
+        icone="fa fa-credit-card"
+        variante="sucesso"
+        [valor]="cards.receitaHoje | currency: 'BRL'"
+        [descricao]="textoVariacaoHoje"
+        [tomDescricao]="tomVariacaoHoje"
+      />
+      <app-card-resumo
+        titulo="Pagamentos Pendentes"
+        icone="fa fa-clock"
+        variante="pendente"
+        [valor]="cards.valorPendente | currency: 'BRL'"
+        [descricao]="cards.quantidadePendentes + ' fatura(s) a receber'"
+      />
+      <app-card-resumo
+        titulo="Em Atraso"
+        icone="fa fa-triangle-exclamation"
+        variante="perigo"
+        [valor]="cards.valorEmAtraso | currency: 'BRL'"
+        [descricao]="cards.quantidadeEmAtraso + ' fatura(s) vencida(s)'"
+      />
     }
   </section>
 
@@ -214,12 +193,12 @@
             <td>{{ fatura.clienteNome }}</td>
             <td>{{ fatura.valor | currency: "BRL" }}</td>
             <td>
-              <span class="status-fatura" [ngClass]="classeStatus(fatura.status)">
-                {{ fatura.status | titlecase }}
-              </span>
+              <app-bag-status-pagamento [status]="fatura.status"></app-bag-status-pagamento>
             </td>
             <td>{{ fatura.data | date: "dd/MM/yyyy HH:mm" }}</td>
-            <td>{{ fatura.tipoPagamento }}</td>
+            <td>
+              <app-bag-forma-pagamento [tipo]="fatura.tipoPagamento"></app-bag-forma-pagamento>
+            </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">

@@ -35,7 +35,8 @@ import { LogsService } from '../../../modules/gerente/pages/logs-sistema/service
 import { MovimentacoesClinicaService } from '../../../modules/gerente/pages/movimentacoes-clinica/service/movimentacoes-clinica-service';
 import { BagLog } from "../../../modules/gerente/pages/logs-sistema/components/bag-log/bag-log";
 import { AgendaConsultas } from '../../components/agenda-consultas/agenda-consultas';
-import { environment } from '../../../../environments/environment';
+import { urlArquivo } from '../../utils/imagem-url';
+import { BagStatusConsulta } from "../../components/bag-status-consulta/bag-status-consulta";
 
 @Component({
   selector: 'app-perfil',
@@ -46,7 +47,8 @@ import { environment } from '../../../../environments/environment';
     ConfirmDialog,
     BagTipoMovimentacao,
     BagLog,
-    AgendaConsultas
+    AgendaConsultas,
+    BagStatusConsulta
 ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './perfil.html',
@@ -181,13 +183,7 @@ export class Perfil implements OnInit {
   public get getImagemUsuario(): string {
     const token = this.tokenService.getToken;
     if (!token) return '';
-    const imagem = this.tokenService.decodeToken(token).imagem;
-    if (imagem == null || imagem == undefined || imagem.trim() === '')
-      return '';
-    const idUsuario = this.tokenService.decodeToken(token).id_usuario;
-    return idUsuario !== ''
-      ? environment.apiUrl + '/arquivos/usuario/' + idUsuario
-      : '';
+    return urlArquivo(this.tokenService.decodeToken(token).imagem);
   }
 
   public get getTipoUsuario(): string {

@@ -19,6 +19,9 @@ import { MessageService } from 'primeng/api';
 import type { CarteirinhaPetDto } from '../../../../../../shared/components/carteirinha-pet/dto/CarteirinhaPetDto';
 import { CarteirinhaPet } from "../../../../../../shared/components/carteirinha-pet/carteirinha-pet";
 import { CarteirinhaPdfService } from '../../../../../../shared/components/carteirinha-pet/service/carteirinha-pdf-service';
+import { BagStatusPerfil } from "../../../../../../shared/components/bag-status-perfil/bag-status-perfil";
+import { Imagem } from '../../../../../../shared/components/imagem/imagem';
+import { urlArquivo } from '../../../../../../shared/utils/imagem-url';
 
 @Component({
   selector: 'app-informacoes-pet',
@@ -28,7 +31,9 @@ import { CarteirinhaPdfService } from '../../../../../../shared/components/carte
     GeneroBag,
     DialogModule,
     BagStatusConsulta,
-    CarteirinhaPet
+    CarteirinhaPet,
+    BagStatusPerfil,
+    Imagem
 ],
   providers: [MessageService],
   templateUrl: './informacoes-pet.html',
@@ -163,15 +168,7 @@ export class InformacoesPet implements OnInit {
   }
 
   public getUrlImagem(pet: PetDetalhesDto | PetSemelhantesDto): string {
-    let id = null;
-    if ('arquivo' in pet) {
-      if (pet.arquivo == null) return '';
-      id = pet.id;
-    } else {
-      if (pet.imagem == null) return '';
-      id = this.idPetSelecionado;
-    }
-    return 'http://localhost:8080/cliente/meus-pets/imagem/' + id;
+    return urlArquivo('arquivo' in pet ? pet.arquivo : pet.imagem);
   }
 
   public acessarConsulta(consulta: MinhasConsultasDto): void {

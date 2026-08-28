@@ -7,10 +7,11 @@ import type { MovimentacoesGerenteDto } from './model/MovimentacoesGerenteDto';
 import type { ConsultasGerenteDto } from './model/ConsultasGerenteDto';
 import { BagTipoMovimentacao } from '../../../../shared/components/bag-tipo-movimentacao/bag-tipo-movimentacao';
 import { TipoMovimentacaoEnum } from '../../../../shared/models/enums/TipoMovimentacaoEnum';
+import { CardResumo } from '../../../../shared/components/card-resumo/card-resumo';
 
 @Component({
   selector: 'app-gerente-dashboard',
-  imports: [PrimeNGModule, ChartModule, BagTipoMovimentacao],
+  imports: [PrimeNGModule, ChartModule, BagTipoMovimentacao, CardResumo],
   templateUrl: './gerente-dashboard.html',
   styleUrl: './gerente-dashboard.scss',
 })
@@ -30,21 +31,27 @@ export class GerenteDashboard implements OnInit {
   public dataAtualizacao: Date = new Date();
 
   /**
+   * 
    * @description Quantidade de consultas do dia
+   * @returns - number - Quantidade de consultas do dia
    */
   public get qtdConsultas(): number {
     return this.consultas.length;
   }
 
   /**
+   * 
    * @description Quantidade total de movimentações do mês
+   * @returns - number - Quantidade total de movimentações do mês
    */
   public get qtdMovimentacoes(): number {
     return this.movimentacoes.length;
   }
 
   /**
+   * 
    * @description Quantidade de movimentações de entrada
+   * @returns - number - Quantidade de movimentações de entrada
    */
   public get qtdEntradas(): number {
     return this.movimentacoes.filter(
@@ -53,7 +60,9 @@ export class GerenteDashboard implements OnInit {
   }
 
   /**
+   * 
    * @description Quantidade de movimentações de saída
+   * @returns - number - Quantidade de movimentações de saída
    */
   public get qtdSaidas(): number {
     return this.movimentacoes.filter(
@@ -62,7 +71,9 @@ export class GerenteDashboard implements OnInit {
   }
 
   /**
+   * 
    * @description Total de acessos no período
+   * @returns - number - Total de acessos no período
    */
   public get totalAcessos(): number {
     return this.acessosMes.reduce(
@@ -72,7 +83,9 @@ export class GerenteDashboard implements OnInit {
   }
 
   /**
+   * 
    * @description Média de acessos por registro do período
+   * @returns - number - Média de acessos por registro do período
    */
   public get mediaAcessos(): number {
     if (!this.acessosMes.length) return 0;
@@ -84,6 +97,7 @@ export class GerenteDashboard implements OnInit {
   }
 
   /**
+   * 
    * @description Recarrega todos os blocos do dashboard e atualiza o horário
    */
   public recarregar(): void {

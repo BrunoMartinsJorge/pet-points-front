@@ -5,43 +5,28 @@
     [hideTransitionOptions]="'1000ms'" 
     [showTransformOptions]="'translateX(100%)'" />
 <main>
-  <section class="cards">
-    <div class="card">
-      <span class="icon efetuado">
-        <i class="fa fa-comment"></i>
-      </span>
-      <div class="infos">
-        <span>Atendimentos Finalizados</span>
-        <span>
-          <strong> {{ cards.atendimentosFinalizados }} </strong>
-          Atendimento(s)
-        </span>
-      </div>
-    </div>
-    <div class="card">
-      <span class="icon pendente">
-        <i class="fa fa-clipboard"></i>
-      </span>
-      <div class="infos">
-        <span>Consultas Participadas</span>
-        <span>
-          <strong> {{ cards.consultasParticipadas }} </strong>
-          Atendimento(s)
-        </span>
-      </div>
-    </div>
-    <div class="card">
-      <span class="icon iniciado">
-        <i class="fas fa-ranking-star"></i>
-      </span>
-      <div class="infos">
-        <span>Ranking de Atendimento</span>
-        <span>
-          <strong> {{ cards.rankingAvaliacao }} </strong>
-          º Lugar
-        </span>
-      </div>
-    </div>
+  <section class="cards-padrao">
+    <app-card-resumo
+      titulo="Atendimentos Finalizados"
+      icone="fa fa-comment"
+      variante="sucesso"
+      [valor]="cards.atendimentosFinalizados"
+      descricao="Atendimento(s)"
+    />
+    <app-card-resumo
+      titulo="Consultas Participadas"
+      icone="fa fa-clipboard"
+      variante="pendente"
+      [valor]="cards.consultasParticipadas"
+      descricao="Atendimento(s)"
+    />
+    <app-card-resumo
+      titulo="Ranking de Atendimento"
+      icone="fas fa-ranking-star"
+      variante="info"
+      [valor]="cards.rankingAvaliacao"
+      descricao="º Lugar"
+    />
   </section>
   <hr />
   <section class="informacoes">

@@ -61,35 +61,35 @@
     </div>
   </section>
   <hr>
-  <section class="cards-metricas">
-    <div class="card">
-      <div class="icon efetuado"><i class="fas fa-list-check"></i></div>
-      <div class="infos">
-        <span class="titulo">Consultas Finalizadas</span>
-        <span class="descricao"><strong>{{ cards.consultasFinalizadas }}</strong> finalizadas</span>
-      </div>
-    </div>
-    <div class="card">
-      <div class="icon neutro"><i class="fas fa-list"></i></div>
-      <div class="infos">
-        <span class="titulo">Total de Consultas</span>
-        <span class="descricao"><strong>{{ cards.totalConsultas }}</strong> totalizadas</span>
-      </div>
-    </div>
-    <div class="card">
-      <div class="icon pendente"><i class="fas fa-clock"></i></div>
-      <div class="infos">
-        <span class="titulo">Consultas Pendentes</span>
-        <span class="descricao"><strong>{{ consultasPendentes }}</strong> aguardando</span>
-      </div>
-    </div>
-    <div class="card">
-      <div class="icon informativo"><i class="fas fa-ranking-star"></i></div>
-      <div class="infos">
-        <span class="titulo">Ranking de Avaliação</span>
-        <span class="descricao"><strong>{{ cards.ranking }}º</strong> melhor avaliado</span>
-      </div>
-    </div>
+  <section class="cards-padrao">
+    <app-card-resumo
+      titulo="Consultas Finalizadas"
+      icone="fas fa-list-check"
+      variante="sucesso"
+      [valor]="cards.consultasFinalizadas"
+      descricao="finalizadas"
+    />
+    <app-card-resumo
+      titulo="Total de Consultas"
+      icone="fas fa-list"
+      variante="neutro"
+      [valor]="cards.totalConsultas"
+      descricao="totalizadas"
+    />
+    <app-card-resumo
+      titulo="Consultas Pendentes"
+      icone="fas fa-clock"
+      variante="pendente"
+      [valor]="consultasPendentes"
+      descricao="aguardando"
+    />
+    <app-card-resumo
+      titulo="Ranking de Avaliação"
+      icone="fas fa-ranking-star"
+      variante="info"
+      [valor]="cards.ranking + 'º'"
+      descricao="melhor avaliado"
+    />
   </section>
   <hr>
   <section class="paineis">

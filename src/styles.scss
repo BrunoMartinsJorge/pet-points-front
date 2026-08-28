@@ -47,6 +47,14 @@ span.sem-resultados {
   flex-wrap: wrap;
 }
 
+/* Container padrão dos cards de resumo (app-card-resumo) das telas. */
+.cards-padrao {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 hr {
   border: none;
   width: 100%;

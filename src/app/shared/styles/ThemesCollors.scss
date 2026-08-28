@@ -58,6 +58,10 @@
   --bag-iniciado: #1b68d4;
   --bag-iniciado-foreground: #1b68d414;
 
+  /* Placeholder de imagem (usuario/pet sem foto) */
+  --placeholder-imagem: #e5e7eb;
+  --placeholder-imagem-icone: #9ca3af;
+
   /* Radius */
   --radius: 0.625rem;
 }
@@ -118,4 +122,8 @@ html[data-theme="dark"] {
   --bag-pendente: #ffc107;
   --bag-pendente-foreground: #291F10;
   --aprovado-foreground: #10231C;
+
+  /* Placeholder de imagem (usuario/pet sem foto) */
+  --placeholder-imagem: #27272a;
+  --placeholder-imagem-icone: #71717a;
 }
