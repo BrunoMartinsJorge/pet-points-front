@@ -38,6 +38,8 @@ import { TagModule } from 'primeng/tag';
 import { BagStatusPerfil } from '../../components/bag-status-perfil/bag-status-perfil';
 import { BagStatusAtendimento } from '../../components/bag-status-atendimento/bag-status-atendimento';
 import { BagFormaPagamento } from '../../components/bag-forma-pagamento/bag-forma-pagamento';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   providers: [MessageService, ConfirmationService],
@@ -81,6 +83,8 @@ import { BagFormaPagamento } from '../../components/bag-forma-pagamento/bag-form
     titlecasePipe,
     DividerModule,
     TagModule,
+    BrowserModule,
+    BrowserAnimationsModule,
   ],
   exports: [
     CommonModule,
@@ -123,8 +127,6 @@ import { BagFormaPagamento } from '../../components/bag-forma-pagamento/bag-form
     BagStatusAtendimento,
     BagFormaPagamento,
   ],
-  declarations: [
-    
-  ]
+  declarations: [],
 })
 export class PrimeNGModule {}
